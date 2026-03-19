@@ -1,6 +1,10 @@
+// https://www.figma.com/design/4UNytlbUa1T0Q2xs9Ar7xj/Full-E-Commerce-Website-UI-UX-Design--Community-?node-id=1-3&p=f&t=6Mt2jipeDqXeIoYl-0
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
+import Navbar from "./component/navbar";
+import Banner from "./component/banner";
+import Footer from "./component/footer";
+import { AuthProvider } from "./context/authContext";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -19,10 +23,25 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="true"
+        />
+      </head>
+
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
+        <AuthProvider>
+          <Navbar />
+        
         {children}
+        <Footer />
+        </AuthProvider>
+        
       </body>
     </html>
   );
