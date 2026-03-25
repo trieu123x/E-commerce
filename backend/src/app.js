@@ -11,6 +11,7 @@ import wishlistRoutes from "./routes/wishlist.routes.js"
 import categoryRoutes from "./routes/category.routes.js";
 import orderRoutes from "./routes/order.routes.js"
 import saleRoutes from "./routes/sale.routes.js"
+import paymentRoutes from"./routes/payment.routes.js"
 const app = express();
 
 app.use(cors({
@@ -33,6 +34,7 @@ app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/order", orderRoutes)
 app.use("/api/sales", saleRoutes)
+app.use("/api/payment", paymentRoutes)
 
 
 export default app;

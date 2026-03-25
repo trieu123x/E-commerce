@@ -1,0 +1,12 @@
+{
+  "tmnCode": "LBLG4WFW",
+  "hashSecret": "10OHPVF2JL464XLT0RWOCAVIMJ3UYGQO",
+  "returnUrl": "http://localhost:3000/payment/callback",
+  "paymentUrl": "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html",
+  "apiUrl": "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction",
+  "refundUrl": "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction",
+  "currency": "VND",
+  "locale": "vn",
+  "version": "2.1.0",
+  "command": "pay"
+}

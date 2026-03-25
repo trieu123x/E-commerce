@@ -15,7 +15,8 @@ export default function OrderPage() {
   const payment = searchParams.get("payment");
   const type = searchParams.get("type")
   if (payment === "COD") redirect(`/order/cod?type=${type}&product_id=${product_id}&quantity=${quantity}`)
-  else if(payment == "VISA")redirect(`/order/visa?type=${type}&product_id=${product_id}&quantity=${quantity}`)
+  else if(payment === "VISA") redirect(`/order/visa?type=${type}&product_id=${product_id}&quantity=${quantity}`)
+  else if(payment === "MOMO") redirect(`/order/momo?type=${type}&product_id=${product_id}&quantity=${quantity}`)
   return (
    <></>
   );

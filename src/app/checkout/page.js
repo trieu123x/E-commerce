@@ -91,6 +91,30 @@ export default function PaymentPage() {
             </div>
           </div>
         </div>
+
+        {/* MOMO */}
+        <div
+          onClick={() => setPaymentMethod("MOMO")}
+          className={`border rounded-xl p-4 cursor-pointer transition ${
+            paymentMethod === "MOMO"
+              ? "border-black bg-gray-100"
+              : "border-gray-300"
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            <input
+              type="radio"
+              checked={paymentMethod === "MOMO"}
+              readOnly
+            />
+            <div>
+              <p className="font-semibold">Thanh toán qua Ví MoMo</p>
+              <p className="text-sm text-gray-500">
+                Quét mã QR bằng ứng dụng MoMo
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <button

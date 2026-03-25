@@ -1,4 +1,4 @@
-import db from "../../models/index.js ";
+import db from "../../models/index.js";
 import { Op } from "sequelize";
 import { fn, col, literal } from "sequelize";
 const { Product, ProductImage, Wishlist, Review, Sale, ProductSale } = db;
