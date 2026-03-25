@@ -1,0 +1,249 @@
+(node:11608) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/integration/cart.routes.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.3] injecting env (13) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+    console.error
+      Auth middleware error: Error [JsonWebTokenError]: invalid token
+          at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\integration\cart.routes.test.js:37:21)
+          at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-mock\build\index.js:305:39
+          at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-mock\build\index.js:312:13)
+          at Object.mockConstructor [as verify] (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-mock\build\index.js:102:19)
+          at verify (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\middlewares\auth.middleware.js:26:29)
+          at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+          at trimPrefix (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:342:13)
+          at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:297:9
+          at processParams (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:582:12)
+          at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:291:5)
+          at Function.handle (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:186:3)
+          at router (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:60:12)
+          at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+          at trimPrefix (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:342:13)
+          at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:297:9
+          at processParams (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:582:12)
+          at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:291:5)
+          at read (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\body-parser\lib\read.js:53:5)
+          at urlencodedParser (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\body-parser\lib\types\urlencoded.js:57:5)
+          at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+          at trimPrefix (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:342:13)
+          at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:297:9
+          at processParams (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:582:12)
+          at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:291:5)
+          at read (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\body-parser\lib\read.js:53:5)
+          at jsonParser (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\body-parser\lib\types\json.js:88:5)
+          at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+          at trimPrefix (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:342:13)
+          at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:297:9
+          at processParams (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:582:12)
+          at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:291:5)
+          at cors (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\cors\lib\index.js:188:7)
+          at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\cors\lib\index.js:224:17
+          at originCallback (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\cors\lib\index.js:214:15)
+          at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\cors\lib\index.js:219:13
+          at optionsCallback (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\cors\lib\index.js:199:9)
+          at corsMiddleware (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\cors\lib\index.js:204:7)
+          at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+          at trimPrefix (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:342:13)
+          at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:297:9
+          at processParams (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:582:12)
+          at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:291:5)
+          at Function.handle (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:186:3)
+          at Function.handle (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\express\lib\application.js:177:15)
+          at Server.app (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\express\lib\express.js:38:9)
+          at Server.emit (node:events:524:28)
+          at parserOnIncoming (node:_http_server:1141:12)
+          at HTTPParser.parserOnHeadersComplete (node:_http_common:118:17)
+
+    [0m [90m 37 |[39m         
+     [90m 38 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 39 |[39m         console[33m.[39merror([32m"Auth middleware error:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 40 |[39m         
+     [90m 41 |[39m         [36mif[39m (error[33m.[39mname [33m===[39m [32m'JsonWebTokenError'[39m) {
+     [90m 42 |[39m             [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ [0m
+
+      at error (src/middlewares/auth.middleware.js:39:17)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at Function.handle (node_modules/router/index.js:186:3)
+      at router (node_modules/router/index.js:60:12)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at read (node_modules/body-parser/lib/read.js:53:5)
+      at urlencodedParser (node_modules/body-parser/lib/types/urlencoded.js:57:5)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at read (node_modules/body-parser/lib/read.js:53:5)
+      at jsonParser (node_modules/body-parser/lib/types/json.js:88:5)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at cors (node_modules/cors/lib/index.js:188:7)
+      at node_modules/cors/lib/index.js:224:17
+      at originCallback (node_modules/cors/lib/index.js:214:15)
+      at node_modules/cors/lib/index.js:219:13
+      at optionsCallback (node_modules/cors/lib/index.js:199:9)
+      at corsMiddleware (node_modules/cors/lib/index.js:204:7)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at Function.handle (node_modules/router/index.js:186:3)
+      at Function.handle (node_modules/express/lib/application.js:177:15)
+      at Server.app (node_modules/express/lib/express.js:38:9)
+
+    console.error
+      Add to cart error: TypeError: CartItem.findByPk is not a function
+          at findByPk (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\cart.controller.js:202:44)
+          at processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+    [0m [90m 289 |[39m     })[33m;[39m
+     [90m 290 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 291 |[39m     console[33m.[39merror([32m"Add to cart error:"[39m[33m,[39m error)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 292 |[39m     res[33m.[39mstatus([35m500[39m)[33m.[39mjson({
+     [90m 293 |[39m       success[33m:[39m [36mfalse[39m[33m,[39m
+     [90m 294 |[39m       message[33m:[39m [32m"Lỗi server khi thêm sản phẩm vào giỏ hàng"[39m[33m,[39m[0m
+
+      at error (src/controllers/cart.controller.js:291:13)
+
+  ● Cart Routes Integration Tests › POST /api/cart/add › should add item to cart
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 201
+    Received: 500
+
+    [0m [90m 60 |[39m       
+     [90m 61 |[39m       [36mconst[39m res [33m=[39m [36mawait[39m request(app)[33m.[39mpost([32m'/api/cart/add'[39m)[33m.[39m[36mset[39m([32m'Authorization'[39m[33m,[39m [32m'Bearer valid'[39m)[33m.[39msend({ product_id[33m:[39m [35m2[39m[33m,[39m quantity[33m:[39m [35m1[39m })[33m;[39m
+    [31m[1m>[22m[39m[90m 62 |[39m       expect(res[33m.[39mstatus)[33m.[39mtoBe([35m201[39m)[33m;[39m [90m// Assuming 201 for add[39m
+     [90m    |[39m                          [31m[1m^[22m[39m
+     [90m 63 |[39m       expect(res[33m.[39mbody[33m.[39msuccess)[33m.[39mtoBe([36mtrue[39m)[33m;[39m
+     [90m 64 |[39m     })[33m;[39m
+     [90m 65 |[39m   })[33m;[39m[0m
+
+      at Object.toBe (tests/integration/cart.routes.test.js:62:26)
+
+PASS tests/integration/order.routes.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.3] injecting env (13) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+    console.log
+      100
+
+      at log (src/controllers/order.controller.js:201:9)
+
+    console.log
+      { id: 101, total_amount: 100 }
+
+      at log (src/controllers/order.controller.js:229:13)
+
+PASS tests/integration/payment.routes.test.js
+  ● Console
+
+    console.log
+      [dotenv@17.2.3] injecting env (13) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+    console.error
+      Auth middleware error: Error [JsonWebTokenError]: invalid token
+          at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\integration\payment.routes.test.js:38:21)
+          at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-mock\build\index.js:305:39
+          at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-mock\build\index.js:312:13)
+          at Object.mockConstructor [as verify] (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-mock\build\index.js:102:19)
+          at verify (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\middlewares\auth.middleware.js:26:29)
+          at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+          at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\route.js:157:13)
+          at Route.dispatch (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\route.js:117:3)
+          at handle (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:435:11)
+          at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+          at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:295:15
+          at processParams (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:582:12)
+          at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:291:5)
+          at Function.handle (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:186:3)
+          at router (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:60:12)
+          at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+          at trimPrefix (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:342:13)
+          at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:297:9
+          at processParams (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:582:12)
+          at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:291:5)
+          at read (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\body-parser\lib\read.js:42:5)
+          at urlencodedParser (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\body-parser\lib\types\urlencoded.js:57:5)
+          at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+          at trimPrefix (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:342:13)
+          at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:297:9
+          at processParams (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:582:12)
+          at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:291:5)
+          at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\body-parser\lib\read.js:171:5
+          at AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+          at invokeCallback (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\raw-body\index.js:238:16)
+          at done (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\raw-body\index.js:227:7)
+          at IncomingMessage.onEnd (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\raw-body\index.js:287:7)
+          at IncomingMessage.emit (node:events:524:28)
+          at endReadableNT (node:internal/streams/readable:1698:12)
+          at processTicksAndRejections (node:internal/process/task_queues:82:21)
+
+    [0m [90m 37 |[39m         
+     [90m 38 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 39 |[39m         console[33m.[39merror([32m"Auth middleware error:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 40 |[39m         
+     [90m 41 |[39m         [36mif[39m (error[33m.[39mname [33m===[39m [32m'JsonWebTokenError'[39m) {
+     [90m 42 |[39m             [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ [0m
+
+      at error (src/middlewares/auth.middleware.js:39:17)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at next (node_modules/router/lib/route.js:157:13)
+      at Route.dispatch (node_modules/router/lib/route.js:117:3)
+      at handle (node_modules/router/index.js:435:11)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at node_modules/router/index.js:295:15
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at Function.handle (node_modules/router/index.js:186:3)
+      at router (node_modules/router/index.js:60:12)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at read (node_modules/body-parser/lib/read.js:42:5)
+      at urlencodedParser (node_modules/body-parser/lib/types/urlencoded.js:57:5)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/body-parser/lib/read.js:171:5
+      at invokeCallback (node_modules/raw-body/index.js:238:16)
+      at done (node_modules/raw-body/index.js:227:7)
+      at IncomingMessage.onEnd (node_modules/raw-body/index.js:287:7)
+
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       1 failed, 7 passed, 8 total
+Snapshots:   0 total
+Time:        3.315 s, estimated 6 s
+Ran all test suites matching tests/integration/cart.routes.test.js|tests/integration/order.routes.test.js|tests/integration/payment.routes.test.js.
