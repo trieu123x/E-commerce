@@ -8,6 +8,8 @@ export default function Sales() {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [saleSearchTerm, setSaleSearchTerm] = useState("");
   const [manageSale, setManageSale] = useState(null);
     const [saleProducts, setSaleProducts] = useState([]);
     const [non,setNon] = useState()
@@ -56,11 +58,12 @@ console.log(sales)
     const res = await instance.get(`/admin/sales/${saleId}`);
     setSaleProducts(res.data.data.products);
   };
-  const fetchProducts = async (pageNumber = 1) => {
+  const fetchProducts = async (pageNumber = 1, search = "") => {
     const res = await instance.get("/products", {
       params: {
         page: pageNumber,
         limit: 20,
+        search: search,
       },
     });
       console.log(res.data)
@@ -71,9 +74,22 @@ console.log(sales)
   useEffect(() => {
     fetchSales();
   }, []);
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
   useEffect(() => {
-    fetchProducts(page);
-  }, [page]);
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
+
+  useEffect(() => {
+    fetchProducts(page, debouncedSearch);
+  }, [page, debouncedSearch]);
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -110,6 +126,9 @@ console.log(sales)
 
   const productsNotInSale = products.filter(
     (p) => !saleProductIds.includes(p.id),
+  );
+  const filteredSaleProducts = saleProducts.filter((p) =>
+    p.name.toLowerCase().includes(saleSearchTerm.toLowerCase()),
   );
   const removeProductFromSale = async (productId) => {
     await instance.delete(`/admin/sales/${manageSale.id}/${productId}`);
@@ -376,7 +395,31 @@ console.log(sales)
                 {/* PRODUCT NOT IN SALE */}
 
                 <div>
-                  <h3 className="font-semibold mb-3">Available Products</h3>
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="font-semibold">Available Products</h3>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="Search products..."
+                        className="border rounded-lg pl-8 pr-3 py-1.5 text-sm w-64 focus:ring-2 focus:ring-blue-500 outline-none"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                      <svg
+                        className="w-4 h-4 absolute left-2.5 top-2.5 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
 
                   <div className="space-y-3 max-h-80 overflow-y-auto">
                     {productsNotInSale.map((p) => (
@@ -450,10 +493,34 @@ console.log(sales)
                 {/* PRODUCT IN SALE */}
 
                 <div>
-                  <h3 className="font-semibold mb-3">Products in Sale</h3>
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="font-semibold">Products in Sale</h3>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="Filter products in sale..."
+                        className="border rounded-lg pl-8 pr-3 py-1.5 text-sm w-64 focus:ring-2 focus:ring-red-500 outline-none"
+                        value={saleSearchTerm}
+                        onChange={(e) => setSaleSearchTerm(e.target.value)}
+                      />
+                      <svg
+                        className="w-4 h-4 absolute left-2.5 top-2.5 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
 
                   <div className="space-y-3 max-h-80 overflow-y-auto">
-                    {saleProducts.map((p) => (
+                    {filteredSaleProducts.map((p) => (
                       <div
                         key={p.id}
                         className="flex items-center justify-between border p-3 rounded hover:bg-gray-50"

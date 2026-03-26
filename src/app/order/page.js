@@ -17,6 +17,7 @@ export default function OrderPage() {
   if (payment === "COD") redirect(`/order/cod?type=${type}&product_id=${product_id}&quantity=${quantity}`)
   else if(payment === "VISA") redirect(`/order/visa?type=${type}&product_id=${product_id}&quantity=${quantity}`)
   else if(payment === "MOMO") redirect(`/order/momo?type=${type}&product_id=${product_id}&quantity=${quantity}`)
+  else if(payment === "VNPAY") redirect(`/order/vnpay?type=${type}&product_id=${product_id}&quantity=${quantity}`)
   return (
    <></>
   );

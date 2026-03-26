@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
-import { Minus, Plus, Heart, User, PencilLine } from "lucide-react";
+import { Minus, Plus, Heart, User, PencilLine, X } from "lucide-react";
 import { Truck, RefreshCcw } from "lucide-react";
 import instance from "@/app/api/axios";
 import { useAuth } from "@/app/context/authContext";
@@ -125,6 +125,19 @@ export default function ProductDetail() {
       }
     } catch (err) {
       console.log(err);
+    }
+  };
+  const handleDeleteReview = async (reviewId) => {
+    if (!window.confirm("Bạn có chắc chắn muốn xóa đánh giá này?")) return;
+    try {
+      const res = await instance.delete(`/products/reviews/${reviewId}`);
+      if (res.data.success) {
+        setReviews((prev) => prev.filter((r) => r.id !== reviewId));
+      }
+    } catch (err) {
+      console.error("Delete review error:", err);
+      setError("Lỗi khi xóa đánh giá");
+      setTimeout(() => setError(), 3000);
     }
   };
 
@@ -594,18 +607,22 @@ export default function ProductDetail() {
               {/* Top row */}
               <div className="flex items-center gap-3">
                 <User className="w-8 h-8 text-gray-500" />
-                {review?.user?.id === user?.id && user && (
-                  <>
-                    <PencilLine
-                      onClick={() => {
-                        setComment(review.comment);
-                        setRating(review.rating);
-                        setShowUpdateReview(review.id);
-                      }}
-                      className="absolute top-6 text-gray-500 right-2"
-                    ></PencilLine>
-                  </>
-                )}
+                 {review?.user?.id === user?.id && user && (
+                   <div className="absolute top-4 right-2 flex gap-3">
+                     <PencilLine
+                       onClick={() => {
+                         setComment(review.comment);
+                         setRating(review.rating);
+                         setShowUpdateReview(review.id);
+                       }}
+                       className="w-5 h-5 text-gray-500 cursor-pointer hover:text-blue-500 transition"
+                     />
+                     <X
+                       onClick={() => handleDeleteReview(review.id)}
+                       className="w-5 h-5 text-gray-500 cursor-pointer hover:text-red-500 transition"
+                     />
+                   </div>
+                 )}
 
                 <div>
                   <StarRating rating={review.rating} />

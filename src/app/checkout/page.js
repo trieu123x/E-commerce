@@ -115,6 +115,30 @@ export default function PaymentPage() {
             </div>
           </div>
         </div>
+
+        {/* VNPAY */}
+        <div
+          onClick={() => setPaymentMethod("VNPAY")}
+          className={`border rounded-xl p-4 cursor-pointer transition ${
+            paymentMethod === "VNPAY"
+              ? "border-black bg-gray-100"
+              : "border-gray-300"
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            <input
+              type="radio"
+              checked={paymentMethod === "VNPAY"}
+              readOnly
+            />
+            <div>
+              <p className="font-semibold">Thanh toán qua VNPay</p>
+              <p className="text-sm text-gray-500">
+                Thanh toán qua cổng ATM/Internet Banking/QR Code
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <button

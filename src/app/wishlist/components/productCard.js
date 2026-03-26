@@ -71,6 +71,12 @@ export default function WishlistCard({ item }) {
         </button>
       </div>
 
+      {product.saleName && (
+        <div className="absolute top-3 left-3 z-10 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow-sm">
+          SALE
+        </div>
+      )}
+
       {/* Image */}
       <div className="relative h-48 bg-gray-100 mb-4 overflow-hidden">
         <img
@@ -96,14 +102,25 @@ export default function WishlistCard({ item }) {
       </div>
 
       {/* Info */}
-      <h3 className="text-sm font-semibold mb-1">
+      <h3 className="text-sm font-semibold mb-1 truncate">
         {product.name}
       </h3>
 
-      <div className="flex items-center gap-2 mb-1">
-        <span className="text-red-500 font-bold">
-          ${parseFloat(product.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-        </span>
+      <div className="flex flex-col mb-2">
+        {product.saleName && product.price_after < product.price ? (
+          <div className="flex items-center gap-2">
+            <span className="text-red-500 font-bold">
+              ${parseFloat(product.price_after).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </span>
+            <span className="text-gray-400 text-xs line-through">
+              ${parseFloat(product.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </span>
+          </div>
+        ) : (
+          <span className="text-red-500 font-bold">
+            ${parseFloat(product.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </span>
+        )}
       </div>
 
       <div className="flex items-center gap-2">
