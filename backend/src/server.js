@@ -5,7 +5,7 @@ import { Op } from "sequelize";
 
 const PORT = process.env.PORT || 5000;
 
-setInterval(async () => {
+const updateExpiredSales = async () => {
   try {
     const now = new Date();
     const result = await db.Sale.update(
@@ -23,7 +23,14 @@ setInterval(async () => {
   } catch (err) {
     console.error(`[Auto-Cron] Error updating expired sales: `, err.message);
   }
-}, 60 * 1000);
+};
+
+// Chạy ngay khi server start
+updateExpiredSales();
+
+// Chạy định kỳ mỗi 60s
+setInterval(updateExpiredSales, 60 * 1000);
+
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

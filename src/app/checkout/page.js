@@ -5,16 +5,20 @@ import { useSearchParams, useRouter } from "next/navigation";
 import instance from "@/app/api/axios";
 
 export default function PaymentPage() {
-    const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const id = searchParams.get("product_id");
   const quantity = parseInt(searchParams.get("quantity") || 1);
-  const type = searchParams.get("type")
+  const type = searchParams.get("type");
   const handleSubmit = async () => {
-    if (type === "buyNow") router.push(`/order?type=buyNow&product_id=${id}&quantity=${quantity}&payment=${paymentMethod}`)
-    else if (type === "cart") router.push(`/order?type=cart&payment=${paymentMethod}`)
+    if (type === "buyNow")
+      router.push(
+        `/order?type=buyNow&product_id=${id}&quantity=${quantity}&payment=${paymentMethod}`,
+      );
+    else if (type === "cart")
+      router.push(`/order?type=cart&payment=${paymentMethod}`);
   };
 
   return (
@@ -32,11 +36,7 @@ export default function PaymentPage() {
           }`}
         >
           <div className="flex items-center gap-3">
-            <input
-              type="radio"
-              checked={paymentMethod === "COD"}
-              readOnly
-            />
+            <input type="radio" checked={paymentMethod === "COD"} readOnly />
             <div>
               <p className="font-semibold">Thanh toán khi nhận hàng (COD)</p>
               <p className="text-sm text-gray-500">
@@ -46,30 +46,8 @@ export default function PaymentPage() {
           </div>
         </div>
 
-        {/* Bank */}
+       
         <div
-          onClick={() => setPaymentMethod("BANK")}
-          className={`border rounded-xl p-4 cursor-pointer transition ${
-            paymentMethod === "BANK"
-              ? "border-black bg-gray-100"
-              : "border-gray-300"
-          }`}
-        >
-          <div className="flex items-center gap-3">
-            <input
-              type="radio"
-              checked={paymentMethod === "BANK"}
-              readOnly
-            />
-            <div>
-              <p className="font-semibold">Chuyển khoản ngân hàng</p>
-              <p className="text-sm text-gray-500">
-                Thanh toán qua tài khoản ngân hàng
-              </p>
-            </div>
-          </div>
-              </div>
-              <div
           onClick={() => setPaymentMethod("VISA")}
           className={`border rounded-xl p-4 cursor-pointer transition ${
             paymentMethod === "VISA"
@@ -78,16 +56,10 @@ export default function PaymentPage() {
           }`}
         >
           <div className="flex items-center gap-3">
-            <input
-              type="radio"
-              checked={paymentMethod === "VISA"}
-              readOnly
-            />
+            <input type="radio" checked={paymentMethod === "VISA"} readOnly />
             <div>
               <p className="font-semibold">Thanh toán bằng thẻ VISA</p>
-              <p className="text-sm text-gray-500">
-                Thanh toán qua thẻ VISA
-              </p>
+              <p className="text-sm text-gray-500">Thanh toán qua thẻ VISA</p>
             </div>
           </div>
         </div>
@@ -102,11 +74,7 @@ export default function PaymentPage() {
           }`}
         >
           <div className="flex items-center gap-3">
-            <input
-              type="radio"
-              checked={paymentMethod === "MOMO"}
-              readOnly
-            />
+            <input type="radio" checked={paymentMethod === "MOMO"} readOnly />
             <div>
               <p className="font-semibold">Thanh toán qua Ví MoMo</p>
               <p className="text-sm text-gray-500">
@@ -126,11 +94,7 @@ export default function PaymentPage() {
           }`}
         >
           <div className="flex items-center gap-3">
-            <input
-              type="radio"
-              checked={paymentMethod === "VNPAY"}
-              readOnly
-            />
+            <input type="radio" checked={paymentMethod === "VNPAY"} readOnly />
             <div>
               <p className="font-semibold">Thanh toán qua VNPay</p>
               <p className="text-sm text-gray-500">

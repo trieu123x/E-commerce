@@ -119,7 +119,7 @@ export default function VnpayOrderPage() {
 
   const cartItems = cart?.items || [];
   const summary = cart?.summary || {};
-
+console.log(cartItems)
   return (
     <div className="max-w-6xl mx-auto py-10 px-4 grid grid-cols-1 md:grid-cols-2 gap-10 text-white">
       {/* LEFT COLUMN */}
@@ -212,7 +212,7 @@ export default function VnpayOrderPage() {
               )}
               <div className="w-16 h-16 relative rounded-md">
                 <img
-                  src={item?.image_url}
+                  src={item?.image_url || item.image}
                   alt={item.name}
                   className="w-full h-full object-cover hover:scale-110 transition duration-300"
                 />

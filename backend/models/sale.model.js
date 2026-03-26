@@ -33,10 +33,12 @@ export default (sequelize, DataTypes) => {
         defaultValue: true,
       },
     },
-    {
-      tableName: "sales",
-      timestamps: false,
-    }
+  {
+    tableName: "sales",
+    timestamps: true,
+    underscored: true,
+    updatedAt: false,
+  }
   );
 
   Sale.associate = (models) => {
