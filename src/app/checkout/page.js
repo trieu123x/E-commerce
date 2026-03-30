@@ -103,6 +103,26 @@ export default function PaymentPage() {
             </div>
           </div>
         </div>
+
+        {/* STRIPE */}
+        <div
+          onClick={() => setPaymentMethod("STRIPE")}
+          className={`border rounded-xl p-4 cursor-pointer transition ${
+            paymentMethod === "STRIPE"
+              ? "border-black bg-gray-100"
+              : "border-gray-300"
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            <input type="radio" checked={paymentMethod === "STRIPE"} readOnly />
+            <div>
+              <p className="font-semibold">Thanh toán qua Stripe</p>
+              <p className="text-sm text-gray-500">
+                Thanh toán an toàn qua thẻ quốc tế (Credit/Debit Card)
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <button

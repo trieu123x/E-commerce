@@ -115,11 +115,11 @@ export default function OrdersPage() {
               <div
                 className={`transition-all duration-500 ease-in-out overflow-hidden ${
                   openOrder === order.id
-                    ? "max-h-[600px] opacity-100"
+                    ? "max-h-150 opacity-100"
                     : "max-h-0 opacity-0"
                 }`}
               >
-                <div className="border-t px-6 pb-6">
+                <div className="border-t  px-6 pb-6">
 
                   {/* Shipping Address */}
                   <div className="bg-gray-50 p-4 rounded-lg mb-4">
@@ -133,6 +133,7 @@ export default function OrdersPage() {
                   </div>
 
                   {/* Items */}
+                  <div className="max-h-80 overflow-y-auto">
                   {order.items.map((item) => (
                     <div
                       key={item.id}
@@ -177,7 +178,7 @@ export default function OrdersPage() {
                         )}
                       </div>
                     </div>
-                  ))}
+                  ))}</div>
                 </div>
               </div>
 

@@ -222,7 +222,7 @@ console.log(price_after)
         shipping_address:
           address.address + ", " + address.district + ", " + address.ward,
         total_amount: totalAmount,
-        status: "COMPLETED",
+        status: "pending",
       },
       { transaction },
     );
@@ -249,6 +249,7 @@ export const buyNow = async (req, res) => {
   try {
     const userId = req.user.id;
     const { product_id, quantity = 1, address_id, items } = req.body;
+    console.log(`[Order] Placing order for user ${userId}, address ${address_id}...`);
 
     let orderItems = [];
 

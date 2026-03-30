@@ -18,6 +18,7 @@ export default function OrderPage() {
   else if(payment === "VISA") redirect(`/order/visa?type=${type}&product_id=${product_id}&quantity=${quantity}`)
   else if(payment === "MOMO") redirect(`/order/momo?type=${type}&product_id=${product_id}&quantity=${quantity}`)
   else if(payment === "VNPAY") redirect(`/order/vnpay?type=${type}&product_id=${product_id}&quantity=${quantity}`)
+  else if(payment === "STRIPE") redirect(`/order/stripe?type=${type}&product_id=${product_id}&quantity=${quantity}`)
   return (
    <></>
   );

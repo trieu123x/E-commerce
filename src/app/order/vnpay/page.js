@@ -46,76 +46,60 @@ export default function VnpayOrderPage() {
   }, [sortedAddress]);
 
   const handlePlaceOrder = async () => {
-    if (!selectedAddress) {
-      alert("Vui lòng chọn địa chỉ giao hàng");
-      return;
+  if (!selectedAddress) {
+    alert("Vui lòng chọn địa chỉ giao hàng");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    let payload = {
+      address_id: selectedAddress,
+      payment_method: payment,
+    };
+
+    if (type === "buyNow") {
+      payload.product_id = product_id;
+      payload.quantity = quantity;
     }
 
-    try {
-      setLoading(true);
-
-      let payload = {
-        address_id: selectedAddress,
-        payment_method: payment,
-      };
-
-      if (type === "buyNow") {
-        payload.product_id = product_id;
-        payload.quantity = quantity;
-      }
-
-      if (type === "cart") {
-        payload.items = cartItems.map((item) => ({
-          product_id: item.product_id,
-          quantity: item.quantity,
-        }));
-      }
-
-      const res = await instance.post("/order", payload);
-      const orderId = res.data.data.id;
-
-      if (type === "cart") {
-        await instance.delete("/cart/clear");
-        setCart([]);
-      }
-
-      // Tạo url thanh toán VNPay
-      const vnpayRes = await instance.post("/payment/vnpay/create", { 
-        orderId,
-      });
-      
-      if (vnpayRes.data && vnpayRes.data.payUrl) {
-        // Mở VNPay ở tab mới
-        window.open(vnpayRes.data.payUrl, '_blank');
-
-        // Tự gọi IPN để cập nhật trạng thái đơn hàng (workaround cho test)
-        // Lưu ý: VNPay IPN thường truyền qua query string nên ta giả lập query string ở đây nếu backend mong đợi req.query
-        // Ở backend controller vnpayIPN dùng req.query
-        try {
-          await instance.get('/payment/vnpay/vnpay_ipn', {
-            params: {
-              vnp_TxnRef: orderId,
-              vnp_ResponseCode: "00",
-              vnp_SecureHash: "bypass" // Controller của ta hiện tại có verifyCallback, ta có thể cần bypass hoặc mock cho test environment
-            }
-          });
-        } catch (ipnErr) {
-          console.error("Lỗi tự gọi IPN:", ipnErr);
-        }
-
-        // Chuyển hướng luôn sang trang completed
-        router.push("/completed");
-      } else {
-        alert("Lỗi khi lấy dữ liệu thanh toán từ VNPay");
-        router.push("/completed");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Đã xảy ra lỗi khi tạo đơn hàng.");
-    } finally {
-      setLoading(false);
+    if (type === "cart") {
+      payload.items = cartItems.map((item) => ({
+        product_id: item.product_id,
+        quantity: item.quantity,
+      }));
     }
-  };
+
+    // ✅ 1. Tạo order
+    const res = await instance.post("/order", payload);
+    const orderId = res.data.data.id;
+
+    // ✅ 2. Nếu là cart thì clear
+    if (type === "cart") {
+      await instance.delete("/cart/clear");
+      setCart([]);
+    }
+
+    // ✅ 3. Lấy link thanh toán VNPAY
+    const vnpayRes = await instance.post("/payment/vnpay/create", {
+      orderId,
+    });
+
+    if (vnpayRes.data && vnpayRes.data.payUrl) {
+      // ✅ 4. Redirect TRỰC TIẾP sang VNPAY (QUAN TRỌNG)
+      window.location.href = vnpayRes.data.payUrl;
+    } else {
+      alert("Lỗi khi tạo link thanh toán VNPay");
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert("Đã xảy ra lỗi khi tạo đơn hàng.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const cartItems = cart?.items || [];
   const summary = cart?.summary || {};

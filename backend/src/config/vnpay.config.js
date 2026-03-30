@@ -8,5 +8,6 @@ export const vnpayConfig = {
   currency: 'VND',
   locale: 'vn',
   version: '2.1.0',
-  command: 'pay'
+  command: 'pay',
+  vnp_IpnUrl: process.env.VNPAY_IPN_URL
 };

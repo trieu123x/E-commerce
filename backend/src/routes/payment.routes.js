@@ -5,7 +5,9 @@ import {
   momoIPN,
   createVnpayPayment,
   vnpayReturn,
-  vnpayIPN
+  vnpayIPN,
+  createStripePayment,
+  stripeWebhook
 } from '../controllers/payment.controller.js';
 import { authMiddleware } from '../middlewares/auth.middleware.js';
 
@@ -23,6 +25,10 @@ router.post('/momo/ipn', momoIPN);
 // VNPay routes
 router.post('/vnpay/create', authMiddleware, createVnpayPayment);
 router.get('/vnpay/return', vnpayReturn);
-router.get('/vnpay/vnpay_ipn', vnpayIPN);
+router.get('/vnpay/ipn', vnpayIPN);
+
+// Stripe routes
+router.post('/stripe/create', authMiddleware, createStripePayment);
+router.post('/stripe/webhook', stripeWebhook);
 
 export default router;

@@ -20,6 +20,7 @@
     "pg": "^8.17.2",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.7",
+    "stripe": "^21.0.1",
     "vnpay": "^2.4.4"
   },
   "description": "",
