@@ -34,3 +34,9 @@ UPDATE products SET status = 'ACTIVE' WHERE status IS NULL;
 
 ALTER TABLE products
 ADD COLUMN reserved_stock DECIMAL(12,2) NOT NULL DEFAULT 0;
+
+UPDATE orders SET status = UPPER(status);
+
+SELECT DISTINCT status FROM orders;
+
+

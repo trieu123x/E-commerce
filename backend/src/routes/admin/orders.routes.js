@@ -2,7 +2,7 @@ import express from "express";
 import db from "../../../models/index.js";
 import { Op } from "sequelize";
 
-const { Order, OrderItem, User, Product,ProductImage } = db;
+const { Order, OrderItem, User, Product, ProductImage, Payment } = db;
 const router = express.Router();
 
 // Lấy danh sách tất cả order (kèm thông tin user)
@@ -27,6 +27,11 @@ router.get("/", async (req, res) => {
     const orders = await Order.findAll({
       where,
       include: [
+        {
+          model: Payment,
+          as: "payment",
+          attributes: ["id", "method", "status", "paid_at"],
+        },
         {
           model: User,
           as: "user",

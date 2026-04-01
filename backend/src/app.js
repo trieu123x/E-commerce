@@ -18,11 +18,13 @@ app.use(cors({
     origin: process.env.FRONTEND_URL || "http://localhost:3000",
     credentials: true
 }));
-app.use(express.json({
-    verify: (req, res, buf) => {
-        req.rawBody = buf;
-    }
-}));
+
+// CRITICAL: Mount payment routes BEFORE JSON parsing
+// So that Stripe webhook can use express.raw() to capture raw body
+app.use("/api/payment", paymentRoutes);
+
+// Regular JSON parsing for all other routes
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/products", productRoutes);
@@ -38,7 +40,6 @@ app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/order", orderRoutes)
 app.use("/api/sales", saleRoutes)
-app.use("/api/payment", paymentRoutes)
 
 
 export default app;

@@ -23,8 +23,8 @@ export default (sequelize) => {
         allowNull: false,
       },
       status: {
-        type: DataTypes.ENUM('pending', 'processing', 'shipped', 'delivered', 'cancelled', 'completed'),
-        defaultValue: 'pending',
+        type: DataTypes.ENUM('PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED', 'COMPLETED'),
+        defaultValue: 'PENDING',
       },
       created_at: {
         type: DataTypes.DATE,

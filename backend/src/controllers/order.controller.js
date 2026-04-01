@@ -91,7 +91,7 @@ export const createOrder = async (req, res) => {
         user_id: userId,
         address_id: address_id,
         total_amount: totalAmount,
-        status: "pending",
+        status: "PENDING",
       },
       { transaction },
     );
@@ -135,7 +135,7 @@ export const createOrder = async (req, res) => {
     });
   }
 };
-export const createOrderFromItems = async (userId, items, address_id) => {
+export const createOrderFromItems = async (userId, items, address_id, payment_method) => {
   const transaction = await db.sequelize.transaction();
   function getBestSalePrice(product, sales) {
     const now = new Date();
@@ -222,11 +222,24 @@ console.log(price_after)
         shipping_address:
           address.address + ", " + address.district + ", " + address.ward,
         total_amount: totalAmount,
-        status: "pending",
+        status: payment_method === "COD" ? "COMPLETED" : "PENDING",
+        payment_method,
       },
       { transaction },
     );
     console.log(order);
+    
+    // Tạo Payment record
+    await db.Payment.create(
+      {
+        order_id: order.id,
+        method: payment_method || "COD",
+        status: payment_method === "COD" ? "COMPLETED" : "PENDING",
+        // paid_at is set by defaultValue in model
+      },
+      { transaction },
+    );
+    
     // Tạo OrderItems
     await OrderItem.bulkCreate(
       orderItemsData.map((item) => ({
@@ -248,9 +261,8 @@ console.log(price_after)
 export const buyNow = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { product_id, quantity = 1, address_id, items } = req.body;
-    console.log(`[Order] Placing order for user ${userId}, address ${address_id}...`);
-
+    const { product_id, quantity = 1, address_id, items,payment_method } = req.body;
+console.log("Buy Now payload:", req.body);
     let orderItems = [];
 
     // 🔹 Nếu là thanh toán từ cart
@@ -273,7 +285,7 @@ export const buyNow = async (req, res) => {
       });
     }
 
-    const order = await createOrderFromItems(userId, orderItems, address_id);
+    const order = await createOrderFromItems(userId, orderItems, address_id, payment_method);
 
     res.status(201).json({
       success: true,
@@ -298,12 +310,17 @@ export const getOrdersByUserId = async (req, res) => {
     } = req.query;
     const offset = (page - 1) * limit;
 
-    const { Order, OrderItem, Product, ProductImage } = db;
+    const { Order, OrderItem, Product, ProductImage, Payment } = db;
     const where = { user_id: userId };
 
     const orders = await Order.findAll({
       where,
       include: [
+        {
+          model: Payment,
+          as: "payment",
+          attributes: ["id", "method", "status", "paid_at"],
+        },
         {
           model: OrderItem,
           as: "items",

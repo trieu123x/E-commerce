@@ -14,7 +14,7 @@ export default (sequelize) => {
         allowNull: false,
       },
       method: {
-        type: DataTypes.ENUM("COD", "MOMO", "VNPAY"),
+        type: DataTypes.ENUM("COD", "MOMO", "VNPAY", "STRIPE"),
         allowNull: false,
       },
       status: {

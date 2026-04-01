@@ -13,6 +13,13 @@ import { authMiddleware } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
+// CRITICAL: Webhook route MUST be defined BEFORE JSON middleware
+// so express.raw() can capture the raw body for signature verification
+router.post('/stripe/webhook', express.raw({type: 'application/json'}), stripeWebhook);
+
+// Apply JSON parser to all OTHER routes
+router.use(express.json());
+
 // API tạo thanh toán MoMo (cần login)
 router.post('/momo/create', authMiddleware, createMomoPayment);
 
@@ -29,6 +36,5 @@ router.get('/vnpay/ipn', vnpayIPN);
 
 // Stripe routes
 router.post('/stripe/create', authMiddleware, createStripePayment);
-router.post('/stripe/webhook', stripeWebhook);
 
 export default router;

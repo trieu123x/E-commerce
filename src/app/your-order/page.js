@@ -97,17 +97,24 @@ export default function OrdersPage() {
                     {Number(order.total_amount).toLocaleString()} đ
                   </p>
 
-                  <span
-                    className={`text-xs px-3 py-1 rounded-full font-medium ${
-                      order.status === "COMPLETED"
-                        ? "bg-green-100 text-green-600"
-                        : order.status === "PENDING"
-                        ? "bg-yellow-100 text-yellow-600"
-                        : "bg-red-100 text-red-600"
-                    }`}
-                  >
-                    {order.status}
-                  </span>
+                  <div className="flex gap-2 justify-end mt-1">
+                    <span
+                      className={`text-xs px-3 py-1 rounded-full font-medium ${
+                        order.status === "COMPLETED"
+                          ? "bg-green-100 text-green-600"
+                          : order.status === "PENDING"
+                          ? "bg-yellow-100 text-yellow-600"
+                          : "bg-red-100 text-red-600"
+                      }`}
+                    >
+                      {order.status}
+                    </span>
+                    {order.payment?.method && (
+                      <span className="text-xs px-2 py-1 rounded-full font-medium bg-blue-100 text-blue-600">
+                        {order.payment.method}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
 

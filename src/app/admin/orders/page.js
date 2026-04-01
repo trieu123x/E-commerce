@@ -11,7 +11,7 @@ export default function OrdersPage() {
   const [limit] = useState(10);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [filter, setFilter] = useState("ALL");
-  console.log(orders)
+  
   useEffect(() => {
     fetchOrders();
   }, [page, filter]);
@@ -128,9 +128,16 @@ export default function OrdersPage() {
                   ${parseFloat(order.total_amount).toFixed(2)}
                 </td>
                 <td className="px-6 py-3">
-                  <span className={`px-2 py-1 rounded text-sm font-semibold ${getStatusColor(order.status)}`}>
-                    {getStatusLabel(order.status)}
-                  </span>
+                  <div className="flex gap-2 items-center">
+                    <span className={`px-2 py-1 rounded text-sm font-semibold ${getStatusColor(order.status)}`}>
+                      {getStatusLabel(order.status)}
+                    </span>
+                    { order.payment?.method && (
+                      <span className="text-xs px-2 py-1 rounded bg-blue-100 text-blue-600 font-medium">
+                        {order.payment.method}
+                      </span>
+                    )}
+                  </div>
                 </td>
                 <td className="px-6 py-3 text-sm">
                   {new Date(order.created_at).toLocaleDateString("vi-VN")}

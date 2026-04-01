@@ -14,6 +14,7 @@ export const createMomoPayment = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
+    // Payment record already created during order creation
     const momoRes = await createPayment(order, redirectUrl);
 
     return res.json({
@@ -47,8 +48,18 @@ export const momoIPN = async (req, res) => {
 
     if (resultCode == 0) {
       await orderService.completeOrder(actualOrderId);
+      // Update Payment status to COMPLETED
+      await db.Payment.update(
+        { status: "COMPLETED", paid_at: new Date() },
+        { where: { order_id: actualOrderId, method: "MOMO" } }
+      );
     } else {
       await orderService.cancelOrder(actualOrderId);
+      // Update Payment status to FAILED
+      await db.Payment.update(
+        { status: "FAILED" },
+        { where: { order_id: actualOrderId, method: "MOMO" } }
+      );
     }
 
     return res.status(200).json({ message: "ok" });
@@ -67,6 +78,7 @@ export const createVnpayPayment = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
+    // Payment record already created during order creation
     const ipAddr =
       req.headers["x-forwarded-for"] ||
       req.connection.remoteAddress ||
@@ -98,10 +110,18 @@ export const vnpayReturn = async (req, res) => {
 
   if (isValid && vnp_Params["vnp_ResponseCode"] === "00") {
     await orderService.completeOrder(orderId);
+    await db.Payment.update(
+          { status: "COMPLETED", paid_at: new Date() },
+          { where: { order_id: orderId, method: "VNPAY" } }
+        );
     return res.redirect(`http://localhost:3000/completed?orderId=${orderId}`);
   } else {
     // Nếu thanh toán thất bại hoặc khách hủy
     await orderService.cancelOrder(orderId);
+    await db.Payment.update(
+      { status: "FAILED" },
+      { where: { order_id: orderId, method: "VNPAY" } }
+    );
     return res.redirect(`http://localhost:3000/fail?orderId=${orderId}`);
   }
 };
@@ -118,8 +138,18 @@ export const vnpayIPN = async (req, res) => {
 
       if (responseCode === "00") {
         await orderService.completeOrder(orderId);
+        // Update Payment status to COMPLETED
+        await db.Payment.update(
+          { status: "COMPLETED", paid_at: new Date() },
+          { where: { order_id: orderId, method: "VNPAY" } }
+        );
       } else {
         await orderService.cancelOrder(orderId);
+        // Update Payment status to FAILED
+        await db.Payment.update(
+          { status: "FAILED" },
+          { where: { order_id: orderId, method: "VNPAY" } }
+        );
       }
 
       console.log(responseCode, orderId);
@@ -147,10 +177,12 @@ export const createStripePayment = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
+    // Payment record already created during order creation
     const session = await stripeService.createCheckoutSession(order);
     return res.json({ payUrl: session.url });
   } catch (err) {
     console.error("Stripe error:", err.message);
+    console.error("Stripe error details:", err);
     return res.status(500).json({ 
       success: false, 
       message: err.message || "Lỗi khi tạo phiên thanh toán Stripe",
@@ -160,35 +192,84 @@ export const createStripePayment = async (req, res) => {
 };
 
 export const stripeWebhook = async (req, res) => {
+
+  
   const sig = req.headers["stripe-signature"];
   let event;
 
   try {
+    if (!sig) {
+      return res.status(400).send('Missing stripe-signature header');
+    }
+    
+    // When express.raw() is used, req.body is a Buffer
+    const rawBody = typeof req.body === 'string' ? req.body : req.body.toString('utf8');
+    
+   
+    
     // Stripe webhooks require the RAW body to verify the signature
-    event = stripeService.verifyWebhook(req.rawBody, sig);
+    event = stripeService.verifyWebhook(rawBody, sig);
   } catch (err) {
+  
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
   // Handle the event
   switch (event.type) {
     case "checkout.session.completed":
+      console.log(`[Stripe Webhook] Event type: checkout.session.completed`);
       const session = event.data.object;
-      const orderId = session.metadata.orderId;
-      console.log(`Stripe: Payment successful for Order ${orderId}`);
-      await orderService.completeOrder(orderId);
+      console.log(`[Stripe Webhook] Session data:`, session);
+      const orderId = session.metadata?.orderId;
+      console.log(`[Stripe Webhook] Order ID from metadata: ${orderId}`);
+      if (!orderId) {
+        console.error(`[Stripe Webhook] ERROR: No orderId in metadata!`);
+        break;
+      }
+      console.log(`[Stripe Webhook] Payment successful for Order ${orderId}`);
+      try {
+        await orderService.completeOrder(orderId);
+        console.log(`[Stripe Webhook] Order ${orderId} status updated to COMPLETED`);
+        
+        // Update Payment status to COMPLETED
+        await db.Payment.update(
+          { status: "COMPLETED", paid_at: new Date() },
+          { where: { order_id: orderId, method: "STRIPE" } }
+        );
+        console.log(`[Stripe Webhook] Payment ${orderId} status updated to COMPLETED`);
+      } catch (error) {
+        console.error(`[Stripe Webhook] Failed to complete order ${orderId}:`, error);
+      }
       break;
 
     case "checkout.session.expired":
+      console.log(`[Stripe Webhook] Event type: checkout.session.expired`);
       const expiredSession = event.data.object;
-      const expiredOrderId = expiredSession.metadata.orderId;
-      console.log(`Stripe: Session expired for Order ${expiredOrderId}`);
-      await orderService.cancelOrder(expiredOrderId);
+      const expiredOrderId = expiredSession.metadata?.orderId;
+      console.log(`[Stripe Webhook] Session expired for Order ${expiredOrderId}`);
+      if (!expiredOrderId) {
+        console.error(`[Stripe Webhook] ERROR: No orderId in metadata!`);
+        break;
+      }
+      try {
+        await orderService.cancelOrder(expiredOrderId);
+        console.log(`[Stripe Webhook] Order ${expiredOrderId} status updated to CANCELLED`);
+        
+        // Update Payment status to FAILED
+        await db.Payment.update(
+          { status: "FAILED" },
+          { where: { order_id: expiredOrderId, method: "STRIPE" } }
+        );
+        console.log(`[Stripe Webhook] Payment ${expiredOrderId} status updated to FAILED`);
+      } catch (error) {
+        console.error(`[Stripe Webhook] Failed to cancel order ${expiredOrderId}:`, error);
+      }
       break;
 
     default:
-      console.log(`Stripe: Unhandled event type ${event.type}`);
+      console.log(`[Stripe Webhook] Unhandled event type: ${event.type}`);
   }
 
   res.json({ received: true });
 };
+

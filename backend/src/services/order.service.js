@@ -11,7 +11,7 @@ class OrderService {
   async completeOrder(orderId) {
     try {
       await db.Order.update(
-        { status: "completed" },
+        { status: "COMPLETED" },
         { where: { id: orderId } }
       );
       console.log(`Order ${orderId} marked as COMPLETED`);
@@ -39,13 +39,13 @@ class OrderService {
         throw new Error("Order not found");
       }
 
-      if (order.status === "cancelled") {
+      if (order.status === "CANCELLED") {
         await transaction.rollback();
         return { success: true, message: "Order already cancelled" };
       }
 
       // 2. Update status to cancelled
-      await order.update({ status: "cancelled" }, { transaction });
+      await order.update({ status: "CANCELLED" }, { transaction });
 
       // 3. Restore stock for each item
       if (order.items && order.items.length > 0) {
