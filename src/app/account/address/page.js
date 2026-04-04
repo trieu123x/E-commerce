@@ -8,12 +8,21 @@ import { Pencil, Trash2, Star } from "lucide-react";
 export default function AddressPage() {
   const [form, setForm] = useState({
     address: "",
+    province: "",
     district: "",
     ward: "",
     is_default: false,
   });
   const [editingAddress, setEditingAddress] = useState(null);
   const { address, setAddress } = useAuth();
+  const [provincesData, setProvincesData] = useState([]);
+
+  useEffect(() => {
+    fetch("https://provinces.open-api.vn/api/v1/?depth=3")
+      .then((res) => res.json())
+      .then((data) => setProvincesData(data))
+      .catch((err) => console.error("Failed to load provinces:", err));
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -26,11 +35,17 @@ export default function AddressPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await axios.post("/address", form);
+    const payload = { 
+      ...form, 
+      address: form.province ? `${form.address}, ${form.province}` : form.address 
+    };
+
+    const res = await axios.post("/address", payload);
 
     if (res.data.success) {
       setForm({
         address: "",
+        province: "",
         district: "",
         ward: "",
         is_default: false,
@@ -71,14 +86,21 @@ export default function AddressPage() {
     e.preventDefault();
 
     try {
+      let finalAddress = editingAddress.address || "";
+      if (editingAddress.province && !finalAddress.endsWith(`, ${editingAddress.province}`)) {
+        finalAddress = `${finalAddress}, ${editingAddress.province}`;
+      }
+
+      const payload = { ...editingAddress, address: finalAddress };
+
       const res = await axios.put(
         `/address/${editingAddress.id}`,
-        editingAddress,
+        payload,
       );
 
       if (res.data.success) {
         const updatedList = address.map((item) =>
-          item.id === editingAddress.id ? editingAddress : item,
+          item.id === editingAddress.id ? (res.data.data || payload) : item,
         );
 
         setAddress(updatedList);
@@ -88,7 +110,17 @@ export default function AddressPage() {
       console.error("Edit failed:", error);
     }
   };
-  console.log(address);
+
+  const editSelectedProvince = provincesData.find((p) => p.name === editingAddress?.province);
+  const editAvailableDistricts = editSelectedProvince ? editSelectedProvince.districts : [];
+  const editSelectedDistrict = editAvailableDistricts.find((d) => d.name === editingAddress?.district);
+  const editAvailableWards = editSelectedDistrict ? editSelectedDistrict.wards : [];
+
+  const formSelectedProvince = provincesData.find((p) => p.name === form.province);
+  const formAvailableDistricts = formSelectedProvince ? formSelectedProvince.districts : [];
+  const formSelectedDistrict = formAvailableDistricts.find((d) => d.name === form.district);
+  const formAvailableWards = formSelectedDistrict ? formSelectedDistrict.wards : [];
+
   return (
     <div className="min-h-screen py-10">
       {editingAddress && (
@@ -97,40 +129,77 @@ export default function AddressPage() {
             <h2 className="text-lg font-semibold mb-6">Edit Address</h2>
 
             <form onSubmit={handleEditFormSubmit} className="space-y-4">
-              <input
-                type="text"
-                name="address"
-                value={editingAddress.address}
+              <select
+                name="province"
+                value={editingAddress.province || ""}
                 onChange={(e) =>
                   setEditingAddress({
                     ...editingAddress,
-                    address: e.target.value,
+                    province: e.target.value,
+                    district: "",
+                    ward: "",
                   })
                 }
                 className="w-full p-3 bg-gray-100 rounded-md"
-              />
+              >
+                <option value="">Select Province</option>
+                {provincesData.map((p) => (
+                  <option key={p.code} value={p.name}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
 
-              <input
-                type="text"
+              <select
                 name="district"
-                value={editingAddress.district}
+                value={editingAddress.district || ""}
                 onChange={(e) =>
                   setEditingAddress({
                     ...editingAddress,
                     district: e.target.value,
+                    ward: "",
                   })
                 }
-                className="w-full p-3 bg-gray-100 rounded-md"
-              />
+                className="w-full p-3 bg-gray-100 rounded-md disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+                disabled={!editingAddress.province}
+              >
+                <option value="">Select District</option>
+                {editAvailableDistricts.map((d) => (
+                  <option key={d.code} value={d.name}>
+                    {d.name}
+                  </option>
+                ))}
+              </select>
 
-              <input
-                type="text"
+              <select
                 name="ward"
-                value={editingAddress.ward}
+                value={editingAddress.ward || ""}
                 onChange={(e) =>
                   setEditingAddress({
                     ...editingAddress,
                     ward: e.target.value,
+                  })
+                }
+                className="w-full p-3 bg-gray-100 rounded-md disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+                disabled={!editingAddress.district}
+              >
+                <option value="">Select Ward</option>
+                {editAvailableWards.map((w) => (
+                  <option key={w.code} value={w.name}>
+                    {w.name}
+                  </option>
+                ))}
+              </select>
+
+              <input
+                type="text"
+                name="address"
+                placeholder="Chi tiết số nhà, tên đường..."
+                value={editingAddress.address || ""}
+                onChange={(e) =>
+                  setEditingAddress({
+                    ...editingAddress,
+                    address: e.target.value,
                   })
                 }
                 className="w-full p-3 bg-gray-100 rounded-md"
@@ -164,31 +233,58 @@ export default function AddressPage() {
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            <select
+              name="province"
+              value={form.province}
+              onChange={(e) => setForm({ ...form, province: e.target.value, district: "", ward: "" })}
+              className="w-full p-3 bg-gray-100 rounded-md"
+              required
+            >
+              <option value="">Select Province</option>
+              {provincesData.map((p) => (
+                <option key={p.code} value={p.name}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+
+            <select
+              name="district"
+              value={form.district}
+              onChange={(e) => setForm({ ...form, district: e.target.value, ward: "" })}
+              className="w-full p-3 bg-gray-100 rounded-md disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+              required
+              disabled={!form.province}
+            >
+              <option value="">Select District</option>
+              {formAvailableDistricts.map((d) => (
+                <option key={d.code} value={d.name}>
+                  {d.name}
+                </option>
+              ))}
+            </select>
+
+            <select
+              name="ward"
+              value={form.ward}
+              onChange={handleChange}
+              className="w-full p-3 bg-gray-100 rounded-md disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+              required
+              disabled={!form.district}
+            >
+              <option value="">Select Ward</option>
+              {formAvailableWards.map((w) => (
+                <option key={w.code} value={w.name}>
+                  {w.name}
+                </option>
+              ))}
+            </select>
+
             <input
               type="text"
               name="address"
-              placeholder="Street Address"
+              placeholder="Chi tiết số nhà, tên đường..."
               value={form.address}
-              onChange={handleChange}
-              className="w-full p-3 bg-gray-100 rounded-md"
-              required
-            />
-
-            <input
-              type="text"
-              name="district"
-              placeholder="District"
-              value={form.district}
-              onChange={handleChange}
-              className="w-full p-3 bg-gray-100 rounded-md"
-              required
-            />
-
-            <input
-              type="text"
-              name="ward"
-              placeholder="Ward"
-              value={form.ward}
               onChange={handleChange}
               className="w-full p-3 bg-gray-100 rounded-md"
               required
@@ -243,7 +339,7 @@ export default function AddressPage() {
   {/* Address Info */}
   <p className="font-semibold text-gray-800">{item.address}</p>
   <p className="text-sm text-gray-500 mt-1">
-    {item.ward}, {item.district}
+    {item.ward}, {item.district}{item.province ? `, ${item.province}` : ''}
   </p>
 
   {/* Action Buttons */}

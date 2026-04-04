@@ -154,7 +154,7 @@ export default function MomoOrderPage() {
             Sau khi đặt hàng, bạn sẽ được chuyển hướng tới trang thanh toán an toàn của MoMo để quét mã QR và hoàn tất.
           </p>
           <div className="flex justify-center">
-            <img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" alt="MoMo Logo" className="h-12 object-contain" />
+            <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-MoMo-Square.png" alt="MoMo Logo" className="h-12 object-contain" />
           </div>
         </div>
       </div>
