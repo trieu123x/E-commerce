@@ -99,3 +99,33 @@ export const changePassword = async (req, res) => {
     res.status(500).json({ message: "Lỗi server" });
   }
 };
+
+export const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ message: "Vui lòng cung cấp email" });
+
+  try {
+    const result = await authService.forgotPassword(email);
+    res.json(result);
+  } catch (error) {
+    if (error.message === "Email không tồn tại trong hệ thống") {
+      return res.status(404).json({ message: error.message });
+    }
+    res.status(500).json({ message: "Lỗi server" });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  const { token, newPassword } = req.body;
+  if (!token || !newPassword) {
+    return res.status(400).json({ message: "Thiếu thông tin token hoặc mật khẩu mới" });
+  }
+
+  try {
+    const result = await authService.resetPassword(token, newPassword);
+    res.json(result);
+  } catch (error) {
+    const status = (error.message === "Link đã hết hạn" || error.message === "Link không hợp lệ hoặc đã được sử dụng") ? 400 : 500;
+    res.status(status).json({ message: error.message });
+  }
+};

@@ -1,0 +1,1654 @@
+﻿
+> backend@1.0.0 test
+> node --experimental-vm-modules node_modules/jest/bin/jest.js --verbose
+
+  console.log
+    VNPay Return RAW PARAMS: { vnp_ResponseCode: '00', vnp_TxnRef: '1' }
+
+      at Module.log (src/controllers/payment.controller.js:106:11)
+
+  console.log
+    isValid: true
+
+      at Module.log (src/controllers/payment.controller.js:107:11)
+
+  console.log
+    VNPay Return RAW PARAMS: { vnp_ResponseCode: '24', vnp_TxnRef: '1' }
+
+      at Module.log (src/controllers/payment.controller.js:106:11)
+
+  console.log
+    isValid: true
+
+      at Module.log (src/controllers/payment.controller.js:107:11)
+
+  console.error
+    Error creating review: Error: Bß║ín chß╗ë c├│ thß╗â ─æ├ính gi├í sß║ún phß║⌐m ─æ├ú mua
+        at ReviewService.createReview (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\services\review.service.js:42:13)
+        at Module.createReview (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\review.controller.js:6:20)
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\unit\review.controller.test.js:26:7)
+
+    [0m [90m 14 |[39m     })[33m;[39m
+     [90m 15 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 16 |[39m     console[33m.[39merror([32m"Error creating review:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 17 |[39m     [36mconst[39m status [33m=[39m error[33m.[39mmessage[33m.[39mincludes([32m"─æ├ú mua"[39m) [33m?[39m [35m403[39m [33m:[39m (error[33m.[39mmessage[33m.[39mincludes([32m"─æ├ú ─æ├ính gi├í"[39m) [33m?[39m [35m400[39m [33m:[39m [35m500[39m)[33m;[39m
+     [90m 18 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({
+     [90m 19 |[39m       success[33m:[39m [36mfalse[39m[33m,[39m[0m
+
+      at Module.error (src/controllers/review.controller.js:16:13)
+      at Object.<anonymous> (tests/unit/review.controller.test.js:26:7)
+
+  console.log
+    RAW PARAMS: { vnp_ResponseCode: '00', vnp_TxnRef: '1' }
+
+      at Module.log (src/controllers/payment.controller.js:133:13)
+
+  console.log
+    isValid: true
+
+      at Module.log (src/controllers/payment.controller.js:134:13)
+
+  console.log
+    00 1
+
+      at Module.log (src/controllers/payment.controller.js:155:15)
+
+  console.error
+    Error creating category: Error: DB Error
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\unit\category.controller.test.js:70:49)
+        at Promise.finally.completed (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+        at _callCircusTest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+        at _runTest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+        at _runTestsForDescribeBlock (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+        at _runTestsForDescribeBlock (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at _runTestsForDescribeBlock (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at run (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+        at runAndTransformResultsToJestFormat (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+        at jestAdapter (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\runner.js:101:19)
+        at runTestInternal (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+        at runTest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+        at Object.worker (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+
+    [0m [90m 12 |[39m     })[33m;[39m
+     [90m 13 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 14 |[39m     console[33m.[39merror([32m"Error creating category:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 15 |[39m     [36mconst[39m status [33m=[39m error[33m.[39mmessage [33m===[39m [32m"DB Error"[39m [33m||[39m error[33m.[39mmessage [33m===[39m [32m"Internal server error"[39m [33m?[39m [35m500[39m [33m:[39m [35m400[39m[33m;[39m
+     [90m 16 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({
+     [90m 17 |[39m       success[33m:[39m [36mfalse[39m[33m,[39m[0m
+
+      at Module.error (src/controllers/category.controller.js:14:13)
+      at Object.<anonymous> (tests/unit/category.controller.test.js:72:7)
+
+  console.log
+    [Stripe] Creating checkout session for order 1...
+
+      at Module.log (src/controllers/payment.controller.js:173:13)
+
+  console.log
+    [Stripe Webhook] Event type: checkout.session.completed
+
+      at Module.log (src/controllers/payment.controller.js:220:15)
+
+  console.error
+    Error creating review: Error: Bß║ín ─æ├ú ─æ├ính gi├í sß║ún phß║⌐m n├áy rß╗ôi
+        at ReviewService.createReview (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\services\review.service.js:50:13)
+        at Module.createReview (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\review.controller.js:6:20)
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\unit\review.controller.test.js:34:7)
+
+    [0m [90m 14 |[39m     })[33m;[39m
+     [90m 15 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 16 |[39m     console[33m.[39merror([32m"Error creating review:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 17 |[39m     [36mconst[39m status [33m=[39m error[33m.[39mmessage[33m.[39mincludes([32m"─æ├ú mua"[39m) [33m?[39m [35m403[39m [33m:[39m (error[33m.[39mmessage[33m.[39mincludes([32m"─æ├ú ─æ├ính gi├í"[39m) [33m?[39m [35m400[39m [33m:[39m [35m500[39m)[33m;[39m
+     [90m 18 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({
+     [90m 19 |[39m       success[33m:[39m [36mfalse[39m[33m,[39m[0m
+
+      at Module.error (src/controllers/review.controller.js:16:13)
+      at Object.<anonymous> (tests/unit/review.controller.test.js:34:7)
+
+  console.log
+    [Stripe Webhook] Session data: { metadata: { orderId: '1' } }
+
+      at Module.log (src/controllers/payment.controller.js:222:15)
+
+  console.log
+    [Stripe Webhook] Order ID from metadata: 1
+
+      at Module.log (src/controllers/payment.controller.js:224:15)
+
+  console.log
+    [Stripe Webhook] Payment successful for Order 1
+
+      at Module.log (src/controllers/payment.controller.js:229:15)
+
+  console.log
+    [Stripe Webhook] Order 1 status updated to COMPLETED
+
+      at Module.log (src/controllers/payment.controller.js:232:17)
+
+  console.log
+    [Stripe Webhook] Payment 1 status updated to COMPLETED
+
+      at Module.log (src/controllers/payment.controller.js:239:17)
+
+  console.log
+    [Stripe Webhook] Event type: checkout.session.expired
+
+      at Module.log (src/controllers/payment.controller.js:246:15)
+
+npm : (node:2772) 
+ExperimentalWarning: 
+VM Modules is an 
+experimental feature 
+and might change at 
+any time
+At line:1 char:1
++ npm test > 
+test_results_v12.txt 
+2>&1
++ ~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
+    + CategoryInfo    
+          : 
+NotSpecified: ((    
+node:2772) Exp...nge  
+   at any 
+time:String) [    ], 
+RemoteException
+    + 
+FullyQualifiedError   
+ Id : 
+NativeCommandErr    or
+ 
+(Use `node 
+--trace-warnings ...` 
+to show where the 
+warning was created)
+  console.log
+    [Stripe Webhook] Session expired for Order 1
+
+      at Module.log (src/controllers/payment.controller.js:249:15)
+
+PASS tests/unit/review
+.controller.test.js
+  Review Controller 
+Unit Tests
+    createReview
+      ΓêÜ should 
+return 403 if user 
+has not purchased 
+(157 ms)
+      ΓêÜ should 
+return 400 if already 
+reviewed (14 ms)
+      ΓêÜ should 
+create review (3 ms)
+
+  console.log
+    [Stripe Webhook] Order 1 status updated to CANCELLED
+
+      at Module.log (src/controllers/payment.controller.js:256:17)
+
+  console.log
+    [Stripe Webhook] Payment 1 status updated to FAILED
+
+      at Module.log (src/controllers/payment.controller.js:263:17)
+
+(node:20128) 
+ExperimentalWarning: 
+VM Modules is an 
+experimental feature 
+and might change at 
+any time
+(Use `node 
+--trace-warnings ...` 
+to show where the 
+warning was created)
+PASS tests/unit/paymen
+t.controller.test.js
+  Payment Controller 
+Unit Tests
+    MoMo Payments
+      ΓêÜ should 
+create MoMo payment 
+and return payUrl (14 
+ms)
+      ΓêÜ should 
+complete order on 
+successful MoMo 
+return (4 ms)
+      ΓêÜ should 
+cancel order on 
+failed MoMo return (3 
+ms)
+    VNPay Payments
+      ΓêÜ should 
+create VNPay payment 
+and return payUrl (3 
+ms)
+      ΓêÜ should 
+complete order on 
+successful VNPay 
+return (159 ms)
+      ΓêÜ should 
+cancel order on 
+failed VNPay return 
+(28 ms)
+      ΓêÜ should 
+handle VNPay IPN 
+correctly (12 ms)
+    Stripe Payments
+      ΓêÜ should 
+create Stripe session 
+and return payUrl (5 
+ms)
+      ΓêÜ should 
+handle Stripe Webhook 
+checkout.session.compl
+eted (17 ms)
+      ΓêÜ should 
+handle Stripe Webhook 
+checkout.session.expir
+ed (13 ms)
+
+  console.error
+    Get products error: Error: DB Failed
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\unit\products.controller.test.js:86:49)
+        at Promise.finally.completed (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+        at _callCircusTest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+        at _runTest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+        at _runTestsForDescribeBlock (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+        at _runTestsForDescribeBlock (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at _runTestsForDescribeBlock (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at run (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+        at runAndTransformResultsToJestFormat (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+        at jestAdapter (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\runner.js:101:19)
+        at runTestInternal (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+        at runTest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+        at Object.worker (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+
+    [0m [90m  9 |[39m     })[33m;[39m
+     [90m 10 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 11 |[39m     console[33m.[39merror([32m"Get products error:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 12 |[39m     res[33m.[39mstatus([35m500[39m)[33m.[39mjson({
+     [90m 13 |[39m       success[33m:[39m [36mfalse[39m[33m,[39m
+     [90m 14 |[39m       message[33m:[39m [32m"Lß╗ùi server"[39m[33m,[39m[0m
+
+      at Module.error (src/controllers/products.controller.js:11:13)
+      at Object.<anonymous> (tests/unit/products.controller.test.js:88:7)
+
+  console.error
+    Error fetching category by ID: Error: Category not found
+        at CategoryService.getCategoryById (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\services\category.service.js:28:26)
+        at Module.getCategoryById (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\category.controller.js:42:22)
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\unit\category.controller.test.js:102:7)
+
+    [0m [90m 46 |[39m     })[33m;[39m
+     [90m 47 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 48 |[39m     console[33m.[39merror([32m"Error fetching category by ID:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 49 |[39m     [36mconst[39m status [33m=[39m error[33m.[39mmessage [33m===[39m [32m"Category not found"[39m [33m?[39m [35m404[39m [33m:[39m [35m500[39m[33m;[39m
+     [90m 50 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({
+     [90m 51 |[39m       success[33m:[39m [36mfalse[39m[33m,[39m[0m
+
+      at Module.error (src/controllers/category.controller.js:48:13)
+      at Object.<anonymous> (tests/unit/category.controller.test.js:102:7)
+
+  console.error
+    Error fetching product by ID: Error: Sß║ún phß║⌐m kh├┤ng tß╗ôn tß║íi
+        at ProductService.getProductById (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\services\product.service.js:121:13)
+        at Module.getProductById (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\products.controller.js:23:21)
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\unit\products.controller.test.js:104:7)
+
+    [0m [90m 27 |[39m     })[33m;[39m
+     [90m 28 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 29 |[39m     console[33m.[39merror([32m"Error fetching product by ID:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 30 |[39m     [36mif[39m (error[33m.[39mmessage [33m===[39m [32m"Sß║ún phß║⌐m kh├┤ng tß╗ôn tß║íi"[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m404[39m)[33m.[39mjson({
+     [90m 32 |[39m         success[33m:[39m [36mfalse[39m[33m,[39m[0m
+
+      at Module.error (src/controllers/products.controller.js:29:13)
+      at Object.<anonymous> (tests/unit/products.controller.test.js:104:7)
+
+  console.error
+    Delete category error: Error: Category not found
+        at CategoryService.deleteCategory (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\services\category.service.js:46:28)
+        at Module.deleteCategory (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\category.controller.js:80:27)
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\unit\category.controller.test.js:117:7)
+
+    [0m [90m 87 |[39m     })[33m;[39m
+     [90m 88 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 89 |[39m     console[33m.[39merror([32m"Delete category error:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 90 |[39m     [36mif[39m (error[33m.[39mmessage[33m.[39mstartsWith([32m"CATEGORY_HAS_PRODUCTS:"[39m)) {
+     [90m 91 |[39m       [36mconst[39m count [33m=[39m error[33m.[39mmessage[33m.[39msplit([32m":"[39m)[[35m1[39m][33m;[39m
+     [90m 92 |[39m       [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({[0m
+
+      at Module.error (src/controllers/category.controller.js:89:13)
+      at Object.<anonymous> (tests/unit/category.controller.test.js:117:7)
+
+(node:8124) 
+ExperimentalWarning: 
+VM Modules is an 
+experimental feature 
+and might change at 
+any time
+(Use `node 
+--trace-warnings ...` 
+to show where the 
+warning was created)
+PASS tests/unit/produc
+ts.controller.test.js
+  Products Controller 
+Unit Tests
+    getAllProducts
+      ΓêÜ should 
+fetch products with 
+default pagination 
+and return 200 (32 ms)
+      ΓêÜ should 
+handle internal 
+errors (168 ms)
+    getProductById
+      ΓêÜ should 
+return 404 if product 
+not found (20 ms)
+      ΓêÜ should 
+return 200 with 
+formatted product if 
+found (3 ms)
+
+  console.error
+    Delete category error: Error: Kh├┤ng thß╗â x├│a danh mß╗Ñc c├│ chß╗⌐a danh mß╗Ñc con
+        at CategoryService.deleteCategory (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\services\category.service.js:54:15)
+        at Module.deleteCategory (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\category.controller.js:80:27)
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\unit\category.controller.test.js:128:7)
+
+    [0m [90m 87 |[39m     })[33m;[39m
+     [90m 88 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 89 |[39m     console[33m.[39merror([32m"Delete category error:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 90 |[39m     [36mif[39m (error[33m.[39mmessage[33m.[39mstartsWith([32m"CATEGORY_HAS_PRODUCTS:"[39m)) {
+     [90m 91 |[39m       [36mconst[39m count [33m=[39m error[33m.[39mmessage[33m.[39msplit([32m":"[39m)[[35m1[39m][33m;[39m
+     [90m 92 |[39m       [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({[0m
+
+      at Module.error (src/controllers/category.controller.js:89:13)
+      at Object.<anonymous> (tests/unit/category.controller.test.js:128:7)
+
+  console.error
+    Delete category error: Error: CATEGORY_HAS_PRODUCTS:5
+        at CategoryService.deleteCategory (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\services\category.service.js:65:17)
+        at Module.deleteCategory (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\category.controller.js:80:27)
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\unit\category.controller.test.js:144:7)
+
+    [0m [90m 87 |[39m     })[33m;[39m
+     [90m 88 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 89 |[39m     console[33m.[39merror([32m"Delete category error:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 90 |[39m     [36mif[39m (error[33m.[39mmessage[33m.[39mstartsWith([32m"CATEGORY_HAS_PRODUCTS:"[39m)) {
+     [90m 91 |[39m       [36mconst[39m count [33m=[39m error[33m.[39mmessage[33m.[39msplit([32m":"[39m)[[35m1[39m][33m;[39m
+     [90m 92 |[39m       [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({[0m
+
+      at Module.error (src/controllers/category.controller.js:89:13)
+      at Object.<anonymous> (tests/unit/category.controller.test.js:144:7)
+
+(node:9844) 
+ExperimentalWarning: 
+VM Modules is an 
+experimental feature 
+and might change at 
+any time
+(Use `node 
+--trace-warnings ...` 
+to show where the 
+warning was created)
+PASS tests/unit/catego
+ry.controller.test.js
+  Category Controller 
+Unit Tests
+    createCategory
+      ΓêÜ should 
+create a category and 
+return 201 (17 ms)
+      ΓêÜ should 
+handle internal 
+errors and return 500 
+(166 ms)
+    getAllCategories
+      ΓêÜ should 
+fetch all categories 
+(4 ms)
+    getCategoryById
+      ΓêÜ should 
+return 404 if not 
+found (37 ms)
+    deleteCategory
+      ΓêÜ should 
+return 404 if 
+category not found 
+(27 ms)
+      ΓêÜ should not 
+delete category if it 
+has children and 
+return 400 (8 ms)
+      ΓêÜ should 
+handle products 
+assigned to category 
+without 
+move_to_category_id 
+(14 ms)
+      ΓêÜ should 
+delete category 
+successfuly when 
+empty (3 ms)
+
+  console.error
+    Error adding to wishlist: Error: Sß║ún phß║⌐m ─æ├ú c├│ trong danh s├ích y├¬u th├¡ch
+        at WishlistService.addToWishlist (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\services\wishlist.service.js:15:13)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at Module.addToWishlist (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\wishlist.controller.js:24:5)
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\unit\wishlist.controller.test.js:25:7)
+
+    [0m [90m 28 |[39m     })[33m;[39m
+     [90m 29 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 30 |[39m     console[33m.[39merror([32m"Error adding to wishlist:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 31 |[39m     [36mif[39m (error[33m.[39mmessage [33m===[39m [32m"Sß║ún phß║⌐m ─æ├ú c├│ trong danh s├ích y├¬u th├¡ch"[39m) {
+     [90m 32 |[39m       [36mreturn[39m res[33m.[39mstatus([35m400[39m)[33m.[39mjson({
+     [90m 33 |[39m         success[33m:[39m [36mfalse[39m[33m,[39m[0m
+
+      at Module.error (src/controllers/wishlist.controller.js:30:13)
+      at Object.<anonymous> (tests/unit/wishlist.controller.test.js:25:7)
+
+  console.error
+    Error: DB Failed
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\unit\users.controller.test.js:35:44)
+        at Promise.finally.completed (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+        at _callCircusTest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at _runTest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+        at _runTestsForDescribeBlock (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+        at _runTestsForDescribeBlock (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at _runTestsForDescribeBlock (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at run (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+        at runAndTransformResultsToJestFormat (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+        at jestAdapter (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\runner.js:101:19)
+        at runTestInternal (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+        at runTest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+        at Object.worker (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+
+    [0m [90m  6 |[39m     res[33m.[39mjson(users)[33m;[39m
+     [90m  7 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m  8 |[39m     console[33m.[39merror(error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m  9 |[39m     res[33m.[39mstatus([35m500[39m)[33m.[39mjson({ message[33m:[39m [32m"Server error"[39m })[33m;[39m
+     [90m 10 |[39m   }
+     [90m 11 |[39m }[33m;[39m[0m
+
+      at Module.error (src/controllers/users.controller.js:8:13)
+      at Object.<anonymous> (tests/unit/users.controller.test.js:36:7)
+
+PASS tests/unit/users.
+controller.test.js
+  Users Controller 
+Unit Tests
+    getAllUsers
+      ΓêÜ should 
+return all users and 
+200 (21 ms)
+      ΓêÜ should 
+handle errors and 
+return 500 (20 ms)
+
+PASS tests/unit/wishli
+st.controller.test.js
+  Wishlist Controller 
+Unit Tests
+    addToWishlist
+      ΓêÜ should 
+return 400 if product 
+already in wishlist 
+(69 ms)
+      ΓêÜ should add 
+to wishlist (2 ms)
+
+  console.error
+    Delete address error: Error: Kh├┤ng thß╗â x├│a ─æß╗ïa chß╗ë mß║╖c ─æß╗ïnh
+        at AddressService.deleteAddress (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\services\address.service.js:81:17)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at Module.deleteAddress (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\address.controller.js:58:5)
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\unit\address.controller.test.js:47:7)
+
+    [0m [90m 59 |[39m     res[33m.[39mjson({ success[33m:[39m [36mtrue[39m })[33m;[39m
+     [90m 60 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 61 |[39m     console[33m.[39merror([32m"Delete address error:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 62 |[39m     [36mconst[39m status [33m=[39m error[33m.[39mmessage[33m.[39mincludes([32m"not found"[39m) [33m?[39m [35m404[39m [33m:[39m (error[33m.[39mmessage[33m.[39mincludes([32m"mß║╖c ─æß╗ïnh"[39m) [33m?[39m [35m400[39m [33m:[39m [35m500[39m)[33m;[39m
+     [90m 63 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m message[33m:[39m error[33m.[39mmessage [33m||[39m [32m"Lß╗ùi server"[39m })[33m;[39m
+     [90m 64 |[39m   }[0m
+
+      at Module.error (src/controllers/address.controller.js:61:13)
+      at Object.<anonymous> (tests/unit/address.controller.test.js:47:7)
+
+PASS tests/unit/addres
+s.controller.test.js
+  Address Controller 
+Unit Tests
+    createAddress
+      ΓêÜ should 
+create an address 
+successfully (19 ms)
+    deleteAddress
+      ΓêÜ should not 
+delete if it is the 
+only default address 
+(63 ms)
+
+  console.error
+    Create sale error: Error: End date must be after start date
+        at SaleService.createSale (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\services\sale.service.js:6:13)
+        at Module.createSale (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\sale.controller.js:5:36)
+        at Object.createSale (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\unit\sale.controller.test.js:25:28)
+        at Promise.finally.completed (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:1557:28)
+        at new Promise (<anonymous>)
+        at callAsyncCircusFn (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:1497:10)
+        at _callCircusTest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:1007:40)
+        at _runTest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:947:3)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:849:7
+        at _runTestsForDescribeBlock (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:862:11)
+        at _runTestsForDescribeBlock (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at _runTestsForDescribeBlock (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:857:11)
+        at run (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:761:3)
+        at runAndTransformResultsToJestFormat (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\jestAdapterInit.js:1918:21)
+        at jestAdapter (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-circus\build\runner.js:101:19)
+        at runTestInternal (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-runner\build\testWorker.js:275:16)
+        at runTest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-runner\build\testWorker.js:343:7)
+        at Object.worker (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-runner\build\testWorker.js:497:12)
+
+    [0m [90m  9 |[39m     })[33m;[39m
+     [90m 10 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 11 |[39m     console[33m.[39merror([32m"Create sale error:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 12 |[39m     [36mconst[39m status [33m=[39m (error[33m.[39mmessage [33m&&[39m error[33m.[39mmessage[33m.[39mincludes([32m"date"[39m)) [33m?[39m [35m400[39m [33m:[39m [35m500[39m[33m;[39m
+     [90m 13 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m message[33m:[39m error[33m.[39mmessage })[33m;[39m
+     [90m 14 |[39m   }[0m
+
+      at Module.error (src/controllers/sale.controller.js:11:13)
+      at Object.<anonymous> (tests/unit/sale.controller.test.js:25:7)
+
+  console.error
+    Add to cart error: Error: Sß║ún phß║⌐m kh├┤ng tß╗ôn tß║íi hoß║╖c kh├┤ng khß║ú dß╗Ñng
+        at CartService.addToCart (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\services\cart.service.js:40:13)
+        at Module.addToCart (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\cart.controller.js:24:22)
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\unit\cart.controller.test.js:64:7)
+
+    [0m [90m 29 |[39m     })[33m;[39m
+     [90m 30 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 31 |[39m     console[33m.[39merror([32m"Add to cart error:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 32 |[39m     [36mif[39m (
+     [90m 33 |[39m       error[33m.[39mmessage [33m===[39m [32m"Sß║ún phß║⌐m kh├┤ng tß╗ôn tß║íi hoß║╖c kh├┤ng khß║ú dß╗Ñng"[39m [33m||[39m
+     [90m 34 |[39m       error[33m.[39mmessage [33m===[39m [32m"Sß╗æ l╞░ß╗úng sß║ún phß║⌐m trong kho kh├┤ng ─æß╗º"[39m[0m
+
+      at Module.error (src/controllers/cart.controller.js:31:13)
+      at Object.<anonymous> (tests/unit/cart.controller.test.js:64:7)
+
+  console.log
+    Order 1 marked as COMPLETED
+
+      at OrderService.log [as completeOrder] (src/services/order.service.js:355:15)
+
+  console.error
+    Add to cart error: Error: Sß╗æ l╞░ß╗úng sß║ún phß║⌐m trong kho kh├┤ng ─æß╗º
+        at CartService.addToCart (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\services\cart.service.js:44:13)
+        at Module.addToCart (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\cart.controller.js:24:22)
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\unit\cart.controller.test.js:71:7)
+
+    [0m [90m 29 |[39m     })[33m;[39m
+     [90m 30 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 31 |[39m     console[33m.[39merror([32m"Add to cart error:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 32 |[39m     [36mif[39m (
+     [90m 33 |[39m       error[33m.[39mmessage [33m===[39m [32m"Sß║ún phß║⌐m kh├┤ng tß╗ôn tß║íi hoß║╖c kh├┤ng khß║ú dß╗Ñng"[39m [33m||[39m
+     [90m 34 |[39m       error[33m.[39mmessage [33m===[39m [32m"Sß╗æ l╞░ß╗úng sß║ún phß║⌐m trong kho kh├┤ng ─æß╗º"[39m[0m
+
+      at Module.error (src/controllers/cart.controller.js:31:13)
+      at Object.<anonymous> (tests/unit/cart.controller.test.js:71:7)
+
+  console.error
+    Add product sale error: Error: Sale not found
+        at SaleService.addProductToSale (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\services\sale.service.js:66:24)
+        at Module.addProductToSale (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\sale.controller.js:83:5)
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\unit\sale.controller.test.js:42:7)
+
+    [0m [90m 87 |[39m     })[33m;[39m
+     [90m 88 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 89 |[39m     console[33m.[39merror([32m"Add product sale error:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 90 |[39m     [36mconst[39m status [33m=[39m (error[33m.[39mmessage [33m&&[39m error[33m.[39mmessage [33m===[39m [32m"Sale not found"[39m) [33m?[39m [35m404[39m [33m:[39m [35m500[39m[33m;[39m
+     [90m 91 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({ success[33m:[39m [36mfalse[39m[33m,[39m message[33m:[39m error[33m.[39mmessage })[33m;[39m
+     [90m 92 |[39m   }[0m
+
+      at Module.error (src/controllers/sale.controller.js:89:13)
+      at Object.<anonymous> (tests/unit/sale.controller.test.js:42:7)
+
+  console.log
+    Restored stock for product undefined: +2
+
+      at OrderService.log [as cancelOrder] (src/services/order.service.js:392:21)
+
+  console.log
+    Restored stock for product undefined: +1
+
+      at OrderService.log [as cancelOrder] (src/services/order.service.js:392:21)
+
+  console.error
+    Error creating order: Error: ─Éß╗ïa chß╗ë giao h├áng kh├┤ng hß╗úp lß╗ç
+        at OrderService.createOrder (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\services\order.service.js:18:15)
+        at Module.createOrder (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\order.controller.js:7:19)
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\unit\order.controller.test.js:35:7)
+
+    [0m [90m 12 |[39m     })[33m;[39m
+     [90m 13 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 14 |[39m     console[33m.[39merror([32m"Error creating order:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 15 |[39m     res[33m.[39mstatus(error[33m.[39mmessage [33m===[39m [32m"─Éß╗ïa chß╗ë giao h├áng kh├┤ng hß╗úp lß╗ç"[39m [33m||[39m error[33m.[39mmessage [33m===[39m [32m"Giß╗Å h├áng trß╗æng"[39m [33m?[39m [35m400[39m [33m:[39m [35m500[39m)[33m.[39mjson({
+     [90m 16 |[39m       success[33m:[39m [36mfalse[39m[33m,[39m
+     [90m 17 |[39m       message[33m:[39m error[33m.[39mmessage [33m||[39m [32m"Lß╗ùi server khi tß║ío ─æ╞ín h├áng"[39m[33m,[39m[0m
+
+      at Module.error (src/controllers/order.controller.js:14:13)
+      at Object.<anonymous> (tests/unit/order.controller.test.js:35:7)
+
+  console.log
+    Order 1 marked as CANCELLED and stock restored
+
+      at OrderService.log [as cancelOrder] (src/services/order.service.js:398:15)
+
+(node:11660) 
+ExperimentalWarning: 
+VM Modules is an 
+experimental feature 
+and might change at 
+any time
+(Use `node 
+--trace-warnings ...` 
+to show where the 
+warning was created)
+PASS tests/unit/sale.c
+ontroller.test.js
+  Sale Controller 
+Unit Tests
+    createSale
+      ΓêÜ should 
+return 400 if start 
+date >= end date (223 
+ms)
+      ΓêÜ should 
+create sale (2 ms)
+    addProductToSale
+      ΓêÜ should 
+return 404 if sale 
+not found (18 ms)
+      ΓêÜ should add 
+products to sale (2 
+ms)
+
+(node:9380) 
+ExperimentalWarning: 
+VM Modules is an 
+experimental feature 
+and might change at 
+any time
+(Use `node 
+--trace-warnings ...` 
+to show where the 
+warning was created)
+  console.error
+    Error creating order: Error: Giß╗Å h├áng trß╗æng
+        at OrderService.createOrder (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\services\order.service.js:24:15)
+        at Module.createOrder (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\order.controller.js:7:19)
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\unit\order.controller.test.js:44:7)
+
+    [0m [90m 12 |[39m     })[33m;[39m
+     [90m 13 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 14 |[39m     console[33m.[39merror([32m"Error creating order:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 15 |[39m     res[33m.[39mstatus(error[33m.[39mmessage [33m===[39m [32m"─Éß╗ïa chß╗ë giao h├áng kh├┤ng hß╗úp lß╗ç"[39m [33m||[39m error[33m.[39mmessage [33m===[39m [32m"Giß╗Å h├áng trß╗æng"[39m [33m?[39m [35m400[39m [33m:[39m [35m500[39m)[33m.[39mjson({
+     [90m 16 |[39m       success[33m:[39m [36mfalse[39m[33m,[39m
+     [90m 17 |[39m       message[33m:[39m error[33m.[39mmessage [33m||[39m [32m"Lß╗ùi server khi tß║ío ─æ╞ín h├áng"[39m[33m,[39m[0m
+
+      at Module.error (src/controllers/order.controller.js:14:13)
+      at Object.<anonymous> (tests/unit/order.controller.test.js:44:7)
+
+(node:25592) 
+ExperimentalWarning: 
+VM Modules is an 
+experimental feature 
+and might change at 
+any time
+(Use `node 
+--trace-warnings ...` 
+to show where the 
+warning was created)
+PASS tests/unit/cart.c
+ontroller.test.js
+  Cart Controller 
+Unit Tests
+    getCart
+      ΓêÜ should 
+return cart with 
+calculated total (18 
+ms)
+    addToCart
+      ΓêÜ should 
+return 404 if product 
+inactive (197 ms)
+      ΓêÜ should 
+return 400 if out of 
+stock (14 ms)
+    removeFromCart
+      ΓêÜ should 
+delete item and 
+return 200 (11 ms)
+
+PASS tests/unit/order.
+service.test.js
+  OrderService Unit 
+Tests
+    completeOrder
+      ΓêÜ should 
+update order status 
+to completed (182 ms)
+    cancelOrder
+      ΓêÜ should 
+update status to 
+cancelled and restore 
+stock (13 ms)
+      ΓêÜ should not 
+restore stock if 
+already cancelled (2 
+ms)
+
+(node:17140) 
+ExperimentalWarning: 
+VM Modules is an 
+experimental feature 
+and might change at 
+any time
+(Use `node 
+--trace-warnings ...` 
+to show where the 
+warning was created)
+PASS tests/unit/order.
+controller.test.js
+  Order Controller 
+Unit Tests
+    createOrder
+      ΓêÜ should 
+rollback and return 
+400 if address 
+invalid (158 ms)
+      ΓêÜ should 
+rollback and return 
+400 if cart empty (10 
+ms)
+    getOrdersByUserId
+      ΓêÜ should 
+fetch paginated 
+orders (12 ms)
+
+(node:22300) 
+ExperimentalWarning: 
+VM Modules is an 
+experimental feature 
+and might change at 
+any time
+(Use `node 
+--trace-warnings ...` 
+to show where the 
+warning was created)
+PASS tests/unit/auth.c
+ontroller.test.js
+  Auth Controller 
+Unit Tests
+    register
+      ΓêÜ should 
+return 400 if missing 
+info (21 ms)
+      ΓêÜ should 
+return 409 if email 
+already exists (4 ms)
+      ΓêÜ should 
+successfully register 
+a new user and return 
+201 (3 ms)
+    login
+      ΓêÜ should 
+return 401 if user 
+not found (3 ms)
+      ΓêÜ should 
+return 403 if user is 
+locked (3 ms)
+      ΓêÜ should 
+return 401 if 
+password does not 
+match (2 ms)
+      ΓêÜ should 
+successfully login 
+and return token (3 
+ms)
+
+  console.log
+    [dotenv@17.2.3] injecting env (18) from .env -- tip: ≡ƒöÉ prevent committing .env to code: https://dotenvx.com/precommit
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+  console.log
+    [dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒùé∩╕Å backup and recover secrets: https://dotenvx.com/ops
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+  console.log
+    [dotenv@17.2.3] injecting env (18) from .env -- tip: ≡ƒæÑ sync secrets across teammates & machines: https://dotenvx.com/ops
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+(node:13072) 
+ExperimentalWarning: 
+VM Modules is an 
+experimental feature 
+and might change at 
+any time
+(Use `node 
+--trace-warnings ...` 
+to show where the 
+warning was created)
+  console.log
+    [dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  suppress all logs with { quiet: true }
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+  console.log
+    [dotenv@17.2.3] injecting env (18) from .env -- tip: ≡ƒöÉ encrypt with Dotenvx: https://dotenvx.com
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+(node:14432) 
+ExperimentalWarning: 
+VM Modules is an 
+experimental feature 
+and might change at 
+any time
+(Use `node 
+--trace-warnings ...` 
+to show where the 
+warning was created)
+  console.log
+    [dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  enable debug logging with { debug: true }
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+  console.log
+    [dotenv@17.2.3] injecting env (18) from .env -- tip: ΓÜÖ∩╕Å  specify custom .env file path with { path: '/custom/path/.env' }
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+  console.error
+    Error fetching product by ID: Error: Sß║ún phß║⌐m kh├┤ng tß╗ôn tß║íi
+        at ProductService.getProductById (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\services\product.service.js:121:13)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at getProductById (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\products.controller.js:23:21)
+
+    [0m [90m 27 |[39m     })[33m;[39m
+     [90m 28 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 29 |[39m     console[33m.[39merror([32m"Error fetching product by ID:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 30 |[39m     [36mif[39m (error[33m.[39mmessage [33m===[39m [32m"Sß║ún phß║⌐m kh├┤ng tß╗ôn tß║íi"[39m) {
+     [90m 31 |[39m       [36mreturn[39m res[33m.[39mstatus([35m404[39m)[33m.[39mjson({
+     [90m 32 |[39m         success[33m:[39m [36mfalse[39m[33m,[39m[0m
+
+      at error (src/controllers/products.controller.js:29:13)
+
+(node:22232) 
+ExperimentalWarning: 
+VM Modules is an 
+experimental feature 
+and might change at 
+any time
+(Use `node 
+--trace-warnings ...` 
+to show where the 
+warning was created)
+  console.log
+    [dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  write to custom object with { processEnv: myObject }
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+  console.log
+    [dotenv@17.2.3] injecting env (18) from .env -- tip: ≡ƒöæ add access controls to secrets: https://dotenvx.com/ops
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+(node:24032) 
+ExperimentalWarning: 
+VM Modules is an 
+experimental feature 
+and might change at 
+any time
+(Use `node 
+--trace-warnings ...` 
+to show where the 
+warning was created)
+PASS tests/integration
+/order.routes.test.js
+  Order Routes 
+Integration Tests
+    GET 
+/api/orders/your-order
+      ΓêÜ should get 
+all orders for user 
+(67 ms)
+    POST /api/orders/
+      ΓêÜ should 
+create an order 
+successfully (37 ms)
+
+  console.error
+    Auth middleware error: Error [JsonWebTokenError]: invalid token
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\integration\products.routes.test.js:56:21)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-mock\build\index.js:305:39
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-mock\build\index.js:312:13)
+        at Object.mockConstructor [as verify] (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-mock\build\index.js:102:19)
+        at verify (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\middlewares\auth.middleware.js:26:29)
+        at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+        at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\route.js:157:13)
+        at Route.dispatch (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\route.js:117:3)
+        at handle (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:435:11)
+        at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:295:15
+        at param (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:600:14)
+        at param (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:610:14)
+        at processParams (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:664:3)
+        at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:291:5)
+        at Function.handle (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:186:3)
+        at router (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:60:12)
+        at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+        at trimPrefix (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:342:13)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:297:9
+        at processParams (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:582:12)
+        at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:291:5)
+        at read (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\body-parser\lib\read.js:42:5)
+        at urlencodedParser (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\body-parser\lib\types\urlencoded.js:57:5)
+        at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+        at trimPrefix (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:342:13)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:297:9
+        at processParams (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:582:12)
+        at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:291:5)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\body-parser\lib\read.js:171:5
+        at AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+        at invokeCallback (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\raw-body\index.js:238:16)
+        at done (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\raw-body\index.js:227:7)
+        at IncomingMessage.onEnd (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\raw-body\index.js:287:7)
+        at IncomingMessage.emit (node:events:524:28)
+        at endReadableNT (node:internal/streams/readable:1698:12)
+        at processTicksAndRejections (node:internal/process/task_queues:82:21)
+
+    [0m [90m 37 |[39m         
+     [90m 38 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 39 |[39m         console[33m.[39merror([32m"Auth middleware error:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 40 |[39m         
+     [90m 41 |[39m         [36mif[39m (error[33m.[39mname [33m===[39m [32m'JsonWebTokenError'[39m) {
+     [90m 42 |[39m             [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ [0m
+
+      at error (src/middlewares/auth.middleware.js:39:17)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at next (node_modules/router/lib/route.js:157:13)
+      at Route.dispatch (node_modules/router/lib/route.js:117:3)
+      at handle (node_modules/router/index.js:435:11)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at node_modules/router/index.js:295:15
+      at param (node_modules/router/index.js:600:14)
+      at param (node_modules/router/index.js:610:14)
+      at processParams (node_modules/router/index.js:664:3)
+      at next (node_modules/router/index.js:291:5)
+      at Function.handle (node_modules/router/index.js:186:3)
+      at router (node_modules/router/index.js:60:12)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at read (node_modules/body-parser/lib/read.js:42:5)
+      at urlencodedParser (node_modules/body-parser/lib/types/urlencoded.js:57:5)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/body-parser/lib/read.js:171:5
+      at invokeCallback (node_modules/raw-body/index.js:238:16)
+      at done (node_modules/raw-body/index.js:227:7)
+      at IncomingMessage.onEnd (node_modules/raw-body/index.js:287:7)
+
+  console.error
+    Error creating review: Error: Bß║ín chß╗ë c├│ thß╗â ─æ├ính gi├í sß║ún phß║⌐m ─æ├ú mua
+        at ReviewService.createReview (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\services\review.service.js:42:13)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at createReview (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\review.controller.js:6:20)
+
+    [0m [90m 14 |[39m     })[33m;[39m
+     [90m 15 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 16 |[39m     console[33m.[39merror([32m"Error creating review:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 17 |[39m     [36mconst[39m status [33m=[39m error[33m.[39mmessage[33m.[39mincludes([32m"─æ├ú mua"[39m) [33m?[39m [35m403[39m [33m:[39m (error[33m.[39mmessage[33m.[39mincludes([32m"─æ├ú ─æ├ính gi├í"[39m) [33m?[39m [35m400[39m [33m:[39m [35m500[39m)[33m;[39m
+     [90m 18 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({
+     [90m 19 |[39m       success[33m:[39m [36mfalse[39m[33m,[39m[0m
+
+      at error (src/controllers/review.controller.js:16:13)
+
+  console.error
+    Auth middleware error: Error [JsonWebTokenError]: invalid token
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\integration\cart.routes.test.js:37:21)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-mock\build\index.js:305:39
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-mock\build\index.js:312:13)
+        at Object.mockConstructor [as verify] (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-mock\build\index.js:102:19)
+        at verify (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\middlewares\auth.middleware.js:26:29)
+        at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+        at trimPrefix (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:342:13)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:297:9
+        at processParams (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:582:12)
+        at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:291:5)
+        at Function.handle (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:186:3)
+        at router (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:60:12)
+        at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+        at trimPrefix (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:342:13)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:297:9
+        at processParams (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:582:12)
+        at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:291:5)
+        at read (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\body-parser\lib\read.js:53:5)
+        at urlencodedParser (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\body-parser\lib\types\urlencoded.js:57:5)
+        at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+        at trimPrefix (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:342:13)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:297:9
+        at processParams (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:582:12)
+        at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:291:5)
+        at read (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\body-parser\lib\read.js:53:5)
+        at jsonParser (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\body-parser\lib\types\json.js:88:5)
+        at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+        at trimPrefix (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:342:13)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:297:9
+        at processParams (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:582:12)
+        at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:291:5)
+        at cors (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\cors\lib\index.js:188:7)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\cors\lib\index.js:224:17
+        at originCallback (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\cors\lib\index.js:214:15)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\cors\lib\index.js:219:13
+        at optionsCallback (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\cors\lib\index.js:199:9)
+        at corsMiddleware (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\cors\lib\index.js:204:7)
+        at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+        at trimPrefix (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:342:13)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:297:9
+        at processParams (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:582:12)
+        at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:291:5)
+        at Function.handle (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:186:3)
+        at Function.handle (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\express\lib\application.js:177:15)
+        at Server.app (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\express\lib\express.js:38:9)
+        at Server.emit (node:events:524:28)
+        at parserOnIncoming (node:_http_server:1141:12)
+        at HTTPParser.parserOnHeadersComplete (node:_http_common:118:17)
+
+    [0m [90m 37 |[39m         
+     [90m 38 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 39 |[39m         console[33m.[39merror([32m"Auth middleware error:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 40 |[39m         
+     [90m 41 |[39m         [36mif[39m (error[33m.[39mname [33m===[39m [32m'JsonWebTokenError'[39m) {
+     [90m 42 |[39m             [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ [0m
+
+      at error (src/middlewares/auth.middleware.js:39:17)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at Function.handle (node_modules/router/index.js:186:3)
+      at router (node_modules/router/index.js:60:12)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at read (node_modules/body-parser/lib/read.js:53:5)
+      at urlencodedParser (node_modules/body-parser/lib/types/urlencoded.js:57:5)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at read (node_modules/body-parser/lib/read.js:53:5)
+      at jsonParser (node_modules/body-parser/lib/types/json.js:88:5)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at cors (node_modules/cors/lib/index.js:188:7)
+      at node_modules/cors/lib/index.js:224:17
+      at originCallback (node_modules/cors/lib/index.js:214:15)
+      at node_modules/cors/lib/index.js:219:13
+      at optionsCallback (node_modules/cors/lib/index.js:199:9)
+      at corsMiddleware (node_modules/cors/lib/index.js:204:7)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at trimPrefix (node_modules/router/index.js:342:13)
+      at node_modules/router/index.js:297:9
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at Function.handle (node_modules/router/index.js:186:3)
+      at Function.handle (node_modules/express/lib/application.js:177:15)
+      at Server.app (node_modules/express/lib/express.js:38:9)
+
+PASS tests/integration
+/products.routes.test.
+js
+  Products Routes 
+Integration Tests
+    GET /api/products
+      ΓêÜ should 
+return products 
+pagination (73 ms)
+    GET 
+/api/products/:id
+      ΓêÜ should 
+return 404 if product 
+not found (42 ms)
+    POST /api/products
+/:product_id/reviews
+      ΓêÜ should 
+block unauthenticated 
+users (64 ms)
+      ΓêÜ should 
+return 403 if user 
+hasn't purchased 
+product (17 ms)
+
+  console.log
+    [dotenv@17.2.3] injecting env (18) from .env -- tip: ΓÜÖ∩╕Å  load multiple .env files with { path: ['.env.local', '.env'] }
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+  console.log
+    [dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒöÉ encrypt with Dotenvx: https://dotenvx.com
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+  console.error
+    Auth middleware error: Error [JsonWebTokenError]: invalid token
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\tests\integration\payment.routes.test.js:38:21)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-mock\build\index.js:305:39
+        at Object.<anonymous> (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-mock\build\index.js:312:13)
+        at Object.mockConstructor [as verify] (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\jest-mock\build\index.js:102:19)
+        at verify (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\middlewares\auth.middleware.js:26:29)
+        at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+        at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\route.js:157:13)
+        at Route.dispatch (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\route.js:117:3)
+        at handle (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:435:11)
+        at Layer.handleRequest (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\lib\layer.js:152:17)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:295:15
+        at processParams (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:582:12)
+        at next (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\router\index.js:291:5)
+        at C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\body-parser\lib\read.js:171:5
+        at AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+        at invokeCallback (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\raw-body\index.js:238:16)
+        at done (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\raw-body\index.js:227:7)
+        at IncomingMessage.onEnd (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\node_modules\raw-body\index.js:287:7)
+        at IncomingMessage.emit (node:events:524:28)
+        at endReadableNT (node:internal/streams/readable:1698:12)
+        at processTicksAndRejections (node:internal/process/task_queues:82:21)
+
+    [0m [90m 37 |[39m         
+     [90m 38 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 39 |[39m         console[33m.[39merror([32m"Auth middleware error:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m                 [31m[1m^[22m[39m
+     [90m 40 |[39m         
+     [90m 41 |[39m         [36mif[39m (error[33m.[39mname [33m===[39m [32m'JsonWebTokenError'[39m) {
+     [90m 42 |[39m             [36mreturn[39m res[33m.[39mstatus([35m401[39m)[33m.[39mjson({ [0m
+
+      at error (src/middlewares/auth.middleware.js:39:17)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at next (node_modules/router/lib/route.js:157:13)
+      at Route.dispatch (node_modules/router/lib/route.js:117:3)
+      at handle (node_modules/router/index.js:435:11)
+      at Layer.handleRequest (node_modules/router/lib/layer.js:152:17)
+      at node_modules/router/index.js:295:15
+      at processParams (node_modules/router/index.js:582:12)
+      at next (node_modules/router/index.js:291:5)
+      at node_modules/body-parser/lib/read.js:171:5
+      at invokeCallback (node_modules/raw-body/index.js:238:16)
+      at done (node_modules/raw-body/index.js:227:7)
+      at IncomingMessage.onEnd (node_modules/raw-body/index.js:287:7)
+
+(node:22120) 
+ExperimentalWarning: 
+VM Modules is an 
+experimental feature 
+and might change at 
+any time
+(Use `node 
+--trace-warnings ...` 
+to show where the 
+warning was created)
+PASS tests/integration
+/cart.routes.test.js
+  Cart Routes 
+Integration Tests
+    Authentication
+      ΓêÜ should 
+return 401 if token 
+is missing or invalid 
+(123 ms)
+    GET /api/cart
+      ΓêÜ should 
+return user cart (9 
+ms)
+    POST /api/cart/add
+      ΓêÜ should add 
+item to cart (26 ms)
+
+  console.log
+    Models initialized:
+
+      at log (models/index.js:56:9)
+
+  console.log
+    - ProductImage: true
+
+      at log (models/index.js:57:9)
+
+  console.log
+    - Product: true
+
+      at log (models/index.js:58:9)
+
+  console.log
+    - User: true
+
+      at log (models/index.js:59:9)
+
+  console.log
+    - Cart: true
+
+      at log (models/index.js:60:9)
+
+  console.log
+    - CartItem: true
+
+      at log (models/index.js:61:9)
+
+  console.log
+    - Order: true
+
+      at log (models/index.js:62:9)
+
+  console.log
+    - OrderItem: true
+
+      at log (models/index.js:63:9)
+
+  console.log
+    - Address: true
+
+      at log (models/index.js:64:9)
+
+  console.log
+    - Category: true
+
+      at log (models/index.js:65:9)
+
+  console.log
+    - Wishlist: true
+
+      at log (models/index.js:66:9)
+
+  console.log
+    - Review: true
+
+      at log (models/index.js:67:9)
+
+  console.log
+    - Payment: true
+
+      at log (models/index.js:68:9)
+
+  console.log
+    - Sale true
+
+      at log (models/index.js:69:9)
+
+  console.log
+    - ProductSale true
+
+      at log (models/index.js:70:9)
+
+  console.log
+    Loaded models: [
+      'sequelize', 'Sequelize',
+      'Address',   'ProductImage',
+      'Product',   'User',
+      'CartItem',  'Cart',
+      'Order',     'OrderItem',
+      'Category',  'Wishlist',
+      'Review',    'Payment',
+      'Sale',      'ProductSale'
+    ]
+
+      at log (models/index.js:71:9)
+
+  console.log
+    Setting up associations for sequelize...
+
+      at log (models/index.js:76:11)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Setting up associations for Sequelize...
+
+      at log (models/index.js:76:11)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Setting up associations for Address...
+
+      at log (models/index.js:76:11)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Γ£ô Address associations set successfully
+
+      at log (models/index.js:80:15)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Setting up associations for ProductImage...
+
+      at log (models/index.js:76:11)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Γ£ô ProductImage associations set successfully
+
+      at log (models/index.js:80:15)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Setting up associations for Product...
+
+      at log (models/index.js:76:11)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Γ£ô Product associations set successfully
+
+      at log (models/index.js:80:15)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Setting up associations for User...
+
+      at log (models/index.js:76:11)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Γ£ô User associations set successfully
+
+      at log (models/index.js:80:15)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Setting up associations for CartItem...
+
+      at log (models/index.js:76:11)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Γ£ô CartItem associations set successfully
+
+      at log (models/index.js:80:15)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Setting up associations for Cart...
+
+      at log (models/index.js:76:11)
+          at Array.forEach (<anonymous>)
+
+  console.error
+    Error fetching category by ID: Error: Category not found
+        at CategoryService.getCategoryById (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\services\category.service.js:28:26)
+        at processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at getCategoryById (C:\Users\admin\Downloads\code_web\e-commerce-1\backend\src\controllers\category.controller.js:42:22)
+
+    [0m [90m 46 |[39m     })[33m;[39m
+     [90m 47 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 48 |[39m     console[33m.[39merror([32m"Error fetching category by ID:"[39m[33m,[39m error)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 49 |[39m     [36mconst[39m status [33m=[39m error[33m.[39mmessage [33m===[39m [32m"Category not found"[39m [33m?[39m [35m404[39m [33m:[39m [35m500[39m[33m;[39m
+     [90m 50 |[39m     res[33m.[39mstatus(status)[33m.[39mjson({
+     [90m 51 |[39m       success[33m:[39m [36mfalse[39m[33m,[39m[0m
+
+      at error (src/controllers/category.controller.js:48:13)
+
+  console.log
+    Γ£ô Cart associations set successfully
+
+      at log (models/index.js:80:15)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Setting up associations for Order...
+
+      at log (models/index.js:76:11)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Γ£ô Order associations set successfully
+
+      at log (models/index.js:80:15)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Setting up associations for OrderItem...
+
+      at log (models/index.js:76:11)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Γ£ô OrderItem associations set successfully
+
+      at log (models/index.js:80:15)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Setting up associations for Category...
+
+      at log (models/index.js:76:11)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Γ£ô Category associations set successfully
+
+      at log (models/index.js:80:15)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Setting up associations for Wishlist...
+
+      at log (models/index.js:76:11)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Γ£ô Wishlist associations set successfully
+
+      at log (models/index.js:80:15)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Setting up associations for Review...
+
+      at log (models/index.js:76:11)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Γ£ô Review associations set successfully
+
+      at log (models/index.js:80:15)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Setting up associations for Payment...
+
+      at log (models/index.js:76:11)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Γ£ô Payment associations set successfully
+
+      at log (models/index.js:80:15)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Setting up associations for Sale...
+
+      at log (models/index.js:76:11)
+          at Array.forEach (<anonymous>)
+
+PASS tests/integration
+/category.routes.test.
+js
+  Category Routes 
+Integration Tests
+    GET 
+/api/categories
+      ΓêÜ should 
+return 200 and all 
+categories (61 ms)
+    GET /api/categorie
+s/parents
+      ΓêÜ should 
+return 200 and parent 
+categories (10 ms)
+    GET 
+/api/categories/:id
+      ΓêÜ should 
+return 404 if not 
+found (32 ms)
+      ΓêÜ should 
+return 200 if found 
+(9 ms)
+
+  console.log
+    Γ£ô Sale associations set successfully
+
+      at log (models/index.js:80:15)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Setting up associations for ProductSale...
+
+      at log (models/index.js:76:11)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    Γ£ô ProductSale associations set successfully
+
+      at log (models/index.js:80:15)
+          at Array.forEach (<anonymous>)
+
+  console.log
+    [dotenv@17.2.3] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  specify custom .env file path with { path: '/custom/path/.env' }
+
+      at _log (node_modules/dotenv/lib/main.js:142:11)
+
+(node:22940) 
+ExperimentalWarning: 
+VM Modules is an 
+experimental feature 
+and might change at 
+any time
+(Use `node 
+--trace-warnings ...` 
+to show where the 
+warning was created)
+  console.log
+    Order undefined marked as COMPLETED
+
+      at OrderService.log [as completeOrder] (src/services/order.service.js:355:15)
+
+PASS tests/integration
+/payment.routes.test.j
+s
+  Payment Routes 
+Integration Tests
+    POST /api/payment/
+momo/create
+      ΓêÜ should 
+block unauthenticated 
+users (116 ms)
+      ΓêÜ should 
+create momo payment 
+url for valid request 
+(237 ms)
+    GET /api/payment/m
+omo/return
+      ΓêÜ should 
+redirect user (14 ms)
+
+PASS tests/integration
+/auth.routes.test.js
+  Auth Routes 
+Integration Test
+    POST 
+/api/auth/register
+      ΓêÜ should 
+return 400 for 
+incomplete data (71 
+ms)
+      ΓêÜ should 
+successfully register 
+and return 201 (106 
+ms)
+      ΓêÜ should fail 
+with 409 if email 
+already exists in DB 
+(7 ms)
+    POST 
+/api/auth/login
+      ΓêÜ should 
+successfully login 
+and return a token 
+(210 ms)
+      ΓêÜ should fail 
+with 401 for 
+incorrect password 
+(213 ms)
+
+Test Suites: 18 
+passed, 18 total
+Tests:       73 
+passed, 73 total
+Snapshots:   0 total
+Time:        4.632 s
+Ran all test suites.
