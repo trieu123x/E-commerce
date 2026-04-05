@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { jest } from '@jest/globals';
 import request from 'supertest';
 
