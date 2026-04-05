@@ -1,62 +1,22 @@
-import { where } from "sequelize";
-import db from "../../models/index.js";
+import saleService from "../services/sale.service.js";
 
-const { Sale, Product, ProductSale, Sequelize, ProductImage } = db;
-const { Op } = Sequelize;
-
-/*
-========================
-CREATE SALE
-========================
-*/
 export const createSale = async (req, res) => {
   try {
-    const {
-      name,
-      description,
-      discount_type,
-      discount_value,
-      start_date,
-      end_date,
-      is_active,
-    } = req.body;
-    if (new Date(start_date) >= new Date(end_date)) {
-      return res.status(400).json({
-        success: false,
-        message: "End date must be after start date",
-      });
-    }
-    const sale = await Sale.create({
-      name,
-      description,
-      discount_type,
-      discount_value,
-      start_date,
-      end_date,
-      is_active,
-    });
-
+    const sale = await saleService.createSale(req.body);
     res.json({
       success: true,
       data: sale,
     });
   } catch (error) {
     console.error("Create sale error:", error);
-    res.status(500).json({ success: false, message: "Server error" });
+    const status = (error.message && error.message.includes("date")) ? 400 : 500;
+    res.status(status).json({ success: false, message: error.message });
   }
 };
 
-/*
-========================
-GET ALL SALES
-========================
-*/
 export const getSales = async (req, res) => {
   try {
-    const sales = await Sale.findAll({
-      order: [["created_at", "DESC"]],
-    });
-
+    const sales = await saleService.getAllSales();
     res.json({
       success: true,
       data: sales,
@@ -67,121 +27,45 @@ export const getSales = async (req, res) => {
   }
 };
 
-/*
-========================
-GET SALE DETAIL
-========================
-*/
 export const getSaleDetail = async (req, res) => {
   try {
     const { id } = req.params;
-
-    const sale = await Sale.findByPk(id, {
-      include: [
-        {
-          model: Product,
-          as: "products",
-          attributes: ["id", "name", "price"],
-          include: [
-            {
-              model: ProductImage,
-              as: "images",
-              attributes: ["image_url"],
-              where: { is_main: true },
-              required: false,
-            },
-          ],
-          through: { attributes: [] },
-        },
-      ],
-    });
-
-    if (!sale) {
-      return res.status(404).json({
-        success: false,
-        message: "Sale not found",
-      });
-    }
-
-    const products = sale.products.map((p) => {
-      let price_after = p.price;
-
-      if (sale.discount_type === "percent") {
-        price_after = p.price - (p.price * sale.discount_value) / 100;
-      }
-
-      if (sale.discount_type === "fixed") {
-        price_after = p.price - sale.discount_value;
-      }
-
-      return {
-        ...p.toJSON(),
-        price_after,
-      };
-    });
-
+    const sale = await saleService.getSaleById(id);
     res.json({
       success: true,
-      data: {
-        ...sale.toJSON(),
-        products,
-      },
+      data: sale,
     });
   } catch (error) {
     console.error("Get sale detail error:", error);
+    if (error.message === "Sale not found") {
+      return res.status(404).json({ success: false, message: error.message });
+    }
     res.status(500).json({ success: false });
   }
 };
 
-/*
-========================
-UPDATE SALE
-========================
-*/
 export const updateSale = async (req, res) => {
   try {
     const { id } = req.params;
-
-    const sale = await Sale.findByPk(id);
-
-    if (!sale) {
-      return res.status(404).json({
-        success: false,
-        message: "Sale not found",
-      });
-    }
-
-    await sale.update(req.body);
-
+    const sale = await saleService.updateSale(id, req.body);
     res.json({
       success: true,
       data: sale,
     });
   } catch (error) {
     console.error("Update sale error:", error);
-    res.status(500).json({ success: false });
+    const status = error.message === "Sale not found" ? 404 : 500;
+    res.status(status).json({
+      success: false,
+      message: error.message || "Internal server error",
+    });
   }
 };
 
-/*
-========================
-DELETE SALE
-========================
-*/
 export const deleteSale = async (req, res) => {
   try {
     const { id } = req.params;
-
-    const sale = await Sale.findByPk(id);
-
-    if (!sale) {
-      return res.status(404).json({
-        success: false,
-      });
-    }
-
-    await sale.destroy();
-
+    await saleService.deleteSale(id);
     res.json({
       success: true,
       message: "Sale deleted",
@@ -192,116 +76,39 @@ export const deleteSale = async (req, res) => {
   }
 };
 
-/*
-========================
-ADD PRODUCT TO SALE
-========================
-*/
 export const addProductToSale = async (req, res) => {
   try {
     const { saleId } = req.params;
     const { productIds } = req.body;
-
-    const sale = await Sale.findByPk(saleId);
-
-    if (!sale) {
-      return res.status(404).json({
-        success: false,
-        message: "Sale not found",
-      });
-    }
-
-    const data = productIds.map((productId) => ({
-      sale_id: saleId,
-      product_id: productId,
-    }));
-
-    await ProductSale.bulkCreate(data, {
-      ignoreDuplicates: true,
-    });
-
+    await saleService.addProductToSale(saleId, productIds);
     res.json({
       success: true,
       message: "Products added to sale",
     });
   } catch (error) {
     console.error("Add product sale error:", error);
-    res.status(500).json({ success: false });
+    const status = (error.message && error.message === "Sale not found") ? 404 : 500;
+    res.status(status).json({ success: false, message: error.message });
   }
 };
+
 export const getActiveSales = async (req, res) => {
   try {
-    const now = new Date();
-
-    const sales = await Sale.findAll({
-      where: {
-        is_active: true,
-        start_date: { [Op.lte]: now },
-        end_date: { [Op.gte]: now },
-      },
-      include: [
-        {
-          model: Product,
-          as: "products",
-          attributes: ["id", "name", "price"],
-          include: [
-            {
-              model: ProductImage,
-              as: "images",
-              attributes: ["image_url"],
-              where: { is_main: true },
-              required: false,
-            },
-          ],
-          through: { attributes: [] },
-        },
-      ],
-    });
-
-    const formattedSales = sales.map((sale) => {
-      const products = sale.products.map((p) => {
-        let price_after = p.price;
-
-        if (sale.discount_type === "percent") {
-          price_after = p.price - (p.price * sale.discount_value) / 100;
-        }
-
-        if (sale.discount_type === "fixed") {
-          price_after = p.price - sale.discount_value;
-        }
-
-        return {
-          ...p.toJSON(),
-          price_after,
-        };
-      });
-
-      return {
-        ...sale.toJSON(),
-        products,
-      };
-    });
-
+    const sales = await saleService.getActiveSales();
     res.json({
       success: true,
-      data: formattedSales,
+      data: sales,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false });
   }
 };
+
 export const removeProductFromSale = async (req, res) => {
   try {
     const { saleId, productId } = req.params;
-
-    await ProductSale.destroy({
-      where: {
-        sale_id: saleId,
-        product_id: productId,
-      },
-    });
-
+    await saleService.removeProductFromSale(saleId, productId);
     res.json({
       success: true,
       message: "Product removed from sale",

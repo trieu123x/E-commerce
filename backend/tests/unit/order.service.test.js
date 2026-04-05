@@ -51,7 +51,7 @@ describe('OrderService Unit Tests', () => {
     it('should update order status to completed', async () => {
       await orderService.completeOrder(1);
       expect(mockOrder.update).toHaveBeenCalledWith(
-        { status: 'completed' },
+        { status: 'COMPLETED' },
         { where: { id: 1 } }
       );
     });
@@ -67,7 +67,7 @@ describe('OrderService Unit Tests', () => {
       const mockOrderWithItems = {
         ...mockOrderInstance,
         id: 1,
-        status: 'pending',
+        status: 'PENDING',
         items: mockItems,
         update: jest.fn().mockResolvedValue(true)
       };
@@ -78,9 +78,9 @@ describe('OrderService Unit Tests', () => {
       const result = await orderService.cancelOrder(1);
 
       expect(result.success).toBe(true);
-      expect(mockOrderWithItems.update).toHaveBeenCalledWith(
-        { status: 'cancelled' },
-        { transaction: mockTransaction }
+      expect(mockOrder.update).toHaveBeenCalledWith(
+        { status: 'CANCELLED' },
+        { where: { id: 1 }, transaction: mockTransaction }
       );
       expect(mockProductInstance.increment).toHaveBeenCalledTimes(2);
       expect(mockProductInstance.increment).toHaveBeenCalledWith('stock', { by: 2, transaction: mockTransaction });
@@ -90,7 +90,7 @@ describe('OrderService Unit Tests', () => {
     it('should not restore stock if already cancelled', async () => {
       const mockOrderCancelled = {
         id: 1,
-        status: 'cancelled'
+        status: 'CANCELLED'
       };
       mockOrder.findByPk.mockResolvedValue(mockOrderCancelled);
 

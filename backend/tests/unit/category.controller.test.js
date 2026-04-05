@@ -56,7 +56,7 @@ describe('Category Controller Unit Tests', () => {
 
       await categoryController.createCategory(req, res);
 
-      expect(mockCategory.create).toHaveBeenCalledWith({ name: 'Electronics', parent_id: null });
+      expect(mockCategory.create).toHaveBeenCalledWith({ name: 'Electronics', parent_id: null }, {});
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({
         success: true,

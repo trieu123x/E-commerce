@@ -40,11 +40,11 @@ describe('Cart Controller Unit Tests', () => {
           product: { price: 100, status: 'ACTIVE', stock: 10, sales: [], name: 'Prod1', images: [] }
         }]
       };
-      mockCart.findOrCreate.mockResolvedValueOnce([mockCartData, false]);
+      mockCart.findOne.mockResolvedValueOnce(mockCartData);
       
       await cartController.getCart(req, res);
       
-      expect(mockCart.findOrCreate).toHaveBeenCalled();
+      expect(mockCart.findOne).toHaveBeenCalled();
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
         success: true,
         cart: expect.objectContaining({

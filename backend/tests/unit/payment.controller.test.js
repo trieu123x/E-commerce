@@ -4,10 +4,12 @@ import { jest } from '@jest/globals';
 const mockOrder = { findByPk: jest.fn(), update: jest.fn() };
 const mockOrderItem = { findAll: jest.fn() };
 const mockProduct = { findByPk: jest.fn() };
+const mockPayment = { update: jest.fn() };
 const mockDb = { 
   Order: mockOrder, 
   OrderItem: mockOrderItem, 
   Product: mockProduct,
+  Payment: mockPayment,
   sequelize: { transaction: jest.fn(() => ({ commit: jest.fn(), rollback: jest.fn() })) }
 };
 jest.unstable_mockModule('../../models/index.js', () => ({ default: mockDb }));

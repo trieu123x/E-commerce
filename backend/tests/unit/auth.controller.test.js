@@ -36,7 +36,7 @@ describe('Auth Controller Unit Tests', () => {
       req.body = { email: 'test@example.com' }; 
       await authController.register(req, res);
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ messsage: 'Thiếu thông tin' }); // Typo in original code
+      expect(res.json).toHaveBeenCalledWith({ message: 'Thiếu thông tin' });
     });
 
     it('should return 409 if email already exists', async () => {

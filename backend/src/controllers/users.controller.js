@@ -1,9 +1,9 @@
-import pool from "../config/db.js";
+import userService from "../services/user.service.js";
 
 export const getAllUsers = async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM users");
-    res.json(result.rows);
+    const users = await userService.getAllUsers();
+    res.json(users);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

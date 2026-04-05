@@ -27,7 +27,7 @@ describe('Auth Routes Integration Test', () => {
         .send({ email: 'test@example.com' });
       
       expect(res.status).toBe(400);
-      expect(res.body).toHaveProperty('messsage', 'Thiếu thông tin'); // Typo matching controller
+      expect(res.body).toHaveProperty("message", "Thiếu thông tin");
     });
 
     it('should successfully register and return 201', async () => {

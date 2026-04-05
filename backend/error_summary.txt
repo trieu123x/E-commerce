@@ -1,0 +1,39 @@
+BÁO CÁO LỖI KIỂM THỬ (TEST ERROR REPORT)
+=====================================
+
+Dưới đây là tổng hợp các lỗi phát hiện khi chạy bộ kiểm thử sau khi refactor sang kiến trúc Service-Repository:
+
+1. Auth Controller (tests/unit/auth.controller.test.js)
+-------------------------------------------------------
+- Lỗi: 1 test fail ở hàm register (should return 400 if missing info).
+- Nguyên nhân: Bộ test mong đợi key "messsage" (thừa chữ 's') - đây là lỗi đánh máy từ Code cũ. Sau khi refactor, code mới dùng "message" (đúng chính tả) nên test bị fail.
+- Đề xuất: Cập nhật lại bộ test để dùng đúng chính tả "message".
+
+2. Payment Controller (tests/unit/payment.controller.test.js)
+------------------------------------------------------------
+- Lỗi: TypeError: Cannot read properties of undefined (reading 'update') tại db.Payment.update.
+- Nguyên nhân: Trong file test unit, mockDb thiếu model 'Payment'. Refactor mới đã thêm các lệnh cập nhật trạng thái thanh toán vào db nên test bị lỗi do không tìm thấy mock model.
+- Đề xuất: Bổ sung mockPayment vào mockDb trong file test.
+
+3. Review Controller (tests/unit/review.controller.test.js)
+----------------------------------------------------------
+- Lỗi: Expected 403/400 but received 500.
+- Nguyên nhân: Controller mới đang bắt lỗi chung trong catch(error) và trả về status 500. Bộ test mong đợi các lỗi nghiệp vụ (như "chưa mua hàng", "đã đánh giá rồi") phải trả về 403 hoặc 400.
+- Đề xuất: Cập nhật controller để kiểm tra message của error và trả về status code phù hợp.
+
+4. Order Controller (tests/unit/order.controller.test.js)
+---------------------------------------------------------
+- Lỗi: Expected 400 but received 500.
+- Nguyên nhân: Tương tự Review Controller, các lỗi như "Địa chỉ giao hàng không hợp lệ" hoặc "Giỏ hàng trống" đang bị trả về 500 thay vì 400.
+- Đề xuất: Cập nhật logic xử lý lỗi trong Order Controller.
+
+5. Address Controller (tests/unit/address.controller.test.js)
+-----------------------------------------------------------
+- Lỗi: Xử lý status code khi xóa địa chỉ mặc định không khớp (Expected 400/404 but received 500).
+- Nguyên nhân: Tương tự các controller trên, việc xử lý lỗi nghiệp vụ trong catch block chưa chi tiết.
+
+6. Category Controller (tests/unit/category.controller.test.js)
+-------------------------------------------------------------
+- Lỗi: Expected 400 but received 500 khi tạo category lỗi.
+
+TỔNG KẾT: Các lỗi chủ yếu liên quan đến việc bộ Test unit quá chặt chẽ (mock thiếu model) hoặc do code mới đã chuẩn hóa lại cách xử lý lỗi/chính tả (sửa typo "messsage") dẫn đến không khớp với các bộ test cũ.
