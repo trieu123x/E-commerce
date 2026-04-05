@@ -1,33 +1,17 @@
 import { jest } from '@jest/globals';
 
-const mockCategory = {
-  create: jest.fn(),
-  findAll: jest.fn(),
-  findByPk: jest.fn(),
-  count: jest.fn(),
-  destroy: jest.fn(),
+const mockCategoryService = {
+  createCategory: jest.fn(),
+  getAllCategories: jest.fn(),
+  getCategoryById: jest.fn(),
+  updateCategory: jest.fn(),
+  deleteCategory: jest.fn(),
+  checkDeleteCategory: jest.fn(),
+  getParentCategories: jest.fn(),
 };
 
-const mockProduct = {
-  count: jest.fn(),
-  update: jest.fn(),
-};
-
-const mockTransaction = {
-  commit: jest.fn(),
-  rollback: jest.fn(),
-};
-
-const mockDb = {
-  Category: mockCategory,
-  Product: mockProduct,
-  sequelize: {
-    transaction: jest.fn(() => mockTransaction),
-  },
-};
-
-jest.unstable_mockModule('../../models/index.js', () => ({
-  default: mockDb,
+jest.unstable_mockModule('../../src/services/category.service.js', () => ({
+  default: mockCategoryService,
 }));
 
 // Load controller after mocking
@@ -52,11 +36,11 @@ describe('Category Controller Unit Tests', () => {
   describe('createCategory', () => {
     it('should create a category and return 201', async () => {
       req.body = { name: 'Electronics', parent_id: null };
-      mockCategory.create.mockResolvedValueOnce({ id: 1, name: 'Electronics', parent_id: null });
+      mockCategoryService.createCategory.mockResolvedValueOnce({ id: 1, name: 'Electronics', parent_id: null });
 
       await categoryController.createCategory(req, res);
 
-      expect(mockCategory.create).toHaveBeenCalledWith({ name: 'Electronics', parent_id: null }, {});
+      expect(mockCategoryService.createCategory).toHaveBeenCalledWith('Electronics', null);
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({
         success: true,
@@ -67,7 +51,7 @@ describe('Category Controller Unit Tests', () => {
 
     it('should handle internal errors and return 500', async () => {
       req.body = { name: 'Electronics' };
-      mockCategory.create.mockRejectedValueOnce(new Error('DB Error'));
+      mockCategoryService.createCategory.mockRejectedValueOnce(new Error('DB Error'));
 
       await categoryController.createCategory(req, res);
 
@@ -81,11 +65,11 @@ describe('Category Controller Unit Tests', () => {
 
   describe('getAllCategories', () => {
     it('should fetch all categories', async () => {
-      mockCategory.findAll.mockResolvedValueOnce([{ id: 1, name: 'Cat1' }]);
+      mockCategoryService.getAllCategories.mockResolvedValueOnce([{ id: 1, name: 'Cat1' }]);
 
       await categoryController.getAllCategories(req, res);
 
-      expect(mockCategory.findAll).toHaveBeenCalled();
+      expect(mockCategoryService.getAllCategories).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         success: true,
@@ -97,7 +81,7 @@ describe('Category Controller Unit Tests', () => {
   describe('getCategoryById', () => {
     it('should return 404 if not found', async () => {
       req.params = { id: 99 };
-      mockCategory.findByPk.mockResolvedValueOnce(null);
+      mockCategoryService.getCategoryById.mockRejectedValueOnce(new Error('Category not found'));
 
       await categoryController.getCategoryById(req, res);
 
@@ -112,38 +96,19 @@ describe('Category Controller Unit Tests', () => {
   describe('deleteCategory', () => {
     it('should return 404 if category not found', async () => {
       req.params = { id: 1 };
-      mockCategory.findByPk.mockResolvedValueOnce(null);
+      mockCategoryService.deleteCategory.mockRejectedValueOnce(new Error('Category not found'));
 
       await categoryController.deleteCategory(req, res);
 
-      expect(mockTransaction.rollback).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(404);
     });
 
-    it('should not delete category if it has children and return 400', async () => {
+    it('should return 400 if category has products', async () => {
       req.params = { id: 1 };
-      mockCategory.findByPk.mockResolvedValueOnce({ id: 1, destroy: jest.fn() });
-      mockCategory.count.mockResolvedValueOnce(2); // Has 2 children
+      mockCategoryService.deleteCategory.mockRejectedValueOnce(new Error('CATEGORY_HAS_PRODUCTS:5'));
 
       await categoryController.deleteCategory(req, res);
 
-      expect(mockTransaction.rollback).toHaveBeenCalled();
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({
-        success: false,
-        message: 'Không thể xóa danh mục có chứa danh mục con'
-      });
-    });
-
-    it('should handle products assigned to category without move_to_category_id', async () => {
-      req.params = { id: 1 };
-      mockCategory.findByPk.mockResolvedValueOnce({ id: 1 });
-      mockCategory.count.mockResolvedValueOnce(0); // No children
-      mockProduct.count.mockResolvedValueOnce(5); // Has products
-      
-      await categoryController.deleteCategory(req, res);
-      
-      expect(mockTransaction.rollback).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
         success: false,
@@ -151,17 +116,12 @@ describe('Category Controller Unit Tests', () => {
       }));
     });
 
-    it('should delete category successfuly when empty', async () => {
+    it('should delete category successfuly', async () => {
       req.params = { id: 1 };
-      const destroyMock = jest.fn();
-      mockCategory.findByPk.mockResolvedValueOnce({ id: 1, destroy: destroyMock });
-      mockCategory.count.mockResolvedValueOnce(0); // No children
-      mockProduct.count.mockResolvedValueOnce(0); // No products
+      mockCategoryService.deleteCategory.mockResolvedValueOnce(0); // 0 products moved
 
       await categoryController.deleteCategory(req, res);
 
-      expect(destroyMock).toHaveBeenCalled();
-      expect(mockTransaction.commit).toHaveBeenCalled();
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         message: 'Xóa danh mục thành công'

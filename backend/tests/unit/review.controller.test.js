@@ -1,10 +1,16 @@
 import { jest } from '@jest/globals';
 
-const mockReview = { create: jest.fn(), findOne: jest.fn(), findAll: jest.fn(), destroy: jest.fn(), save: jest.fn() };
-const mockOrderItem = { findOne: jest.fn() };
-const mockDb = { Review: mockReview, OrderItem: mockOrderItem, Order: {}, User: {}, Product: {} };
+const mockReviewService = {
+  getReviewsByProductId: jest.fn(),
+  createReview: jest.fn(),
+  deleteReview: jest.fn(),
+  updateReview: jest.fn(),
+  getReviewsByUser: jest.fn(),
+};
 
-jest.unstable_mockModule('../../models/index.js', () => ({ default: mockDb }));
+jest.unstable_mockModule('../../src/services/review.service.js', () => ({
+  default: mockReviewService,
+}));
 
 let reviewController;
 beforeAll(async () => {
@@ -13,40 +19,49 @@ beforeAll(async () => {
 
 describe('Review Controller Unit Tests', () => {
   let req, res;
+
   beforeEach(() => {
-    req = { user: { id: 1 }, body: {}, params: {} };
+    req = { user: { id: 1 }, body: {}, params: {}, query: {} };
     res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
     jest.clearAllMocks();
   });
 
+  describe('getReviewsByProduct', () => {
+    it('should return reviews for product', async () => {
+      req.params = { product_id: 1 };
+      const mockResult = { reviews: [], pagination: {} };
+      mockReviewService.getReviewsByProductId.mockResolvedValueOnce(mockResult);
+
+      await reviewController.getReviewsByProduct(req, res);
+
+      expect(mockReviewService.getReviewsByProductId).toHaveBeenCalledWith(1, expect.any(Object));
+      expect(res.json).toHaveBeenCalledWith({ success: true, reviews: [], pagination: {} });
+    });
+  });
+
   describe('createReview', () => {
-    it('should return 403 if user has not purchased', async () => {
-      req.params = { product_id: 1 };
-      mockOrderItem.findOne.mockResolvedValueOnce(null);
+    it('should create review and return success', async () => {
+      req.body = { product_id: 1, rating: 5, comment: 'Good' };
+      const mockReview = { id: 1, ...req.body };
+      mockReviewService.createReview.mockResolvedValueOnce(mockReview);
+
       await reviewController.createReview(req, res);
+
+      expect(mockReviewService.createReview).toHaveBeenCalledWith(1, expect.objectContaining(req.body));
+      expect(res.json).toHaveBeenCalledWith({
+        success: true,
+        message: 'Đã tạo đánh giá thành công',
+        review: mockReview
+      });
+    });
+
+    it('should return 403 if user has not purchased product', async () => {
+      req.body = { product_id: 1 };
+      mockReviewService.createReview.mockRejectedValueOnce(new Error('Bạn chỉ có thể đánh giá sản phẩm đã mua'));
+
+      await reviewController.createReview(req, res);
+
       expect(res.status).toHaveBeenCalledWith(403);
-    });
-
-    it('should return 400 if already reviewed', async () => {
-      req.params = { product_id: 1 };
-      mockOrderItem.findOne.mockResolvedValueOnce({ id: 1 }); // Purchased
-      mockReview.findOne.mockResolvedValueOnce({ id: 1 }); // Already reviewed
-      await reviewController.createReview(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
-    });
-
-    it('should create review', async () => {
-      req.params = { product_id: 1 };
-      req.body = { rating: 5, comment: 'Great' };
-      mockOrderItem.findOne.mockResolvedValueOnce({ id: 1 }); // Purchased
-      mockReview.findOne
-        .mockResolvedValueOnce(null) // Not reviewed yet
-        .mockResolvedValueOnce({ id: 1, rating: 5, user: { full_name: 'A' } }); // Created review with user
-
-      mockReview.create.mockResolvedValueOnce({ id: 1 });
-
-      await reviewController.createReview(req, res);
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ success: true }));
     });
   });
 });

@@ -1,15 +1,17 @@
 import { jest } from '@jest/globals';
 
-const mockTransaction = { commit: jest.fn(), rollback: jest.fn() };
-const mockAddress = { create: jest.fn(), findAll: jest.fn(), findOne: jest.fn(), update: jest.fn(), destroy: jest.fn(), count: jest.fn() };
-
-const mockDb = {
-  Address: mockAddress,
-  Sequelize: { Op: { ne: Symbol('ne') } },
-  sequelize: { transaction: jest.fn(() => mockTransaction) }
+const mockAddressService = {
+  getUserAddresses: jest.fn(),
+  getAddressById: jest.fn(),
+  createAddress: jest.fn(),
+  updateAddress: jest.fn(),
+  deleteAddress: jest.fn(),
+  setDefaultAddress: jest.fn(),
 };
 
-jest.unstable_mockModule('../../models/index.js', () => ({ default: mockDb }));
+jest.unstable_mockModule('../../src/services/address.service.js', () => ({
+  default: mockAddressService,
+}));
 
 let addressController;
 beforeAll(async () => {
@@ -18,37 +20,58 @@ beforeAll(async () => {
 
 describe('Address Controller Unit Tests', () => {
   let req, res;
+
   beforeEach(() => {
-    req = { user: { id: 1 }, body: {}, params: {} };
+    req = { user: { id: 1 }, body: {}, params: {}, query: {} };
     res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
     jest.clearAllMocks();
   });
 
+  describe('getUserAddresses', () => {
+    it('should return all addresses for user', async () => {
+      const mockAddresses = [{ id: 1, address_line: '123 St' }];
+      mockAddressService.getUserAddresses.mockResolvedValueOnce(mockAddresses);
+
+      await addressController.getUserAddresses(req, res);
+
+      expect(mockAddressService.getUserAddresses).toHaveBeenCalledWith(1);
+      expect(res.json).toHaveBeenCalledWith({ success: true, data: mockAddresses });
+    });
+  });
+
   describe('createAddress', () => {
-    it('should create an address successfully', async () => {
-      req.body = { address: '123 St', district: 'D1', ward: 'W1', is_default: true };
-      mockAddress.update.mockResolvedValueOnce([1]); // Clear old default
-      mockAddress.create.mockResolvedValueOnce({ id: 1, ...req.body });
+    it('should create address and return 201', async () => {
+      req.body = { address: 'New St' };
+      const mockAddress = { id: 1, address: 'New St' };
+      mockAddressService.createAddress.mockResolvedValueOnce(mockAddress);
 
       await addressController.createAddress(req, res);
 
-      expect(mockTransaction.commit).toHaveBeenCalled();
+      expect(mockAddressService.createAddress).toHaveBeenCalledWith(1, req.body);
       expect(res.status).toHaveBeenCalledWith(201);
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ success: true }));
+      expect(res.json).toHaveBeenCalledWith({ success: true, data: mockAddress });
     });
   });
 
   describe('deleteAddress', () => {
-    it('should not delete if it is the only default address', async () => {
+    it('should delete address successfully', async () => {
       req.params = { id: 1 };
-      mockAddress.findOne.mockResolvedValueOnce({ id: 1, is_default: true, destroy: jest.fn() });
-      mockAddress.count.mockResolvedValueOnce(1); // Have other addresses
+      mockAddressService.deleteAddress.mockResolvedValueOnce();
 
       await addressController.deleteAddress(req, res);
 
-      expect(mockTransaction.rollback).toHaveBeenCalled();
+      expect(mockAddressService.deleteAddress).toHaveBeenCalledWith(1, 1);
+      expect(res.json).toHaveBeenCalledWith({ success: true });
+    });
+
+    it('should handle default address deletion error (400)', async () => {
+      req.params = { id: 1 };
+      mockAddressService.deleteAddress.mockRejectedValueOnce(new Error('Không thể xóa địa chỉ mặc định'));
+
+      await addressController.deleteAddress(req, res);
+
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ message: 'Không thể xóa địa chỉ mặc định' }));
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ success: false }));
     });
   });
 });

@@ -1,19 +1,5 @@
 import { jest } from '@jest/globals';
 
-// Mock Models
-const mockOrder = { findByPk: jest.fn(), update: jest.fn() };
-const mockOrderItem = { findAll: jest.fn() };
-const mockProduct = { findByPk: jest.fn() };
-const mockPayment = { update: jest.fn() };
-const mockDb = { 
-  Order: mockOrder, 
-  OrderItem: mockOrderItem, 
-  Product: mockProduct,
-  Payment: mockPayment,
-  sequelize: { transaction: jest.fn(() => ({ commit: jest.fn(), rollback: jest.fn() })) }
-};
-jest.unstable_mockModule('../../models/index.js', () => ({ default: mockDb }));
-
 // Mock Services
 const mockMomoService = { createPayment: jest.fn() };
 jest.unstable_mockModule('../../src/services/momo.service.js', () => ({ createPayment: mockMomoService.createPayment }));
@@ -24,8 +10,15 @@ jest.unstable_mockModule('../../src/services/vnpay.service.js', () => ({ default
 const mockStripeService = { createCheckoutSession: jest.fn(), verifyWebhook: jest.fn() };
 jest.unstable_mockModule('../../src/services/stripe.service.js', () => ({ default: mockStripeService }));
 
-const mockOrderService = { completeOrder: jest.fn(), cancelOrder: jest.fn() };
+const mockOrderService = { completeOrder: jest.fn(), cancelOrder: jest.fn(), getOrderById: jest.fn() };
 jest.unstable_mockModule('../../src/services/order.service.js', () => ({ default: mockOrderService }));
+
+// Mock DB for the cases where controller still uses it for payments table directly if any
+const mockDb = {
+  Payment: { update: jest.fn() },
+  Order: { findByPk: jest.fn() },
+};
+jest.unstable_mockModule('../../models/index.js', () => ({ default: mockDb }));
 
 let paymentController;
 
@@ -55,7 +48,7 @@ describe('Payment Controller Unit Tests', () => {
   describe('MoMo Payments', () => {
     it('should create MoMo payment and return payUrl', async () => {
       req.body = { orderId: '1', redirectUrl: 'http://test.com' };
-      mockOrder.findByPk.mockResolvedValue({ id: 1, total_amount: 1000 });
+      mockDb.Order.findByPk.mockResolvedValue({ id: 1, total_amount: 1000 });
       mockMomoService.createPayment.mockResolvedValue({ payUrl: 'http://momo.vn/pay' });
       
       await paymentController.createMomoPayment(req, res);
@@ -83,7 +76,7 @@ describe('Payment Controller Unit Tests', () => {
   describe('VNPay Payments', () => {
     it('should create VNPay payment and return payUrl', async () => {
       req.body = { orderId: '1', bankCode: 'NCB' };
-      mockOrder.findByPk.mockResolvedValue({ id: 1, total_amount: 1000 });
+      mockDb.Order.findByPk.mockResolvedValue({ id: 1, total_amount: 1000 });
       mockVnpayService.createPaymentUrl.mockReturnValue('http://vnpay.vn/pay');
       
       await paymentController.createVnpayPayment(req, res);
@@ -125,7 +118,7 @@ describe('Payment Controller Unit Tests', () => {
   describe('Stripe Payments', () => {
     it('should create Stripe session and return payUrl', async () => {
       req.body = { orderId: '1' };
-      mockOrder.findByPk.mockResolvedValue({ id: 1, total_amount: 1000 });
+      mockDb.Order.findByPk.mockResolvedValue({ id: 1, total_amount: 1000 });
       mockStripeService.createCheckoutSession.mockResolvedValue({ url: 'http://stripe.com/pay' });
       
       await paymentController.createStripePayment(req, res);
