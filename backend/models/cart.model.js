@@ -1,4 +1,3 @@
-import { use } from "react";
 import { DataTypes, Sequelize } from "sequelize";
 
 export default (sequelize) => {
