@@ -4,7 +4,12 @@ import { useState } from "react";
 import logImg from "../login/asserts/logImg.png";
 import axios from "../api/axios";
 import Link from "next/link";
+import { useAuth } from "../context/authContext";
+import { useRouter } from "next/navigation";
+
 export default function LoginPage() {
+  const { setUser } = useAuth();
+  const router = useRouter();
   const [error, setError] = useState("");
     const [form,setForm] = useState({
         email:"",
@@ -23,10 +28,11 @@ export default function LoginPage() {
             const response = await axios.post("/auth/login", form);
             const { token, user } = response.data;
             localStorage.setItem("token", token);
-            console.log("Login successful:", response.data);
+            setUser(user);
+            router.push("/");
         } catch (error) {
             console.error("Login failed:", error);
-            setError("Invalid email or password.");
+            setError(error.response?.data?.message || "Invalid email or password.");
             setTimeout(() => {
                 setError("");
             }, 3000);
@@ -86,12 +92,12 @@ export default function LoginPage() {
                 Log In
               </button>
 
-              <button
-                type="button"
+              <Link
+                href="/forgot-password"
                 className="text-red-500 text-sm hover:underline"
               >
                 Forget Password?
-              </button>
+              </Link>
                       </div>
                       {/* Dont have an account? */}
                     <div className="text-center pt-4">

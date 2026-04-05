@@ -159,7 +159,7 @@ export default function ProductCard({ product }) {
         {/* Image */}
         <div className="relative h-48 bg-gray-100 mb-4 overflow-hidden">
           <img
-            src={product.main_image || product.images[0].image_url}
+            src={product.main_image || (product.images && product.images[0] ? product.images[0].image_url : "/placeholder.png")}
             alt={product.name}
             className="absolute cursor-pointer inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-300"
           />
