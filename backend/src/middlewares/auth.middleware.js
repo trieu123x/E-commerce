@@ -23,7 +23,7 @@ export const authMiddleware = (req, res, next) => {
         }
 
         // Verify token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || "default_jwt_secret_key_for_testing_123");
         
         // Gắn user info vào request
         req.user = {

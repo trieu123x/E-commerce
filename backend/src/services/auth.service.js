@@ -41,7 +41,7 @@ class AuthService {
         email: user.email,
         fullName: user.full_name,
       },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || "default_jwt_secret_key_for_testing_123",
       { expiresIn: "7d" }
     );
 
@@ -87,7 +87,7 @@ class AuthService {
 
     const resetToken = jwt.sign(
       { id: user.id, email: user.email, type: "reset_password" },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || "default_jwt_secret_key_for_testing_123",
       { expiresIn: "1h" }
     );
 
@@ -102,7 +102,7 @@ class AuthService {
 
   async resetPassword(token, newPassword) {
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || "default_jwt_secret_key_for_testing_123");
       if (decoded.type !== "reset_password") {
         throw new Error("Token không hợp lệ");
       }
