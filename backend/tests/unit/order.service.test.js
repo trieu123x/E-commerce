@@ -38,8 +38,8 @@ jest.unstable_mockModule('../../models/index.js', () => ({ default: mockDb }));
 let orderService;
 
 beforeAll(async () => {
-  const module = await import('../../src/services/order.service.js');
-  orderService = module.default;
+  const orderServiceModule = await import('../../src/services/order.service.js');
+  orderService = orderServiceModule.default;
 });
 
 describe('OrderService Unit Tests', () => {

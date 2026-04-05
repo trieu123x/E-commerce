@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 
-export default (sequelize) => {
+const addressModel = (sequelize) => {
   const Address = sequelize.define(
     "Address",
     {
@@ -46,3 +46,5 @@ export default (sequelize) => {
 
   return Address;
 };
+
+export default addressModel;

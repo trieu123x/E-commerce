@@ -20,11 +20,12 @@ export const getWishlist = async (req, res) => {
 export const addToWishlist = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { productId } = req.body;
-    await wishlistService.addToWishlist(userId, productId);
+    const { product_id } = req.body;
+    const wishlist = await wishlistService.addToWishlist(userId, product_id);
     res.status(201).json({
       success: true,
       message: "Đã thêm vào danh sách yêu thích",
+      wishlist,
     });
   } catch (error) {
     console.error("Error adding to wishlist:", error);
@@ -44,8 +45,8 @@ export const addToWishlist = async (req, res) => {
 export const removeFromWishlist = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { productId } = req.params;
-    await wishlistService.removeFromWishlist(userId, productId);
+    const { product_id } = req.params;
+    await wishlistService.removeFromWishlist(userId, product_id);
     res.json({
       success: true,
       message: "Đã xóa khỏi danh sách yêu thích",
@@ -68,8 +69,8 @@ export const removeFromWishlist = async (req, res) => {
 export const checkWishlistStatus = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { productId } = req.params;
-    const isInWishlist = await wishlistService.checkWishlistStatus(userId, productId);
+    const { product_id } = req.params;
+    const isInWishlist = await wishlistService.checkWishlistStatus(userId, product_id);
     res.json({
       success: true,
       isInWishlist,

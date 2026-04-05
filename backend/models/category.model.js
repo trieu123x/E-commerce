@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 
-export default (sequelize) => {
+const categoryModel = (sequelize) => {
     const Category = sequelize.define('Category', {
         id: {
             type: DataTypes.BIGINT,
@@ -33,3 +33,5 @@ export default (sequelize) => {
     }
     return Category;
 }
+
+export default categoryModel;

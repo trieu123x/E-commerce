@@ -2,7 +2,8 @@ import express from "express";
 import {
   getWishlist,
   addToWishlist,
-  removeFromWishlist
+  removeFromWishlist,
+  checkWishlistStatus
 } from "../controllers/wishlist.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 const router = express.Router();
@@ -15,5 +16,8 @@ router.get("/", getWishlist);
 router.post("/", addToWishlist);
 // Xóa sản phẩm khỏi danh sách yêu thích
 router.delete("/:product_id", removeFromWishlist);
+
+// Kiểm tra trạng thái yêu thích
+router.get("/check/:product_id", checkWishlistStatus);
 export default router;
 
