@@ -12,20 +12,31 @@ const addressModel = (sequelize) => {
       user_id: {
         type: DataTypes.BIGINT,
         allowNull: false,
-        },
-        address: {
+      },
+      house_number: {
+        type: DataTypes.STRING(50),
+        allowNull: true,
+      },
+      street_name: {
         type: DataTypes.STRING(255),
-        allowNull: false,
+        allowNull: true,
+      },
+      city: {
+        type: DataTypes.STRING(100),
+        allowNull: true,
       },
       district: {
         type: DataTypes.STRING(100),
-        allowNull: false,
+        allowNull: true,
       },
       ward: {
         type: DataTypes.STRING(100),
         allowNull: false,
       },
-      
+      province: {
+        type: DataTypes.STRING(100),
+        allowNull: true,
+      },
       is_default: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,

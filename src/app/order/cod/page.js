@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/app/component/Toast";
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useMemo, useEffect } from "react";
@@ -55,7 +56,7 @@ export default function OrderPage() {
   }, [sortedAddress]);
   const handlePlaceOrder = async () => {
   if (!selectedAddress) {
-    alert("Vui lòng chọn địa chỉ giao hàng");
+    toast.error("Vui lòng chọn địa chỉ giao hàng");
     return;
   }
 
@@ -124,7 +125,7 @@ console.log(product)
           {sortedAddress.map((item) => (
             <option key={item.id} value={item.id}>
               {item.is_default ? "⭐ " : ""}
-              {item.address}, {item.district}, {item.ward}
+              {[item.house_number, item.street_name, item.ward, item.province].filter(Boolean).join(", ")}
             </option>
           ))}
         </select>
@@ -161,7 +162,7 @@ console.log(product)
         )}
             <div className="w-16 h-16 relative  rounded-md">
               <img
-                src={product?.images?.[0].image_url}
+                src={product?.images?.[0].image_url || product?.image}
                 alt={product?.name}
                 className="w-full h-full object-cover hover:scale-110 transition duration-300"
               />
@@ -196,7 +197,7 @@ console.log(product)
         )}
               <div className="w-16 h-16 relative rounded-md">
                 <img
-                  src={item?.image_url}
+                  src={item?.image_url || item?.image} 
                   alt={item.name}
                   className="w-full h-full object-cover hover:scale-110 transition duration-300"
                 />
@@ -237,7 +238,7 @@ console.log(product)
               ${
               (type === "buyNow"
                 ? product?.price_after * quantity
-                : summary.totalPrice).toLocaleString("en-US", {
+                : summary.totalPrice)?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })
@@ -259,7 +260,7 @@ console.log(product)
               ${
               (type === "buyNow"
                 ? product?.price_after * quantity
-                : summary.totalPrice).toLocaleString("en-US", {
+                : summary.totalPrice)?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })

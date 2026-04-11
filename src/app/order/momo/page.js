@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/app/component/Toast";
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useMemo, useEffect } from "react";
@@ -47,7 +48,7 @@ export default function MomoOrderPage() {
 
   const handlePlaceOrder = async () => {
     if (!selectedAddress) {
-      alert("Vui lòng chọn địa chỉ giao hàng");
+      toast.error("Vui lòng chọn địa chỉ giao hàng");
       return;
     }
 
@@ -103,12 +104,12 @@ export default function MomoOrderPage() {
         // Chuyển hướng luôn sang trang completed
         router.push("/completed");
       } else {
-        alert("Lỗi khi lấy dữ liệu thanh toán từ MoMo");
+        toast.error("Lỗi khi lấy dữ liệu thanh toán từ MoMo");
         router.push("/completed");
       }
     } catch (error) {
       console.error(error);
-      alert("Đã xảy ra lỗi khi tạo đơn hàng.");
+      toast.error("Đã xảy ra lỗi khi tạo đơn hàng.");
     } finally {
       setLoading(false);
     }
@@ -143,7 +144,7 @@ export default function MomoOrderPage() {
           {sortedAddress.map((item) => (
             <option key={item.id} value={item.id}>
               {item.is_default ? "⭐ " : ""}
-              {item.address}, {item.district}, {item.ward}
+              {[item.house_number, item.street_name, item.ward, item.province].filter(Boolean).join(", ")}
             </option>
           ))}
         </select>

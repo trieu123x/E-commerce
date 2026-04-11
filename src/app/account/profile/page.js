@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/app/component/Toast";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/app/context/authContext";
 import axios from "@/app/api/axios";
@@ -13,7 +14,7 @@ export default function ProfilePage() {
     phone: "",
   });
   useEffect(() => {
-    if (user) {
+    if (user && form.email === "") {
       setForm((prev) => ({
         ...prev,
         fullName: user.fullName || "",
@@ -21,7 +22,7 @@ export default function ProfilePage() {
         phone: user.phone || "",
       }));
     }
-  }, [user]);
+  }, [user, form.email]);
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -70,7 +71,7 @@ export default function ProfilePage() {
     setSuccess(false);
   }, 3000);
     } else {
-      alert("Failed to update profile");
+      toast.error("Failed to update profile");
     }
   };
 

@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/app/component/Toast";
 import { useEffect, useState } from "react";
 import instance from "@/app/api/axios";
 
@@ -84,11 +85,13 @@ console.log(sales)
   }, [searchTerm]);
 
   useEffect(() => {
-    setPage(1);
-  }, [debouncedSearch]);
+    if (page !== 1) setPage(1);
+  }, [debouncedSearch, page]);
 
   useEffect(() => {
-    fetchProducts(page, debouncedSearch);
+    if (debouncedSearch !== undefined) {
+      fetchProducts(page, debouncedSearch);
+    }
   }, [page, debouncedSearch]);
 
   const handleCreate = async (e) => {
@@ -381,7 +384,7 @@ console.log(sales)
                       manageSale,
                     );
                     fetchSales();
-                    alert("Sale updated");
+                    toast.success("Sale updated");
                   }}
                   className="col-span-2 bg-blue-600 text-white py-2 rounded"
                 >

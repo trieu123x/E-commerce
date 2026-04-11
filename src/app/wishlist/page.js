@@ -47,6 +47,11 @@ export default function WishlistPage() {
       <div className="max-w-7xl mx-auto space-y-10">
         {parentCategories.map((parent) => {
           const children = getChildren(parent.id);
+          const hasItems = [parent, ...children].some(
+            (cat) => getWishlistByCategory(cat.id).length > 0
+          );
+
+          if (!hasItems) return null;
 
           return (
             <div key={parent.id}>

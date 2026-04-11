@@ -39,4 +39,7 @@ UPDATE orders SET status = UPPER(status);
 
 SELECT DISTINCT status FROM orders;
 
+ALTER TABLE addresses
+ADD COLUMN house_number VARCHAR(50);
+
 

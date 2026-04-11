@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/app/component/Toast";
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useMemo, useEffect } from "react";
@@ -47,7 +48,7 @@ export default function VnpayOrderPage() {
 
   const handlePlaceOrder = async () => {
   if (!selectedAddress) {
-    alert("Vui lòng chọn địa chỉ giao hàng");
+    toast.error("Vui lòng chọn địa chỉ giao hàng");
     return;
   }
 
@@ -90,12 +91,12 @@ export default function VnpayOrderPage() {
       // ✅ 4. Redirect TRỰC TIẾP sang VNPAY (QUAN TRỌNG)
       window.location.href = vnpayRes.data.payUrl;
     } else {
-      alert("Lỗi khi tạo link thanh toán VNPay");
+      toast.error("Lỗi khi tạo link thanh toán VNPay");
     }
 
   } catch (error) {
     console.error(error);
-    alert("Đã xảy ra lỗi khi tạo đơn hàng.");
+    toast.error("Đã xảy ra lỗi khi tạo đơn hàng.");
   } finally {
     setLoading(false);
   }
@@ -130,7 +131,7 @@ console.log(cartItems)
           {sortedAddress.map((item) => (
             <option key={item.id} value={item.id}>
               {item.is_default ? "⭐ " : ""}
-              {item.address}, {item.district}, {item.ward}
+              {[item.house_number, item.street_name, item.ward, item.province].filter(Boolean).join(", ")}
             </option>
           ))}
         </select>

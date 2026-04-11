@@ -19,14 +19,11 @@ export default function ProductCard({ product }) {
   const router = useRouter();
   const { wishlist, setWishlist } = useAuth();
   const [nonti, setNonti] = useState("Add To Cart");
-  const [sale, setSale] = useState();
   const { wishlistCount, setWishlistCount, setCartCount, cart, setCart } =
     useAuth();
 
-  useEffect(() => {
-    if (product.price_after != product.price) setSale(true);
-  }, []);
-  const isInWishlist = wishlist.some((item) => item.product_id === product.id);
+  const isSale = product.price_after != product.price;
+  const isInWishlist = wishlist.some((item) => item.product_id == product.id);
 
   const handleWishlistToggle = async () => {
     try {
@@ -118,7 +115,6 @@ export default function ProductCard({ product }) {
     } catch (error) {
       console.log("Cart error:", error.response?.data || error.message);
     }
-
   };
 
   return (
@@ -129,7 +125,7 @@ export default function ProductCard({ product }) {
         }}
         className="group border border-gray-100 shadow-xl bg-white p-4 rounded-lg relative hover:shadow-lg transition"
       >
-        {sale && (
+        {isSale && (
           <>
             <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-md z-10">
               SALE
@@ -160,7 +156,12 @@ export default function ProductCard({ product }) {
         {/* Image */}
         <div className="relative h-48 bg-gray-100 mb-4 overflow-hidden">
           <img
-            src={product.main_image || (product.images && product.images[0] ? product.images[0].image_url : "/placeholder.png")}
+            src={
+              product.main_image ||
+              (product.images && product.images[0]
+                ? product.images[0].image_url
+                : "/placeholder.png")
+            }
             alt={product.name}
             className="absolute cursor-pointer inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-300"
           />
@@ -186,11 +187,12 @@ export default function ProductCard({ product }) {
 
         {/* Info */}
         <h3 className="text-sm font-semibold mb-1">{product.name}</h3>
-        {sale ? (
+        {isSale ? (
           <>
             <div className="flex flex-col items-left gap-2">
               <span className="text-red-500 font-bold">
-                ${parseFloat(product.price_after).toLocaleString("en-US", {
+                $
+                {parseFloat(product.price_after).toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
@@ -198,10 +200,11 @@ export default function ProductCard({ product }) {
 
               {product.price_after < product.price && (
                 <span className="text-gray-400 line-through text-sm">
-                  ${parseFloat(product.price).toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                  $
+                  {parseFloat(product.price).toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                 </span>
               )}
             </div>

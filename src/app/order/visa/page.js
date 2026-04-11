@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/app/component/Toast";
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useMemo, useEffect } from "react";
@@ -55,7 +56,7 @@ export default function OrderPage() {
   }, [sortedAddress]);
   const handlePlaceOrder = async () => {
   if (!selectedAddress) {
-    alert("Vui lòng chọn địa chỉ giao hàng");
+    toast.error("Vui lòng chọn địa chỉ giao hàng");
     return;
   }
 
@@ -124,7 +125,7 @@ export default function OrderPage() {
           {sortedAddress.map((item) => (
             <option key={item.id} value={item.id}>
               {item.is_default ? "⭐ " : ""}
-              {item.address}, {item.district}, {item.ward}
+              {[item.house_number, item.street_name, item.ward, item.province].filter(Boolean).join(", ")}
             </option>
           ))}
         </select>
@@ -272,7 +273,7 @@ export default function OrderPage() {
               ${
               (type === "buyNow"
                 ? product?.price_after * quantity
-                : summary.totalPrice).toLocaleString("en-US", {
+                : summary.totalPrice)?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })
@@ -294,7 +295,7 @@ export default function OrderPage() {
               ${
               (type === "buyNow"
                 ? product?.price_after * quantity
-                : summary.totalPrice).toLocaleString("en-US", {
+                : summary.totalPrice)?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })

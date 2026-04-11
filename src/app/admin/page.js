@@ -200,11 +200,12 @@ useEffect(() => {
                 <XAxis 
                   dataKey="month" 
                   stroke="#666"
+                  tickFormatter={(value) => `Tháng ${value}`}
                 />
                 <YAxis 
                   stroke="#666"
                   width={80}
-                  formatter={formatCurrency}
+                  tickFormatter={formatCurrency}
                 />
                 <Tooltip 
                   formatter={(value) => formatCurrency(value)}

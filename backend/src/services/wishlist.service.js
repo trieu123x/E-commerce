@@ -70,13 +70,22 @@ class WishlistService {
     }
 
     return {
+      id: item.id,
+      user_id: item.user_id,
       product_id: product.id,
-      name: product.name,
-      price: parseFloat(product.price),
-      price_after: parseFloat(price_after),
-      saleName: saleName,
-      image_url: product.images && product.images[0] ? product.images[0].image_url : null,
-      stock: product.stock,
+      product: {
+        id: product.id,
+        category_id: product.category_id,
+        name: product.name,
+        price: parseFloat(product.price),
+        price_after: parseFloat(price_after),
+        saleName: saleName,
+        images: product.images,
+        main_image: product.images && product.images[0] ? product.images[0].image_url : null,
+        stock: product.stock,
+        rating: product.rating,
+        review_count: product.review_count
+      }
     };
   }
 }

@@ -18,7 +18,11 @@ export default function OrdersPage() {
     setOpenOrder(openOrder === id ? null : id);
   };
 
+  const [loading, setLoading] = useState(false);
+
   const fetchOrders = async () => {
+    if (loading) return;
+    setLoading(true);
     try {
       const res = await instance.get("/order/your-order", {
         params: { page, limit: 5 }
@@ -34,11 +38,15 @@ export default function OrdersPage() {
       setTotalPages(res.data.pagination.total_pages);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (user) fetchOrders();
+    if (user) {
+      fetchOrders();
+    }
   }, [user, page, statusFilter]);
 
   return (

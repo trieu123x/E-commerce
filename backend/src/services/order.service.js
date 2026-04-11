@@ -133,7 +133,7 @@ class OrderService {
         {
           user_id: userId,
           shipping_address:
-            address.address + ", " + address.district + ", " + address.ward,
+            [address.house_number, address.street_name, address.ward, address.province].filter(Boolean).join(", "),
           total_amount: totalAmount,
           status: payment_method === "COD" ? "COMPLETED" : "PENDING",
           payment_method,
@@ -333,15 +333,8 @@ class OrderService {
       throw new Error("Đơn hàng không tồn tại");
     }
 
-    let address = null;
-    if (order.shipping_address) {
-      address = await db.Address.findByPk(order.shipping_address, {
-        attributes: ["id", "address", "district", "ward"],
-      });
-    }
-
     const orderData = order.toJSON();
-    orderData.address = address;
+    orderData.address = order.shipping_address;
 
     return orderData;
   }

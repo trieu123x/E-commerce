@@ -13,7 +13,7 @@ class AddressService {
   }
 
   async createAddress(userId, data) {
-    const { address, district, ward, is_default = false } = data;
+    const { house_number, street_name, province, ward, is_default = false } = data;
     const transaction = await db.sequelize.transaction();
 
     try {
@@ -23,8 +23,9 @@ class AddressService {
 
       const newAddress = await addressRepository.create({
         user_id: userId,
-        address,
-        district,
+        house_number,
+        street_name,
+        province,
         ward,
         is_default,
       }, { transaction });
@@ -38,7 +39,7 @@ class AddressService {
   }
 
   async updateAddress(userId, id, data) {
-    const { address, district, ward, is_default } = data;
+    const { house_number, street_name, province, ward, is_default } = data;
     const transaction = await db.sequelize.transaction();
 
     try {
@@ -52,8 +53,9 @@ class AddressService {
       }
 
       await addressRecord.update({
-        address: address || addressRecord.address,
-        district: district || addressRecord.district,
+        house_number: house_number !== undefined ? house_number : addressRecord.house_number,
+        street_name: street_name !== undefined ? street_name : addressRecord.street_name,
+        province: province || addressRecord.province,
         ward: ward || addressRecord.ward,
         is_default: is_default !== undefined ? is_default : addressRecord.is_default,
       }, { transaction });

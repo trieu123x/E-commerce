@@ -10,7 +10,7 @@ export default function ProductSection() {
   useEffect(() => {
     fetchSales();
   }, []);
-  const fetchSales = async () => {
+  async function fetchSales() {
     try {
       const res = await instance.get("/sales/active");
       if (res.data.success) {
@@ -20,9 +20,9 @@ export default function ProductSection() {
     } catch (err) {
       console.log(err);
     }
-  };
+  }
   return (
-    <section className=" container mx-auto py-10 ">
+    <>{sales.length > 0 && <section className=" container mx-auto py-10 ">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
@@ -57,6 +57,7 @@ export default function ProductSection() {
           View All Products
         </button>
       </div>
-    </section>
+    </section>}
+    </>
   );
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export default function Countdown({ endDate }) {
-  const calculateTime = () => {
+  function calculateTime() {
     const now = Date.now();
     const distance = new Date(endDate) - now;
 
@@ -15,9 +15,9 @@ export default function Countdown({ endDate }) {
       minutes: Math.floor((distance / (1000 * 60)) % 60),
       seconds: Math.floor((distance / 1000) % 60),
     };
-  };
+  }
 
-  const [timeLeft, setTimeLeft] = useState(calculateTime());
+  const [timeLeft, setTimeLeft] = useState(() => calculateTime());
 
   useEffect(() => {
     const timer = setInterval(() => {

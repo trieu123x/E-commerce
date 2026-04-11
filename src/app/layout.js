@@ -1,6 +1,7 @@
 // https://www.figma.com/design/4UNytlbUa1T0Q2xs9Ar7xj/Full-E-Commerce-Website-UI-UX-Design--Community-?node-id=1-3&p=f&t=6Mt2jipeDqXeIoYl-0
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Toast from "@/app/component/Toast";
 import Navbar from "./component/navbar";
 import Banner from "./component/banner";
 import Footer from "./component/footer";
@@ -39,6 +40,7 @@ export default function RootLayout({ children }) {
           <Navbar />
         
         {children}
+        <Toast />
         <Footer />
         </AuthProvider>
         

@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/app/component/Toast";
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useMemo, useEffect } from "react";
@@ -48,7 +49,7 @@ export default function StripeOrderPage() {
 
   const handlePlaceOrder = async () => {
     if (!selectedAddress) {
-      alert("Vui lòng chọn địa chỉ giao hàng");
+      toast.error("Vui lòng chọn địa chỉ giao hàng");
       return;
     }
 
@@ -95,12 +96,12 @@ export default function StripeOrderPage() {
         // 4. Redirect sang Stripe
         window.location.href = stripeRes.data.payUrl;
       } else {
-        alert("Lỗi khi tạo link thanh toán Stripe");
+        toast.error("Lỗi khi tạo link thanh toán Stripe");
       }
 
     } catch (error) {
       console.error("Lỗi đặt hàng:", error);
-      alert(error.response?.data?.message || "Đã xảy ra lỗi khi tạo đơn hàng.");
+      toast.error(error.response?.data?.message || "Đã xảy ra lỗi khi tạo đơn hàng.");
     } finally {
       setLoading(false);
     }
@@ -135,7 +136,7 @@ export default function StripeOrderPage() {
           {sortedAddress.map((item) => (
             <option key={item.id} value={item.id} className="bg-zinc-900">
               {item.is_default ? "⭐ " : ""}
-              {item.address}, {item.district}, {item.ward}
+              {[item.house_number, item.street_name, item.ward, item.province].filter(Boolean).join(", ")}
             </option>
           ))}
         </select>

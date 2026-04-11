@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/app/component/Toast";
 import { useEffect, useState } from "react";
 import instance from "../../api/axios";
 import { Star,Trash2, Edit, Plus, Image as ImageIcon, ChevronUp, ChevronDown } from "lucide-react";
@@ -121,13 +122,13 @@ export default function ProductsPage() {
       fetchProducts();
     } catch (error) {
       console.error("Error changing status:", error);
-      alert("Lỗi khi thay đổi trạng thái");
+      toast.error("Lỗi khi thay đổi trạng thái");
     }
   };
 
   const handleUpdateStock = async () => {
     if (!stockData.stock || isNaN(stockData.stock)) {
-      alert("Vui lòng nhập số lượng hợp lệ");
+      toast.error("Vui lòng nhập số lượng hợp lệ");
       return;
     }
     try {
@@ -139,7 +140,7 @@ export default function ProductsPage() {
       fetchProducts();
     } catch (error) {
       console.error("Error updating stock:", error);
-      alert("Lỗi khi cập nhật kho");
+      toast.error("Lỗi khi cập nhật kho");
     }
   };
 
@@ -174,7 +175,7 @@ export default function ProductsPage() {
 
   const handleAddImage = async () => {
     if (!imageFormData.imageUrl.trim()) {
-      alert("Vui lòng nhập URL ảnh");
+      toast.error("Vui lòng nhập URL ảnh");
       return;
     }
     try {
@@ -194,7 +195,7 @@ export default function ProductsPage() {
       }
     } catch (error) {
       console.error("Error adding image:", error);
-      alert("Lỗi khi thêm ảnh");
+      toast.error("Lỗi khi thêm ảnh");
     }
   };
 
@@ -268,7 +269,7 @@ export default function ProductsPage() {
       fetchProducts();
     } catch (error) {
       console.error("Error saving product:", error);
-      alert("Lỗi khi lưu sản phẩm");
+      toast.error("Lỗi khi lưu sản phẩm");
     }
   };
 

@@ -76,7 +76,7 @@ export const updateCategory = async (req, res) => {
 export const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
-    const { move_to_category_id } = req.body;
+    const { move_to_category_id } = req.body || {};
     const productsCount = await categoryService.deleteCategory(id, move_to_category_id);
     
     res.json({

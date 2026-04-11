@@ -51,7 +51,7 @@ export default function Products() {
     }
   }, [categoryFromUrl]);
 
-  const fetchProducts = async () => {
+  async function fetchProducts() {
     try {
       const res = await instance.get(
         `/products?page=${page}&search=${filters.search}&min_price=${filters.minPrice}&max_price=${filters.maxPrice}&category_id=${filters.category}&sort_by=${filters.sortBy}&sort_order=${filters.sortOrder}&sale=${filters.sale}`,
@@ -65,8 +65,8 @@ export default function Products() {
     } catch (error) {
       console.error("Fetch products error:", error);
     }
-  };
-  const fetchSales = async () => {
+  }
+  async function fetchSales() {
     try {
       const res = await instance.get("/sales/active");
       if (res.data.success) {
@@ -76,7 +76,7 @@ export default function Products() {
     } catch (err) {
       console.log(err);
     }
-  };
+  }
 
   return (
     <div className="container mx-auto px-6 py-10">
