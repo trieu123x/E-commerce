@@ -310,13 +310,18 @@ router.get("/stats-weekly", async (req, res) => {
         const weekEndDate = new Date(weekStartDate);
         weekEndDate.setDate(weekEndDate.getDate() + 6);
         
+        // Format: "Tuần 1 (12/1 - 18/1)"
+        const startDay = weekStartDate.getDate();
+        const startMonth = weekStartDate.getMonth() + 1;
+        const endDay = weekEndDate.getDate();
+        const endMonth = weekEndDate.getMonth() + 1;
+        const label = `Tuần ${item.week} (${startDay}/${startMonth} - ${endDay}/${endMonth})`;
+        
         weekMap.set(key, {
           year: Number(item.year),
           month: Number(item.month),
           week: Number(item.week),
-          week_start: weekStartDate.toLocaleDateString('vi-VN'),
-          week_end: weekEndDate.toLocaleDateString('vi-VN'),
-          label: `Tuần ${item.week} (${weekStartDate.toLocaleDateString('vi-VN')} - ${weekEndDate.toLocaleDateString('vi-VN')})`,
+          label: label,
           total: 0
         });
       }
@@ -395,10 +400,11 @@ router.get("/stats-daily", async (req, res) => {
     result.forEach(item => {
       const key = item.date;
       if (!dateMap.has(key)) {
-        const dateObj = new Date(item.date);
+        // Format: "12/1" (ngày/tháng)
+        const label = `${item.day}/${item.month}`;
         dateMap.set(key, {
           date: item.date,
-          label: dateObj.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+          label: label,
           total: 0
         });
       }
