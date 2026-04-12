@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Package, FolderOpen, Users, ShoppingCart, TrendingUp } from "lucide-react";
 import instance from "../api/axios";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, ComposedChart } from "recharts";
 
 export default function AdminDashboard() {
   const { user, loading,products } = useAuth();
@@ -23,6 +23,7 @@ export default function AdminDashboard() {
   const [topProducts, setTopProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [chartType, setChartType] = useState("monthly"); // monthly, weekly, daily
+  const [visualType, setVisualType] = useState("bar"); // bar, line, combined
 
   // Format số tiền theo kiểu 1M, 2M, 3M
   const formatCurrency = (value) => {
@@ -219,6 +220,40 @@ useEffect(() => {
             </button>
           </div>
 
+          {/* Chart Visual Type Tabs */}
+          <div className="flex gap-3 mb-6 border-b border-gray-200">
+            <button
+              onClick={() => setVisualType("bar")}
+              className={`px-4 py-2 font-medium transition ${
+                visualType === "bar"
+                  ? "text-green-600 border-b-2 border-green-600"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Biểu Đồ Cột
+            </button>
+            <button
+              onClick={() => setVisualType("line")}
+              className={`px-4 py-2 font-medium transition ${
+                visualType === "line"
+                  ? "text-green-600 border-b-2 border-green-600"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Biểu Đồ Đường
+            </button>
+            <button
+              onClick={() => setVisualType("combined")}
+              className={`px-4 py-2 font-medium transition ${
+                visualType === "combined"
+                  ? "text-green-600 border-b-2 border-green-600"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Kết Hợp
+            </button>
+          </div>
+
           {/* Filters */}
           <div className="flex gap-4 mb-6 flex-wrap">
             <div>
@@ -268,64 +303,205 @@ useEffect(() => {
           ) : revenueData.length > 0 ? (
             <div>
               <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={revenueData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis 
-                    dataKey={chartType === "monthly" ? "month" : chartType === "weekly" ? "label" : "label"}
-                    stroke="#666"
-                    angle={0}
-                    tickFormatter={(value) => {
-                      if (chartType === "monthly") return `Tháng ${value}`;
-                      return value;
-                    }}
-                  />
-                  <YAxis 
-                    stroke="#666"
-                    width={80}
-                    tickFormatter={formatCurrency}
-                  />
-                  <Tooltip 
-                    content={({ active, payload, label }) => {
-                      if (active && payload && payload.length) {
-                        const data = payload[0].payload;
-                        return (
-                          <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-300">
-                            <p className="font-semibold text-gray-800 mb-2">
-                              {chartType === "monthly" && `Tháng ${data.month}`}
-                              {chartType === "weekly" && data.label}
-                              {chartType === "daily" && data.label}
-                            </p>
-                            <p className="text-green-600">COD (Tiền mặt): {formatCurrency(data.COD || 0)}</p>
-                            <p className="text-blue-600">VNPay: {formatCurrency(data.VNPAY || 0)}</p>
-                            <p className="text-purple-600">Stripe: {formatCurrency(data.STRIPE || 0)}</p>
-                            <hr className="my-2" />
-                            <p className="font-bold text-lg text-gray-800">Tổng: {formatCurrency(data.total || 0)}</p>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
-                  <Legend />
-                  <Bar 
-                    dataKey="COD" 
-                    fill="#10b981" 
-                    name="COD (Tiền mặt)"
-                    stackId="a"
-                  />
-                  <Bar 
-                    dataKey="VNPAY" 
-                    fill="#3b82f6" 
-                    name="VNPay"
-                    stackId="a"
-                  />
-                  <Bar 
-                    dataKey="STRIPE" 
-                    fill="#8b5cf6" 
-                    name="Stripe"
-                    stackId="a"
-                  />
-                </BarChart>
+                {visualType === "bar" && (
+                  <BarChart data={revenueData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis 
+                      dataKey={chartType === "monthly" ? "month" : chartType === "weekly" ? "label" : "label"}
+                      stroke="#666"
+                      angle={0}
+                      tickFormatter={(value) => {
+                        if (chartType === "monthly") return `Tháng ${value}`;
+                        return value;
+                      }}
+                    />
+                    <YAxis 
+                      stroke="#666"
+                      width={80}
+                      tickFormatter={formatCurrency}
+                    />
+                    <Tooltip 
+                      content={({ active, payload, label }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload;
+                          return (
+                            <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-300">
+                              <p className="font-semibold text-gray-800 mb-2">
+                                {chartType === "monthly" && `Tháng ${data.month}`}
+                                {chartType === "weekly" && data.label}
+                                {chartType === "daily" && data.label}
+                              </p>
+                              <p className="text-green-600">COD (Tiền mặt): {formatCurrency(data.COD || 0)}</p>
+                              <p className="text-blue-600">VNPay: {formatCurrency(data.VNPAY || 0)}</p>
+                              <p className="text-purple-600">Stripe: {formatCurrency(data.STRIPE || 0)}</p>
+                              <hr className="my-2" />
+                              <p className="font-bold text-lg text-gray-800">Tổng: {formatCurrency(data.total || 0)}</p>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Legend />
+                    <Bar 
+                      dataKey="COD" 
+                      fill="#10b981" 
+                      name="COD (Tiền mặt)"
+                      stackId="a"
+                    />
+                    <Bar 
+                      dataKey="VNPAY" 
+                      fill="#3b82f6" 
+                      name="VNPay"
+                      stackId="a"
+                    />
+                    <Bar 
+                      dataKey="STRIPE" 
+                      fill="#8b5cf6" 
+                      name="Stripe"
+                      stackId="a"
+                    />
+                  </BarChart>
+                )}
+
+                {visualType === "line" && (
+                  <LineChart data={revenueData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis 
+                      dataKey={chartType === "monthly" ? "month" : chartType === "weekly" ? "label" : "label"}
+                      stroke="#666"
+                      angle={0}
+                      tickFormatter={(value) => {
+                        if (chartType === "monthly") return `Tháng ${value}`;
+                        return value;
+                      }}
+                    />
+                    <YAxis 
+                      stroke="#666"
+                      width={80}
+                      tickFormatter={formatCurrency}
+                    />
+                    <Tooltip 
+                      content={({ active, payload, label }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload;
+                          return (
+                            <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-300">
+                              <p className="font-semibold text-gray-800 mb-2">
+                                {chartType === "monthly" && `Tháng ${data.month}`}
+                                {chartType === "weekly" && data.label}
+                                {chartType === "daily" && data.label}
+                              </p>
+                              <p className="text-green-600">COD (Tiền mặt): {formatCurrency(data.COD || 0)}</p>
+                              <p className="text-blue-600">VNPay: {formatCurrency(data.VNPAY || 0)}</p>
+                              <p className="text-purple-600">Stripe: {formatCurrency(data.STRIPE || 0)}</p>
+                              <hr className="my-2" />
+                              <p className="font-bold text-lg text-gray-800">Tổng: {formatCurrency(data.total || 0)}</p>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Legend />
+                    <Line 
+                      type="monotone" 
+                      dataKey="COD" 
+                      stroke="#10b981" 
+                      name="COD (Tiền mặt)"
+                      strokeWidth={2}
+                      dot={{ r: 4 }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="VNPAY" 
+                      stroke="#3b82f6" 
+                      name="VNPay"
+                      strokeWidth={2}
+                      dot={{ r: 4 }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="STRIPE" 
+                      stroke="#8b5cf6" 
+                      name="Stripe"
+                      strokeWidth={2}
+                      dot={{ r: 4 }}
+                    />
+                  </LineChart>
+                )}
+
+                {visualType === "combined" && (
+                  <ComposedChart data={revenueData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis 
+                      dataKey={chartType === "monthly" ? "month" : chartType === "weekly" ? "label" : "label"}
+                      stroke="#666"
+                      angle={0}
+                      tickFormatter={(value) => {
+                        if (chartType === "monthly") return `Tháng ${value}`;
+                        return value;
+                      }}
+                    />
+                    <YAxis 
+                      stroke="#666"
+                      width={80}
+                      tickFormatter={formatCurrency}
+                    />
+                    <Tooltip 
+                      content={({ active, payload, label }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload;
+                          return (
+                            <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-300">
+                              <p className="font-semibold text-gray-800 mb-2">
+                                {chartType === "monthly" && `Tháng ${data.month}`}
+                                {chartType === "weekly" && data.label}
+                                {chartType === "daily" && data.label}
+                              </p>
+                              <p className="text-green-600">COD (Tiền mặt): {formatCurrency(data.COD || 0)}</p>
+                              <p className="text-blue-600">VNPay: {formatCurrency(data.VNPAY || 0)}</p>
+                              <p className="text-purple-600">Stripe: {formatCurrency(data.STRIPE || 0)}</p>
+                              <hr className="my-2" />
+                              <p className="font-bold text-lg text-gray-800">Tổng: {formatCurrency(data.total || 0)}</p>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Legend />
+                    <Bar 
+                      dataKey="total" 
+                      fill="#e0e7ff" 
+                      name="Tổng Doanh Thu"
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="COD" 
+                      stroke="#10b981" 
+                      name="COD (Tiền mặt)"
+                      strokeWidth={2}
+                      dot={{ r: 4 }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="VNPAY" 
+                      stroke="#3b82f6" 
+                      name="VNPay"
+                      strokeWidth={2}
+                      dot={{ r: 4 }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="STRIPE" 
+                      stroke="#8b5cf6" 
+                      name="Stripe"
+                      strokeWidth={2}
+                      dot={{ r: 4 }}
+                    />
+                  </ComposedChart>
+                )}
               </ResponsiveContainer>
             </div>
           ) : (

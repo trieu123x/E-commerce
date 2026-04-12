@@ -66,6 +66,17 @@ export default function UsersPage() {
 
   const totalPages = Math.ceil(total / limit);
 
+  const formatDate = (dateString) => {
+    try {
+      if (!dateString) return "N/A";
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return "N/A";
+      return date.toLocaleDateString("vi-VN");
+    } catch (error) {
+      return "N/A";
+    }
+  };
+
   if (loading && users.length === 0) {
     return <div className="text-center py-10">Đang tải...</div>;
   }
@@ -139,7 +150,7 @@ export default function UsersPage() {
                   ${parseFloat(user.total_spent || 0).toFixed(2)}
                 </td>
                 <td className="px-6 py-3 text-sm">
-                  {new Date(user.created_at).toLocaleDateString("vi-VN")}
+                  {formatDate(user.created_at)}
                 </td>
                 <td className="px-6 py-3 flex gap-2">
                   {user.status === "LOCKED" ? (
