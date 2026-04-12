@@ -1,6 +1,7 @@
 import express from "express";
 import db from "../../../models/index.js";
 import { Op } from "sequelize";
+import userService from "../../services/user.service.js";
 
 const { User } = db;
 const router = express.Router();
@@ -272,6 +273,78 @@ router.patch("/:id/role", async (req, res) => {
     });
   } catch (error) {
     console.error("Update role error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Lỗi server",
+      error: error.message,
+    });
+  }
+});
+
+// Recalculate VIP status for ALL users (MUST be before /:id routes)
+router.post("/recalculate-vip/all", async (req, res) => {
+  try {
+    const users = await db.User.findAll({
+      where: { role: 'customer' },
+      attributes: ['id']
+    });
+
+    let updatedCount = 0;
+    let vipCount = 0;
+    
+    for (const user of users) {
+      try {
+        const updated = await userService.updateVipStatus(user.id);
+        updatedCount++;
+        if (updated.is_vip) {
+          vipCount++;
+        }
+      } catch (err) {
+        console.error(`Error updating VIP for user ${user.id}:`, err);
+      }
+    }
+
+    res.json({
+      success: true,
+      message: `Recalculated VIP status for all users`,
+      stats: {
+        total_customers: users.length,
+        updated: updatedCount,
+        vip_count: vipCount
+      }
+    });
+  } catch (error) {
+    console.error("Recalculate VIP all error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Lỗi server",
+      error: error.message,
+    });
+  }
+});
+
+// Recalculate VIP status for a specific user
+router.post("/:id/recalculate-vip", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await db.User.findByPk(id);
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Người dùng không tồn tại",
+      });
+    }
+
+    const updatedUser = await userService.updateVipStatus(id);
+    
+    res.json({
+      success: true,
+      message: `VIP status updated - Is VIP: ${updatedUser.is_vip}, Total Spent: ${updatedUser.total_spent}`,
+      data: updatedUser,
+    });
+  } catch (error) {
+    console.error("Recalculate VIP error:", error);
     res.status(500).json({
       success: false,
       message: "Lỗi server",

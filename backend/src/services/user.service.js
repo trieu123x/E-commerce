@@ -26,27 +26,34 @@ class UserService {
   }
 
   async updateVipStatus(userId) {
+    const db = await import("../../models/index.js").then(m => m.default);
+    
     const user = await userRepository.findById(userId);
     if (!user) {
       throw new Error("User not found");
     }
 
-    // Calculate total spent from completed orders
-    const db = await import("../../models/index.js").then(m => m.default);
-    const totalSpent = await db.sequelize.query(`
-      SELECT COALESCE(SUM(total_amount), 0) as total
-      FROM orders
-      WHERE user_id = :user_id AND status = 'COMPLETED'
-    `, {
-      replacements: { user_id: userId },
-      type: db.Sequelize.QueryTypes.SELECT
+    // Calculate total spent from completed orders - using more explicit query
+    const orders = await db.Order.findAll({
+      where: {
+        user_id: userId,
+        status: 'COMPLETED'
+      },
+      attributes: ['id', 'total_amount'],
+      raw: true
     });
 
-    const spent = parseFloat(totalSpent[0].total) || 0;
-    const isVip = spent >= 100000;
+    // Sum all order amounts
+    const totalSpent = orders.reduce((sum, order) => {
+      return sum + (parseFloat(order.total_amount) || 0);
+    }, 0);
+
+    console.log(`[VIP Check] User ${userId}: Total Spent = ${totalSpent}, Is VIP = ${totalSpent >= 100000}`);
+
+    const isVip = totalSpent >= 100000;
 
     return await userRepository.update(userId, {
-      total_spent: spent,
+      total_spent: totalSpent,
       is_vip: isVip
     });
   }
