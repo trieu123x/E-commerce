@@ -194,45 +194,60 @@ useEffect(() => {
               Đang tải dữ liệu...
             </div>
           ) : revenueData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={400}>
-              <BarChart data={revenueData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="month" 
-                  stroke="#666"
-                  tickFormatter={(value) => `Tháng ${value}`}
-                />
-                <YAxis 
-                  stroke="#666"
-                  width={80}
-                  tickFormatter={formatCurrency}
-                />
-                <Tooltip 
-                  formatter={(value) => formatCurrency(value)}
-                  labelStyle={{ color: '#000' }}
-                  contentStyle={{ backgroundColor: '#fff', border: '1px solid #ccc' }}
-                />
-                <Legend />
-                <Bar 
-                  dataKey="COD" 
-                  fill="#10b981" 
-                  name="COD (Tiền mặt)"
-                  stackId="a"
-                />
-                <Bar 
-                  dataKey="VNPAY" 
-                  fill="#3b82f6" 
-                  name="VNPay"
-                  stackId="a"
-                />
-                <Bar 
-                  dataKey="STRIPE" 
-                  fill="#8b5cf6" 
-                  name="Stripe"
-                  stackId="a"
-                />
-              </BarChart>
-            </ResponsiveContainer>
+            <div>
+              <ResponsiveContainer width="100%" height={400}>
+                <BarChart data={revenueData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis 
+                    dataKey="month" 
+                    stroke="#666"
+                    tickFormatter={(value) => `Tháng ${value}`}
+                  />
+                  <YAxis 
+                    stroke="#666"
+                    width={80}
+                    tickFormatter={formatCurrency}
+                  />
+                  <Tooltip 
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        const data = payload[0].payload;
+                        return (
+                          <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-300">
+                            <p className="font-semibold text-gray-800 mb-2">Tháng {data.month}</p>
+                            <p className="text-green-600">COD (Tiền mặt): {formatCurrency(data.COD || 0)}</p>
+                            <p className="text-blue-600">VNPay: {formatCurrency(data.VNPAY || 0)}</p>
+                            <p className="text-purple-600">Stripe: {formatCurrency(data.STRIPE || 0)}</p>
+                            <hr className="my-2" />
+                            <p className="font-bold text-lg text-gray-800">Tổng: {formatCurrency(data.total || 0)}</p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Legend />
+                  <Bar 
+                    dataKey="COD" 
+                    fill="#10b981" 
+                    name="COD (Tiền mặt)"
+                    stackId="a"
+                  />
+                  <Bar 
+                    dataKey="VNPAY" 
+                    fill="#3b82f6" 
+                    name="VNPay"
+                    stackId="a"
+                  />
+                  <Bar 
+                    dataKey="STRIPE" 
+                    fill="#8b5cf6" 
+                    name="Stripe"
+                    stackId="a"
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           ) : (
             <div className="h-80 flex items-center justify-center text-gray-500">
               Chưa có dữ liệu doanh thu
