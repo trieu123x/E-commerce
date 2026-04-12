@@ -17,10 +17,12 @@ export default function AdminDashboard() {
     categories: 5,
   });
   const [year, setYear] = useState(new Date().getFullYear());
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [revenueData, setRevenueData] = useState([]);
   const [loadingChart, setLoadingChart] = useState(false);
   const [topProducts, setTopProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
+  const [chartType, setChartType] = useState("monthly"); // monthly, weekly, daily
 
   // Format số tiền theo kiểu 1M, 2M, 3M
   const formatCurrency = (value) => {
@@ -46,7 +48,15 @@ export default function AdminDashboard() {
     try {
       setLoadingChart(true);
 
-      const res = await instance.get(`/admin/products/stats?year=${year}`);
+      let url = `/admin/products/stats?year=${year}`;
+      
+      if (chartType === "weekly") {
+        url = `/admin/products/stats-weekly?year=${year}&month=${month}`;
+      } else if (chartType === "daily") {
+        url = `/admin/products/stats-daily?year=${year}&month=${month}`;
+      }
+
+      const res = await instance.get(url);
 
       if (res.data.success) {
         setRevenueData(res.data.data);
@@ -62,7 +72,7 @@ export default function AdminDashboard() {
   if (user && user.role === "admin") {
     fetchRevenueData();
   }
-}, [user, year]);
+}, [user, year, month, chartType]);
 useEffect(() => {
     const fetchTopProducts = async () => {
       try {
@@ -168,25 +178,87 @@ useEffect(() => {
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold flex items-center gap-2">
               <TrendingUp className="text-blue-600" />
-              Thống Kê Doanh Thu Theo Tháng
+              Thống Kê Doanh Thu
             </h2>
-            <select
-              value={year}
-              onChange={(e) => setYear(Number(e.target.value))}
-              className="border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium bg-white"
+          </div>
+
+          {/* Chart Type Tabs */}
+          <div className="flex gap-3 mb-6 border-b border-gray-200">
+            <button
+              onClick={() => setChartType("monthly")}
+              className={`px-4 py-2 font-medium transition ${
+                chartType === "monthly"
+                  ? "text-blue-600 border-b-2 border-blue-600"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
             >
-              {[...Array(10)].map((_, i) => {
-                const y = new Date().getFullYear() - 5 + i;
-                return (
-                  <option key={y} value={y}>
-                    Năm {y}
-                  </option>
-                );
-              })}
-            </select>
+              Theo Tháng
+            </button>
+            <button
+              onClick={() => setChartType("weekly")}
+              className={`px-4 py-2 font-medium transition ${
+                chartType === "weekly"
+                  ? "text-blue-600 border-b-2 border-blue-600"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Theo Tuần
+            </button>
+            <button
+              onClick={() => setChartType("daily")}
+              className={`px-4 py-2 font-medium transition ${
+                chartType === "daily"
+                  ? "text-blue-600 border-b-2 border-blue-600"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Theo Ngày
+            </button>
+          </div>
+
+          {/* Filters */}
+          <div className="flex gap-4 mb-6 flex-wrap">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Năm
+              </label>
+              <select
+                value={year}
+                onChange={(e) => setYear(Number(e.target.value))}
+                className="border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium bg-white"
+              >
+                {[...Array(10)].map((_, i) => {
+                  const y = new Date().getFullYear() - 5 + i;
+                  return (
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+
+            {(chartType === "weekly" || chartType === "daily") && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tháng
+                </label>
+                <select
+                  value={month}
+                  onChange={(e) => setMonth(Number(e.target.value))}
+                  className="border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium bg-white"
+                >
+                  {[...Array(12)].map((_, i) => (
+                    <option key={i + 1} value={i + 1}>
+                      Tháng {i + 1}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
           
           {loadingChart ? (
@@ -196,12 +268,18 @@ useEffect(() => {
           ) : revenueData.length > 0 ? (
             <div>
               <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={revenueData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                <BarChart data={revenueData} margin={{ top: 5, right: 30, left: 0, bottom: 80 }}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis 
-                    dataKey="month" 
+                    dataKey={chartType === "monthly" ? "month" : chartType === "weekly" ? "label" : "label"}
                     stroke="#666"
-                    tickFormatter={(value) => `Tháng ${value}`}
+                    angle={-45}
+                    textAnchor="end"
+                    height={100}
+                    tickFormatter={(value) => {
+                      if (chartType === "monthly") return `Tháng ${value}`;
+                      return value;
+                    }}
                   />
                   <YAxis 
                     stroke="#666"
@@ -214,7 +292,11 @@ useEffect(() => {
                         const data = payload[0].payload;
                         return (
                           <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-300">
-                            <p className="font-semibold text-gray-800 mb-2">Tháng {data.month}</p>
+                            <p className="font-semibold text-gray-800 mb-2">
+                              {chartType === "monthly" && `Tháng ${data.month}`}
+                              {chartType === "weekly" && data.label}
+                              {chartType === "daily" && data.label}
+                            </p>
                             <p className="text-green-600">COD (Tiền mặt): {formatCurrency(data.COD || 0)}</p>
                             <p className="text-blue-600">VNPay: {formatCurrency(data.VNPAY || 0)}</p>
                             <p className="text-purple-600">Stripe: {formatCurrency(data.STRIPE || 0)}</p>

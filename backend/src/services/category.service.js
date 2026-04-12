@@ -17,28 +17,74 @@ class CategoryService {
     // Add product counts for each category
     const categoriesWithCounts = await Promise.all(
       categories.map(async (cat) => {
-        const productCount = await db.Product.count({
-          where: { category_id: cat.id },
-        });
+        let productCount = 0;
+        let totalSold = 0;
 
-        // Get sold count (sum of quantity from order items for products in this category)
-        const [{ total_sold }] = await db.sequelize.query(`
-          SELECT COALESCE(SUM(oi.quantity), 0) as total_sold
-          FROM order_items oi
-          JOIN products p ON oi.product_id = p.id
-          WHERE p.category_id = :category_id
-          AND oi.order_id IN (
-            SELECT id FROM orders WHERE status = 'COMPLETED'
-          )
-        `, {
-          replacements: { category_id: cat.id },
-          type: db.Sequelize.QueryTypes.SELECT
-        });
+        // Nếu là danh mục cha (parent_id = null)
+        if (!cat.parent_id) {
+          // Count products từ danh mục cha + tất cả danh mục con
+          const [result] = await db.sequelize.query(`
+            SELECT COUNT(DISTINCT p.id) as count
+            FROM products p
+            WHERE p.category_id = :category_id
+            OR p.category_id IN (
+              SELECT id FROM categories WHERE parent_id = :category_id
+            )
+          `, {
+            replacements: { category_id: cat.id },
+            type: db.Sequelize.QueryTypes.SELECT
+          });
+          productCount = parseInt(result.count) || 0;
+
+          // Sum sold quantity từ danh mục cha + con
+          const [soldResult] = await db.sequelize.query(`
+            SELECT COALESCE(SUM(oi.quantity), 0) as total_sold
+            FROM order_items oi
+            JOIN products p ON oi.product_id = p.id
+            WHERE (p.category_id = :category_id
+              OR p.category_id IN (
+                SELECT id FROM categories WHERE parent_id = :category_id
+              ))
+            AND oi.order_id IN (
+              SELECT id FROM orders WHERE status = 'COMPLETED'
+            )
+          `, {
+            replacements: { category_id: cat.id },
+            type: db.Sequelize.QueryTypes.SELECT
+          });
+          totalSold = parseInt(soldResult.total_sold) || 0;
+        } else {
+          // Nếu là danh mục con - chỉ count sản phẩm của danh mục này
+          const [result] = await db.sequelize.query(`
+            SELECT COUNT(DISTINCT p.id) as count
+            FROM products p
+            WHERE p.category_id = :category_id
+          `, {
+            replacements: { category_id: cat.id },
+            type: db.Sequelize.QueryTypes.SELECT
+          });
+          productCount = parseInt(result.count) || 0;
+
+          // Sum sold quantity
+          const [soldResult] = await db.sequelize.query(`
+            SELECT COALESCE(SUM(oi.quantity), 0) as total_sold
+            FROM order_items oi
+            JOIN products p ON oi.product_id = p.id
+            WHERE p.category_id = :category_id
+            AND oi.order_id IN (
+              SELECT id FROM orders WHERE status = 'COMPLETED'
+            )
+          `, {
+            replacements: { category_id: cat.id },
+            type: db.Sequelize.QueryTypes.SELECT
+          });
+          totalSold = parseInt(soldResult.total_sold) || 0;
+        }
 
         return {
           ...cat.toJSON(),
           product_count: productCount,
-          sold_count: parseInt(total_sold) || 0,
+          sold_count: totalSold,
         };
       })
     );

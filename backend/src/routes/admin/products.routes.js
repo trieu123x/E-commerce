@@ -261,6 +261,172 @@ router.get("/stats", async (req, res) => {
   }
 });
 
+// Thống kê doanh thu theo tuần
+router.get("/stats-weekly", async (req, res) => {
+  try {
+    const { year, month } = req.query;
+    
+    const replacements = {};
+    let query = `
+      SELECT 
+        EXTRACT(YEAR FROM o.created_at) AS year,
+        EXTRACT(MONTH FROM o.created_at) AS month,
+        EXTRACT(WEEK FROM o.created_at) AS week,
+        DATE_TRUNC('week', o.created_at) AS week_start,
+        SUM(o.total_amount) AS revenue,
+        COALESCE(p.method, 'COD') AS payment_method
+      FROM orders o
+      LEFT JOIN payments p ON o.id = p.order_id
+      WHERE o.status = 'COMPLETED'
+    `;
+
+    if (year) {
+      query += ` AND EXTRACT(YEAR FROM o.created_at) = :year`;
+      replacements.year = parseInt(year);
+    }
+
+    if (month) {
+      query += ` AND EXTRACT(MONTH FROM o.created_at) = :month`;
+      replacements.month = parseInt(month);
+    }
+
+    query += `
+      GROUP BY year, month, week, week_start, payment_method
+      ORDER BY year, month, week, payment_method
+    `;
+
+    const result = await db.sequelize.query(query, {
+      replacements,
+      type: db.Sequelize.QueryTypes.SELECT
+    });
+
+    // Reformat data: group by week with payment methods as separate fields
+    const weekMap = new Map();
+
+    result.forEach(item => {
+      const key = `${item.year}-${item.month}-${item.week}`;
+      if (!weekMap.has(key)) {
+        const weekStartDate = new Date(item.week_start);
+        const weekEndDate = new Date(weekStartDate);
+        weekEndDate.setDate(weekEndDate.getDate() + 6);
+        
+        weekMap.set(key, {
+          year: Number(item.year),
+          month: Number(item.month),
+          week: Number(item.week),
+          week_start: weekStartDate.toLocaleDateString('vi-VN'),
+          week_end: weekEndDate.toLocaleDateString('vi-VN'),
+          label: `Tuần ${item.week} (${weekStartDate.toLocaleDateString('vi-VN')} - ${weekEndDate.toLocaleDateString('vi-VN')})`,
+          total: 0
+        });
+      }
+      
+      const weekData = weekMap.get(key);
+      const paymentMethod = item.payment_method || 'COD';
+      const revenue = Number(item.revenue) || 0;
+      
+      weekData[paymentMethod] = revenue;
+      weekData.total += revenue;
+    });
+
+    const sortedData = Array.from(weekMap.values())
+      .sort((a, b) => {
+        if (a.year !== b.year) return a.year - b.year;
+        if (a.month !== b.month) return a.month - b.month;
+        return a.week - b.week;
+      });
+
+    res.json({
+      success: true,
+      data: sortedData
+    });
+
+  } catch (error) {
+    console.error("Weekly stats error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error"
+    });
+  }
+});
+
+// Thống kê doanh thu theo ngày
+router.get("/stats-daily", async (req, res) => {
+  try {
+    const { year, month } = req.query;
+    
+    const replacements = {};
+    let query = `
+      SELECT 
+        DATE(o.created_at) AS date,
+        EXTRACT(YEAR FROM o.created_at) AS year,
+        EXTRACT(MONTH FROM o.created_at) AS month,
+        EXTRACT(DAY FROM o.created_at) AS day,
+        SUM(o.total_amount) AS revenue,
+        COALESCE(p.method, 'COD') AS payment_method
+      FROM orders o
+      LEFT JOIN payments p ON o.id = p.order_id
+      WHERE o.status = 'COMPLETED'
+    `;
+
+    if (year) {
+      query += ` AND EXTRACT(YEAR FROM o.created_at) = :year`;
+      replacements.year = parseInt(year);
+    }
+
+    if (month) {
+      query += ` AND EXTRACT(MONTH FROM o.created_at) = :month`;
+      replacements.month = parseInt(month);
+    }
+
+    query += `
+      GROUP BY date, year, month, day, payment_method
+      ORDER BY date DESC, payment_method
+    `;
+
+    const result = await db.sequelize.query(query, {
+      replacements,
+      type: db.Sequelize.QueryTypes.SELECT
+    });
+
+    // Reformat data: group by date with payment methods as separate fields
+    const dateMap = new Map();
+
+    result.forEach(item => {
+      const key = item.date;
+      if (!dateMap.has(key)) {
+        const dateObj = new Date(item.date);
+        dateMap.set(key, {
+          date: item.date,
+          label: dateObj.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+          total: 0
+        });
+      }
+      
+      const dateData = dateMap.get(key);
+      const paymentMethod = item.payment_method || 'COD';
+      const revenue = Number(item.revenue) || 0;
+      
+      dateData[paymentMethod] = revenue;
+      dateData.total += revenue;
+    });
+
+    const sortedData = Array.from(dateMap.values());
+
+    res.json({
+      success: true,
+      data: sortedData
+    });
+
+  } catch (error) {
+    console.error("Daily stats error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error"
+    });
+  }
+});
+
 router.get("/dashboard",async (req, res) => {
   try {
     const { Product, User, Category, Order } = db;

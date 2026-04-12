@@ -1,0 +1,615 @@
+================================================================================
+                    BÁO CÁO LUỒNG HOẠT ĐỘNG DỰ ÁN
+                         E-COMMERCE PLATFORM
+================================================================================
+
+I. TỔNG QUAN DỰ ÁN
+================================================================================
+Xây dựng platform e-commerce hoàn chỉnh với:
+- Admin dashboard: Quản lý sản phẩm, đơn hàng, người dùng, danh mục
+- Thống kê doanh thu: Theo tháng, breakdown phương thức thanh toán
+- Hệ thống thanh toán: MoMo, VNPay, Stripe (webhook integration)
+- Hệ thống VIP Member: Auto VIP khi chi tiêu >= 100k
+- Quản lý địa chỉ: Hỗ trợ các trường địa chỉ chi tiết
+
+Ngày kết thúc báo cáo: 12/04/2026
+
+
+II. CÁC LUỒNG HOẠT ĐỘNG CHÍNH
+================================================================================
+
+A. LUỒNG 1: FIX ADMIN ORDERS FILTER
+================================================================================
+Yêu cầu: Phần filter đơn hàng ở admin không hoạt động
+
+VẤN ĐỀ:
+- Filter buttons (status, date, price, order ID) không trigger cập nhật
+- Admin không thể filter orders theo tiêu chí
+
+NGUYÊN NHÂN:
+1. Frontend (src/app/admin/orders/page.js)
+   - useEffect chỉ depend vào [page, filter, sort_by, sort_order]
+   - Search params (orderIdSearch, startDate, endDate, minPrice, maxPrice) 
+     không included → state change không trigger fetch
+
+2. Backend (backend/src/routes/admin/orders.routes.js)
+   - Endpoint /admin/orders chỉ handle filter "status"
+   - Không xử lý: order_id, start_date, end_date, min_price, max_price
+
+GIẢI PHÁP:
+Frontend:
+  - Thêm tất cả search params vào useEffect dependencies
+  - Trước: [page, filter, sort_by, sort_order]
+  - Sau: [page, filter, sort_by, sort_order, orderIdSearch, startDate, endDate, minPrice, maxPrice]
+
+Backend:
+  - Expand query WHERE clause:
+    * if order_id: where.id = order_id
+    * if start_date/end_date: where.created_at = {Op.gte/Op.lte}
+    * if min_price/max_price: where.total_amount = {Op.gte/Op.lte}
+  - Support sort_by (created_at, id, total_amount)
+  - Support sort_order (ASC, DESC)
+
+KẾT QUẢ:
+✅ Filter hoạt động đúng trên 5 tiêu chí
+✅ Sắp xếp động theo 3 trường
+✅ Pagination tự động reset về trang 1 khi filter
+
+
+B. LUỒNG 2: THỐNG KÊ DOANH THU THEO PHƯƠNG THỨC THANH TOÁN
+================================================================================
+Yêu cầu: Hiển thị doanh thu tháng với breakdown 3 phương thức: COD/VNPay/Stripe
+
+LUỒNG HOẠT ĐỘNG:
+
+1. Backend Query (backend/src/routes/admin/products.routes.js)
+   Endpoint: GET /admin/products/stats?year=2026
+   
+   SQL Query:
+   - SELECT EXTRACT(YEAR/MONTH FROM orders.created_at) AS year/month
+   - SELECT COALESCE(payments.method, 'COD') AS payment_method
+   - SELECT SUM(orders.total_amount) AS revenue
+   - FROM orders LEFT JOIN payments
+   - WHERE status = 'COMPLETED'
+   - GROUP BY year, month, payment_method
+   
+   Data Transformation:
+   - Group by month
+   - Tạo object: {month, COD: X, VNPAY: Y, STRIPE: Z, total: X+Y+Z}
+   - Trả về sorted array by month
+
+2. Frontend Render (src/app/admin/page.js)
+   - Fetch /admin/products/stats?year=2026
+   - Store vào revenueData state
+   - Render BarChart (thay vì LineChart)
+   
+   Chart Configuration:
+   - 3 bars: COD (xanh lục #10b981), VNPay (xanh dương #3b82f6), Stripe (tím #8b5cf6)
+   - stackId="a" để xếp chồng
+   - Custom Tooltip hiển thị:
+     * Tháng N
+     * COD (Tiền mặt): $X
+     * VNPay: $Y
+     * Stripe: $Z
+     * ─────────────
+     * Tổng: $X+Y+Z
+
+KẾT QUẢ:
+✅ Dashboard hiển thị doanh thu đầy đủ
+✅ Visual clear với 3 colors riêng
+✅ Tooltip detail khi hover
+✅ Admin dễ track hiệu suất từng channel
+
+
+C. LUỒNG 3: DANH MỤC - HIỂN THỊ SỐ SẢN PHẨM & ĐÃ BÁN
+================================================================================
+Yêu cầu: Thêm số sản phẩm và số sản phẩm đã bán trong danh mục
+
+BACKEND LOGIC (backend/src/services/category.service.js):
+
+getAllCategories():
+  - Fetch tất cả categories
+  - Loop qua mỗi category:
+    
+    a) Count Products:
+       SELECT COUNT(*) FROM products 
+       WHERE category_id = :category_id
+       → product_count
+    
+    b) Count Sold (from COMPLETED orders):
+       SELECT COALESCE(SUM(order_items.quantity), 0)
+       FROM order_items oi
+       JOIN products p ON oi.product_id = p.id
+       JOIN orders o ON oi.order_id = o.id
+       WHERE p.category_id = :category_id 
+       AND o.status = 'COMPLETED'
+       → sold_count
+    
+    c) Return enriched object:
+       {...category, product_count, sold_count}
+
+FRONTEND DISPLAY (src/app/admin/categories/page.js):
+
+Parent Category (cha):
+  Quần áo
+  📦 50 sản phẩm    ✓ 368 đã bán
+  [Sửa] [Xóa]
+
+Child Category (con):
+  └─ Áo Thun
+    📦 20 sản phẩm   ✓ 150 đã bán
+    [Sửa] [Xóa]
+
+KẾT QUẢ:
+✅ Admin dễ tracking hiệu suất danh mục
+✅ Cả parent + child categories hiển thị stats
+✅ Quick overview bán chạy
+
+
+D. LUỒNG 4: HỆ THỐNG VIP MEMBER
+================================================================================
+Yêu CẦU: User chi tiêu >= 100,000 tự động lên VIP status
+
+PHASE 1: DATABASE SCHEMA
+File: backend/src/migrations/004-add-vip-fields.cjs
+
+Thêm 2 cột vào users table:
+- is_vip: BOOLEAN (default: false)
+- total_spent: DECIMAL(15, 2) (default: 0)
+
+Migration:
+  - Kiểm tra column tồn tại rồi mới add
+  - Hỗ trợ rollback bằng DROP column
+
+PHASE 2: VIP STATUS CALCULATION SERVICE
+File: backend/src/services/user.service.js
+
+updateVipStatus(userId):
+  Step 1: Fetch user
+  Step 2: Query tất cả COMPLETED orders
+  Step 3: Loop orders, sum total_amount
+  Step 4: Calculate is_vip = (total >= 100000)
+  Step 5: Update user: {total_spent, is_vip}
+  Step 6: Log chi tiết: "[VIP Check] User X: Total = Y, Is VIP = Z"
+
+PHASE 3: AUTO-UPDATE TRIGGERS
+Có 4 điểm trigger updateVipStatus():
+
+1. Admin Update Order Status:
+   Endpoint: PATCH /admin/orders/{id}
+   File: backend/src/routes/admin/orders.routes.js
+   
+   Khi admin change status → COMPLETED:
+   - await order.update({status})
+   - await userService.updateVipStatus(order.user_id)
+   - Return success
+
+2. MoMo Payment Webhook:
+   Endpoint: POST /payment/momo/ipn
+   File: backend/src/controllers/payment.controller.js
+   
+   Khi MoMo callback resultCode == 0:
+   - await orderService.completeOrder(orderId)
+   - await db.Payment.update({status: COMPLETED})
+   - await userService.updateVipStatus(order.user_id)
+
+3. VNPay Payment Webhook:
+   Endpoint: POST /payment/vnpay/ipn
+   
+   Khi VNPay callback responseCode === "00":
+   - await orderService.completeOrder(orderId)
+   - await db.Payment.update({status: COMPLETED})
+   - await userService.updateVipStatus(order.user_id)
+
+4. Stripe Webhook:
+   Endpoint: POST /payment/stripe/webhook (raw body)
+   
+   Khi event type "checkout.session.completed":
+   - await orderService.completeOrder(orderId)
+   - await db.Payment.update({status: COMPLETED})
+   - await userService.updateVipStatus(order.user_id)
+
+PHASE 4: FRONTEND - USER PROFILE
+File: src/app/account/profile/page.js
+
+Display VIP Badge:
+  - Nếu user.is_vip === true:
+    ⭐ VIP Member (amber badge)
+  - Nếu false:
+    Not VIP
+
+Display Stats:
+  Total Spent Box:
+    💰 $X,XXX.XX
+    "Spend $100,000+ to become VIP"
+  
+  VIP Status Box:
+    ⭐ VIP / Not VIP
+    "Thank you for being loyal" / "Almost there!"
+
+PHASE 5: FRONTEND - ADMIN USERS MANAGEMENT
+File: src/app/admin/users/page.js
+
+Table Columns Thêm:
+  - VIP: ⭐ VIP (nếu is_vip) hoặc "-"
+  - Chi Tiêu: $X,XXX.XX (total_spent)
+
+PHASE 6: ADMIN RECALCULATE ENDPOINTS
+File: backend/src/routes/admin/users.routes.js
+
+Endpoint 1: POST /admin/users/recalculate-vip/all
+  - Fetch tất cả customers (role='customer')
+  - Loop mỗi user, call updateVipStatus()
+  - Response: {total_customers, updated, vip_count}
+  - Dùng để: Fix data, resync sau migration
+
+Endpoint 2: POST /admin/users/{id}/recalculate-vip
+  - Fetch user by id
+  - Call updateVipStatus(id)
+  - Response: updated user data
+  - Dùng để: Kiểm tra 1 user, debug
+
+KẾT QUẢ:
+✅ Auto VIP full integrated
+✅ Multi-channel webhook support
+✅ Admin có tool debug + recalculate
+✅ User thấy VIP badge + chi tiêu
+
+
+E. LUỒNG 5: HIỂN THỊ TOTAL SPENT TRÊN USER PROFILE
+================================================================================
+Yêu CẦU: Profile user không hiển thị tổng chi tiêu
+
+VẤN ĐỀ:
+- /auth/me không return total_spent, is_vip
+- User context không cập nhật sau profile update
+- Total Spent box hiển thị $0.00
+
+SOLUTION:
+
+1. Backend: Update /auth/me Endpoint
+   File: backend/src/controllers/auth.controller.js
+   
+   me():
+     - Get user by id
+     - Query COMPLETED orders
+     - Sum total_amount
+     - Calculate is_vip = (sum >= 100000)
+     - Return: {id, email, fullName, total_spent, is_vip, ...}
+
+2. Backend: Update /auth/profile Endpoint
+   
+   updateProfile(fullName, phone):
+     - Update user fields
+     - Query COMPLETED orders again
+     - Calculate total_spent, is_vip
+     - Return: {user: {..., total_spent, is_vip}, ...}
+
+3. Frontend: Fix Profile Update Flow
+   File: src/app/account/profile/page.js
+   
+   handleSubmit():
+     - Call PUT /auth/profile
+     - On success:
+       * Fetch GET /auth/me (refresh all data)
+       * setUser(meRes.data) → cập nhật context
+       * Component re-render → boxes hiển thị correct
+     - On error: rollback, show toast
+
+4. Frontend: Display Logic
+   
+   Total Spent Box:
+     <p>${parseFloat(user?.total_spent || 0).toFixed(2)}</p>
+   
+   VIP Status Box:
+     {user?.is_vip ? '⭐ VIP' : 'Not VIP'}
+
+KẾT QUẢ:
+✅ Profile hiển thị chính xác total_spent
+✅ VIP badge đúng
+✅ Data sync khi update profile
+
+
+III. BẢNG TÓMS TẮT ENDPOINTS
+================================================================================
+
+ADMIN ORDERS:
+  GET /admin/orders
+    Params: page, limit, status, order_id, start_date, end_date, 
+            min_price, max_price, sort_by, sort_order
+    Response: {data: [orders], pagination}
+
+ADMIN PRODUCTS/STATS:
+  GET /admin/products/stats?year=2026
+    Response: {data: [{month, COD, VNPAY, STRIPE, total}]}
+
+ADMIN CATEGORIES:
+  GET /admin/categories
+    Response: {categories: [{id, name, product_count, sold_count}]}
+
+ADMIN USERS:
+  GET /admin/users
+    Params: page, limit, role, status, search
+    Response: {data: [{id, email, total_spent, is_vip}], pagination}
+
+  POST /admin/users/recalculate-vip/all
+    Response: {stats: {total_customers, updated, vip_count}}
+  
+  POST /admin/users/{id}/recalculate-vip
+    Response: {data: updated_user}
+
+ADMIN ORDERS STATUS UPDATE:
+  PATCH /admin/orders/{id}
+    Body: {status}
+    Side effect: Auto-call updateVipStatus(order.user_id)
+
+AUTH - USER PROFILE:
+  GET /auth/me
+    Response: {id, email, fullName, total_spent, is_vip, ...}
+  
+  PUT /auth/profile
+    Body: {fullName, phone}
+    Response: {user: {..., total_spent, is_vip}}
+
+PAYMENT WEBHOOKS:
+  POST /payment/momo/ipn
+    Trigger: updateVipStatus() khi thanh toán thành công
+  
+  POST /payment/vnpay/ipn
+    Trigger: updateVipStatus() khi thanh toán thành công
+  
+  POST /payment/stripe/webhook
+    Trigger: updateVipStatus() khi checkout.session.completed
+
+
+IV. FLOW DIAGRAM - ADMIN ORDERS FILTER
+================================================================================
+
+User Input (Status/Date/Price/OrderID/Sort)
+         ↓
+Frontend handleApplyFilters()
+         ↓
+setPage(1) → setFilter(X) → useEffect trigger
+         ↓
+fetchOrders() with params:
+  {page, limit, status, order_id, start_date, end_date, min_price, max_price, sort_by, sort_order}
+         ↓
+Backend GET /admin/orders?...
+         ↓
+SQL WHERE clause:
+  - if status: WHERE status = X
+  - if order_id: WHERE id = X
+  - if date: WHERE created_at BETWEEN start_date AND end_date
+  - if price: WHERE total_amount BETWEEN min_price AND max_price
+         ↓
+SQL ORDER BY sort_by sort_order
+         ↓
+Response orders[] + pagination
+         ↓
+setOrders() + setTotal() → re-render table
+         ↓
+✅ Filter results display
+
+
+V. FLOW DIAGRAM - VIP AUTO-UPDATE VIA WEBHOOK
+================================================================================
+
+Customer thanh toán thành công
+         ↓
+[MoMo IPN / VNPay IPN / Stripe webhook]
+         ↓
+resultCode == 0 / responseCode == "00" / checkout.session.completed
+         ↓
+await orderService.completeOrder(orderId)
+  - Update orders.status = "COMPLETED"
+         ↓
+await db.Payment.update({status: "COMPLETED", paid_at: now})
+         ↓
+await userService.updateVipStatus(user_id)
+  - Query: SELECT SUM(total_amount) FROM orders WHERE user_id AND status='COMPLETED'
+  - Calculate: total_spent = sum
+  - Determine: is_vip = (total_spent >= 100000)
+  - Update: users.{is_vip, total_spent}
+         ↓
+✅ User automatically become VIP
+✅ Badge appear on profile + admin
+✅ No manual action needed
+
+
+VI. FLOW DIAGRAM - USER PROFILE UPDATE WITH VIP SYNC
+================================================================================
+
+User load profile page
+         ↓
+useEffect → call fetchUserData() → GET /auth/me
+         ↓
+Backend:
+  - Fetch user
+  - Query COMPLETED orders
+  - Calculate total_spent
+  - Calculate is_vip
+  - Response: {id, fullName, email, total_spent, is_vip, ...}
+         ↓
+Frontend:
+  - setUser(response)
+  - Display boxes:
+    * Total Spent: $X
+    * VIP Status: ⭐ or Not VIP
+         ↓
+User edit form (fullName, phone)
+         ↓
+Click "Save Changes"
+         ↓
+handleSubmit()
+  - Validate inputs
+  - Call PUT /auth/profile
+         ↓
+Backend:
+  - Update user fields
+  - Query COMPLETED orders
+  - Calculate total_spent, is_vip
+  - Return: {user: {..., total_spent, is_vip}}
+         ↓
+Frontend on success:
+  - Fetch GET /auth/me (refresh fresh data)
+  - setUser(meData)
+  - Display success toast
+  - Form re-render with new values
+         ↓
+✅ Total Spent display correctly
+✅ VIP status accurate
+
+
+VII. BẢNG TÓMS TẮT ISSUES & SOLUTIONS
+================================================================================
+
+Issue 1: Admin Filter Not Working
+  Cause: useEffect dependencies incomplete + backend không handle params
+  Solution: Add all search params to dependencies + expand backend WHERE clause
+  Status: ✅ FIXED
+
+Issue 2: Revenue Chart Not Show Payment Methods
+  Cause: Query không JOIN payments table
+  Solution: LEFT JOIN payments, GROUP BY payment_method, format data properly
+  Status: ✅ FIXED
+
+Issue 3: Categories Don't Show Product Stats
+  Cause: API chỉ return category info
+  Solution: Add product_count + sold_count calculation in service
+  Status: ✅ FIXED
+
+Issue 4: User Not Become VIP Despite 100k+ Purchase
+  Cause: total_spent column mismatch + not calculated from orders
+  Solution: Query COMPLETED orders directly, sum amounts, compare >= 100000
+  Status: ✅ FIXED
+
+Issue 5: User Profile Show $0.00 Total Spent
+  Cause: Auth endpoints don't return total_spent
+  Solution: Calculate in /auth/me + /auth/profile, refresh after profile update
+  Status: ✅ FIXED
+
+Issue 6: Multiple VIP Updates on Same Order Complete
+  Cause: Both payment webhook + admin update call updateVipStatus
+  Solution: Idempotent design - safe to call multiple times
+  Status: ✅ ACCEPTABLE (no data corruption)
+
+
+VIII. TỔNG KẾT - FEATURES ĐÃ IMPLEMENT
+================================================================================
+
+✅ ADMIN DASHBOARD:
+   - Filter orders theo 5 tiêu chí (status, ID, date, price)
+   - Sort orders theo 3 trường (id, created_at, total_amount)
+   - Thống kê doanh thu breakdown 3 phương thức
+   - Danh mục hiển thị product stats
+   - User management với VIP + chi tiêu
+   - Bulk recalculate VIP
+
+✅ PAYMENT SYSTEM:
+   - MoMo, VNPay, Stripe webhook
+   - Auto VIP update khi order COMPLETED
+   - Payment method display on orders
+
+✅ USER FEATURES:
+   - VIP badge trên profile
+   - Display total chi tiêu
+   - Auto VIP khi >= 100k
+   - Address management với field chi tiết
+
+✅ API RICHNESS:
+   - Enriched responses với tính toán
+   - Real-time data từ orders
+   - Idempotent operations
+
+
+IX. CÔNG NGHỆ & STACK SỬ DỤNG
+================================================================================
+
+Frontend:
+  - Next.js 13+
+  - React Hooks
+  - Recharts (data visualization)
+  - Tailwind CSS
+  - Lucide Icons
+  - Axios (HTTP client)
+
+Backend:
+  - Express.js
+  - Sequelize 6.37.7 (ORM)
+  - PostgreSQL
+  - Sequelize-cli (migrations)
+
+Payment Integration:
+  - MoMo API + IPN
+  - VNPay API + IPN
+  - Stripe Checkout + Webhooks
+
+External APIs:
+  - provinces.open-api.vn (location data)
+
+
+X. GHI CHÚ KỸ THUẬT
+================================================================================
+
+Query Performance:
+  - Category stats: N+1 query pattern (có thể optimize bằng aggregate query)
+  - User admin list: Parallel Promise.all cho tất cả calculations
+  - Webhook updateVipStatus: Cached, chỉ tính 1 lần
+
+Security:
+  - Admin endpoints require auth + admin role
+  - Webhook signatures verified (Stripe rawBody)
+  - Payment methods secured
+
+Scalability:
+  - Webhook async try-catch không block response
+  - User recalculate endpoint có thể batch process
+  - Revenue stats yearly partition (có thể implement)
+
+Error Handling:
+  - Graceful fallback khi calculation fail
+  - Log chi tiết cho debugging
+  - User-friendly error messages
+
+
+XI. TEST CASES (MANUAL)
+================================================================================
+
+Test Admin Orders Filter:
+  1. Click status "COMPLETED" → should show only completed orders
+  2. Enter start date → should filter by date range
+  3. Enter price range → should filter by amount
+  4. Enter order ID → should search by ID
+  5. Change sort to "total_amount-DESC" → should sort by amount descending
+
+Test VIP Update:
+  1. Create test user
+  2. Create orders total = 50k (not VIP)
+  3. Admin mark order COMPLETED → updateVipStatus trigger
+  4. Refresh admin users → should show $50k, not VIP
+  5. Create more orders to reach 100k
+  6. Mark COMPLETED → should auto become VIP ⭐
+
+Test Profile Display:
+  1. Load user profile → should show total spent
+  2. Edit profile → should save + refresh data
+  3. Verify is_vip badge display correctly
+
+
+XII. DÃYSỰ KIỆN - COMMIT HISTORY
+================================================================================
+
+Commit 1: Fix admin orders filter - add all params support
+Commit 2: Add payment method breakdown to revenue statistics
+Commit 3: Show total monthly revenue in tooltip
+Commit 4: Add product count and sold count to categories
+Commit 5: Add VIP member system - auto VIP >= 100k
+Commit 6: Fix VIP status calculation - use actual orders sum
+Commit 7: Enrich admin users list with calculated totals
+Commit 8: Add total_spent and is_vip to auth endpoints
+
+
+================================================================================
+                        END OF REPORT
+                    Báo cáo kết thúc: 12/04/2026
+================================================================================
