@@ -49,9 +49,39 @@ router.get("/", async (req, res) => {
 
     const total = await User.count({ where });
 
+    // Enrich users with order data
+    const usersWithOrders = await Promise.all(
+      users.map(async (user) => {
+        const userObj = user.toJSON();
+        
+        // Get total spent from orders
+        const orders = await db.Order.findAll({
+          where: {
+            user_id: user.id,
+            status: 'COMPLETED'
+          },
+          attributes: ['total_amount'],
+          raw: true
+        });
+
+        const totalSpent = orders.reduce((sum, order) => {
+          return sum + (parseFloat(order.total_amount) || 0);
+        }, 0);
+
+        // Determine VIP status
+        const isVip = totalSpent >= 100000;
+
+        return {
+          ...userObj,
+          total_spent: totalSpent,
+          is_vip: isVip
+        };
+      })
+    );
+
     res.json({
       success: true,
-      data: users,
+      data: usersWithOrders,
       pagination: {
         page: parseInt(page),
         limit: parseInt(limit),
