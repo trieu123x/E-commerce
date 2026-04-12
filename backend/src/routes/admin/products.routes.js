@@ -306,16 +306,10 @@ router.get("/stats-weekly", async (req, res) => {
     result.forEach(item => {
       const key = `${item.year}-${item.month}-${item.week}`;
       if (!weekMap.has(key)) {
+        // Format: "Tuần 1", "Tuần 2" (tuần trong tháng)
         const weekStartDate = new Date(item.week_start);
-        const weekEndDate = new Date(weekStartDate);
-        weekEndDate.setDate(weekEndDate.getDate() + 6);
-        
-        // Format: "Tuần 1 (12/1 - 18/1)"
-        const startDay = weekStartDate.getDate();
-        const startMonth = weekStartDate.getMonth() + 1;
-        const endDay = weekEndDate.getDate();
-        const endMonth = weekEndDate.getMonth() + 1;
-        const label = `Tuần ${item.week} (${startDay}/${startMonth} - ${endDay}/${endMonth})`;
+        const weekOfMonth = Math.ceil((weekStartDate.getDate()) / 7);
+        const label = `Tuần ${weekOfMonth}`;
         
         weekMap.set(key, {
           year: Number(item.year),
