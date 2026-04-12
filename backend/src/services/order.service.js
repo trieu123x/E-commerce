@@ -256,9 +256,52 @@ class OrderService {
     return order;
   }
 
-  async getAllOrders({ page = 1, limit = 10, sort_by = "created_at", sort_order = "DESC" }) {
+  async getAllOrders({
+    page = 1,
+    limit = 10,
+    sort_by = "created_at",
+    sort_order = "DESC",
+    status,
+    order_id,
+    start_date,
+    end_date,
+    min_price,
+    max_price,
+  }) {
+    console.log("OrderService.getAllOrders called with:", { page, limit, sort_by, sort_order, status, order_id, start_date, end_date, min_price, max_price });
+    const { Op } = db.Sequelize;
     const offset = (page - 1) * limit;
     const where = {};
+
+    if (status) {
+      where.status = status;
+    }
+
+    if (order_id) {
+      where.id = order_id;
+    }
+
+    if (start_date || end_date) {
+      const dateFilter = {};
+      if (start_date) {
+        dateFilter[Op.gte] = new Date(`${start_date}T00:00:00.000Z`);
+      }
+      if (end_date) {
+        dateFilter[Op.lte] = new Date(`${end_date}T23:59:59.999Z`);
+      }
+      where.created_at = dateFilter;
+    }
+
+    if (min_price || max_price) {
+      where.total_amount = {};
+      if (min_price) {
+        where.total_amount[Op.gte] = parseFloat(min_price);
+      }
+      if (max_price) {
+        where.total_amount[Op.lte] = parseFloat(max_price);
+      }
+    }
+
     const orders = await orderRepository.findAll({
       where,
       include: [
@@ -277,6 +320,11 @@ class OrderService {
           model: db.User,
           as: "user",
           attributes: ["id", "full_name", "email"],
+        },
+        {
+          model: db.Payment,
+          as: "payment",
+          attributes: ["id", "method", "status", "paid_at"],
         },
       ],
       limit: parseInt(limit),

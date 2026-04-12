@@ -79,7 +79,32 @@ export const getOrderById = async (req, res) => {
 
 export const getAllOrders = async (req, res) => {
   try {
-    const result = await orderService.getAllOrders(req.query);
+    console.log("getAllOrders query:", req.query);
+    const {
+      page,
+      limit,
+      sort_by,
+      sort_order,
+      status,
+      order_id,
+      start_date,
+      end_date,
+      min_price,
+      max_price,
+    } = req.query;
+
+    const result = await orderService.getAllOrders({
+      page,
+      limit,
+      sort_by,
+      sort_order,
+      status,
+      order_id,
+      start_date,
+      end_date,
+      min_price,
+      max_price,
+    });
     res.json({
       success: true,
       ...result,

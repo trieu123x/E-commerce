@@ -22,7 +22,12 @@ class ProductService {
     where.status = { [Op.ne]: "INACTIVE" };
 
     if (search) {
-      where.name = { [Op.iLike]: `%${search}%` };
+      where.name = db.sequelize.where(
+        db.sequelize.fn("unaccent", db.sequelize.col("Product.name")),
+        {
+          [Op.iLike]: db.sequelize.fn("unaccent", `%${search}%`),
+        }
+      );
     }
 
     if (category_id) {

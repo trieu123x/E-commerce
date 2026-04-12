@@ -13,16 +13,59 @@ router.get("/", async (req, res) => {
       limit = 20,
       status,
       search,
+      order_id,
+      start_date,
+      end_date,
+      min_price,
+      max_price,
+      sort_by = "created_at",
+      sort_order = "DESC"
     } = req.query;
 
     const where = {};
     
     // Lọc theo trạng thái
-    if (status) {
+    if (status && status !== "ALL") {
       where.status = status;
     }
 
+    // Lọc theo order ID
+    if (order_id) {
+      where.id = order_id;
+    }
+
+    // Lọc theo khoảng ngày
+    if (start_date || end_date) {
+      where.created_at = {};
+      if (start_date) {
+        where.created_at[Op.gte] = new Date(start_date);
+      }
+      if (end_date) {
+        const endDateTime = new Date(end_date);
+        endDateTime.setHours(23, 59, 59, 999);
+        where.created_at[Op.lte] = endDateTime;
+      }
+    }
+
+    // Lọc theo giá tiền
+    if (min_price || max_price) {
+      where.total_amount = {};
+      if (min_price) {
+        where.total_amount[Op.gte] = parseFloat(min_price);
+      }
+      if (max_price) {
+        where.total_amount[Op.lte] = parseFloat(max_price);
+      }
+    }
+
     const offset = (parseInt(page) - 1) * parseInt(limit);
+
+    // Xác định thứ tự sắp xếp
+    const sortArray = [];
+    const validSortFields = ["created_at", "id", "total_amount"];
+    const sortByField = validSortFields.includes(sort_by) ? sort_by : "created_at";
+    const sortDirection = ["ASC", "DESC"].includes(sort_order?.toUpperCase()) ? sort_order.toUpperCase() : "DESC";
+    sortArray.push([sortByField, sortDirection]);
 
     const orders = await Order.findAll({
       where,
@@ -59,7 +102,7 @@ router.get("/", async (req, res) => {
           ],
         },
       ],
-      order: [["created_at", "DESC"]],
+      order: sortArray,
       limit: parseInt(limit),
       offset,
     });
