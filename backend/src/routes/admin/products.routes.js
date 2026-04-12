@@ -193,22 +193,24 @@ router.get("/stats", async (req, res) => {
     
     let query = `
       SELECT 
-        EXTRACT(YEAR FROM created_at) AS year,
-        EXTRACT(MONTH FROM created_at) AS month,
-        SUM(total_amount) AS revenue
-      FROM orders
-      WHERE status = 'COMPLETED'
+        EXTRACT(YEAR FROM o.created_at) AS year,
+        EXTRACT(MONTH FROM o.created_at) AS month,
+        SUM(o.total_amount) AS revenue,
+        COALESCE(p.method, 'COD') AS payment_method
+      FROM orders o
+      LEFT JOIN payments p ON o.id = p.order_id
+      WHERE o.status = 'COMPLETED'
     `;
     const replacements = {};
 
     if (year) {
-      query += ` AND EXTRACT(YEAR FROM created_at) = :year`;
+      query += ` AND EXTRACT(YEAR FROM o.created_at) = :year`;
       replacements.year = parseInt(year);
     }
 
     query += `
-      GROUP BY year, month
-      ORDER BY year, month
+      GROUP BY year, month, payment_method
+      ORDER BY year, month, payment_method
     `;
 
     const result = await db.sequelize.query(query, {
@@ -216,13 +218,38 @@ router.get("/stats", async (req, res) => {
       type: db.Sequelize.QueryTypes.SELECT
     });
 
+    // Reformat data: group by month with payment methods as separate fields
+    const formattedData = [];
+    const monthMap = new Map();
+
+    result.forEach(item => {
+      const key = `${item.year}-${item.month}`;
+      if (!monthMap.has(key)) {
+        monthMap.set(key, {
+          year: Number(item.year),
+          month: Number(item.month),
+          total: 0
+        });
+      }
+      
+      const monthData = monthMap.get(key);
+      const paymentMethod = item.payment_method || 'COD';
+      const revenue = Number(item.revenue) || 0;
+      
+      monthData[paymentMethod] = revenue;
+      monthData.total += revenue;
+    });
+
+    // Convert Map to Array and sort
+    const sortedData = Array.from(monthMap.values())
+      .sort((a, b) => {
+        if (a.year !== b.year) return a.year - b.year;
+        return a.month - b.month;
+      });
+
     res.json({
       success: true,
-      data: result.map(item => ({
-        year: Number(item.year),
-        month: Number(item.month),
-        revenue: Number(item.revenue)
-      }))
+      data: sortedData
     });
 
   } catch (error) {

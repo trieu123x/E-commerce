@@ -195,7 +195,7 @@ useEffect(() => {
             </div>
           ) : revenueData.length > 0 ? (
             <ResponsiveContainer width="100%" height={400}>
-              <LineChart data={revenueData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+              <BarChart data={revenueData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
                   dataKey="month" 
@@ -213,16 +213,25 @@ useEffect(() => {
                   contentStyle={{ backgroundColor: '#fff', border: '1px solid #ccc' }}
                 />
                 <Legend />
-                <Line 
-                  type="monotone" 
-                  dataKey="revenue" 
-                  stroke="#2563eb" 
-                  strokeWidth={2}
-                  dot={{ fill: '#2563eb', r: 5 }}
-                  activeDot={{ r: 7 }}
-                  name="Doanh Thu ($)"
+                <Bar 
+                  dataKey="COD" 
+                  fill="#10b981" 
+                  name="COD (Tiền mặt)"
+                  stackId="a"
                 />
-              </LineChart>
+                <Bar 
+                  dataKey="VNPAY" 
+                  fill="#3b82f6" 
+                  name="VNPay"
+                  stackId="a"
+                />
+                <Bar 
+                  dataKey="STRIPE" 
+                  fill="#8b5cf6" 
+                  name="Stripe"
+                  stackId="a"
+                />
+              </BarChart>
             </ResponsiveContainer>
           ) : (
             <div className="h-80 flex items-center justify-center text-gray-500">
