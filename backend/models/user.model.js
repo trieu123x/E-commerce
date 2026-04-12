@@ -47,7 +47,7 @@ export default (sequelize) => {
     }
   }, {
     tableName: 'users',
-    timestamps: false,
+    timestamps: true,
     hooks: {
       beforeCreate: async (user) => {
         if (user.password_hash) {
