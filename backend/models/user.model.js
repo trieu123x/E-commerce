@@ -47,15 +47,13 @@ export default (sequelize) => {
     }
   }, {
     tableName: 'users',
-    timestamps: true,
-    underscored: true,
+    timestamps: false,
     hooks: {
       beforeCreate: async (user) => {
         if (user.password_hash) {
           user.password_hash = await bcrypt.hash(user.password_hash, 10);
         }
       }
-      // Không cần beforeUpdate hook cho password vì không có updatedAt
     }
   });
    // Instance method để kiểm tra password
