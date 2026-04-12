@@ -3,7 +3,7 @@ import db from "../../models/index.js";
 
 class CategoryService {
   async getAllCategories() {
-    return await categoryRepository.findAll({
+    const categories = await categoryRepository.findAll({
       include: [
         {
           model: db.Category,
@@ -13,6 +13,37 @@ class CategoryService {
       ],
       order: [["id", "ASC"]],
     });
+
+    // Add product counts for each category
+    const categoriesWithCounts = await Promise.all(
+      categories.map(async (cat) => {
+        const productCount = await db.Product.count({
+          where: { category_id: cat.id },
+        });
+
+        // Get sold count (sum of quantity from order items for products in this category)
+        const [{ total_sold }] = await db.sequelize.query(`
+          SELECT COALESCE(SUM(oi.quantity), 0) as total_sold
+          FROM order_items oi
+          JOIN products p ON oi.product_id = p.id
+          WHERE p.category_id = :category_id
+          AND oi.order_id IN (
+            SELECT id FROM orders WHERE status = 'COMPLETED'
+          )
+        `, {
+          replacements: { category_id: cat.id },
+          type: db.Sequelize.QueryTypes.SELECT
+        });
+
+        return {
+          ...cat.toJSON(),
+          product_count: productCount,
+          sold_count: parseInt(total_sold) || 0,
+        };
+      })
+    );
+
+    return categoriesWithCounts;
   }
 
   async getCategoryById(id) {

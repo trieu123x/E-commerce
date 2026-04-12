@@ -186,6 +186,14 @@ export default function CategoriesPage() {
                     <p className="text-gray-600 text-sm">
                       {category.description || "Không có mô tả"}
                     </p>
+                    <div className="flex gap-4 mt-2 text-sm">
+                      <span className="text-blue-600 font-medium">
+                        📦 {category.product_count || 0} sản phẩm
+                      </span>
+                      <span className="text-green-600 font-medium">
+                        ✓ {category.sold_count || 0} đã bán
+                      </span>
+                    </div>
                   </div>
 
                   <div className="flex gap-2">
@@ -220,6 +228,14 @@ export default function CategoriesPage() {
                           <p className="text-gray-600 text-sm">
                             {child.description || "Không có mô tả"}
                           </p>
+                          <div className="flex gap-4 mt-1 text-xs">
+                            <span className="text-blue-600 font-medium">
+                              📦 {child.product_count || 0} sản phẩm
+                            </span>
+                            <span className="text-green-600 font-medium">
+                              ✓ {child.sold_count || 0} đã bán
+                            </span>
+                          </div>
                         </div>
                         <div className="flex gap-2">
                           <button
