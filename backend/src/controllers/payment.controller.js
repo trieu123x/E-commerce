@@ -2,6 +2,7 @@ import { createPayment } from "../services/momo.service.js";
 import vnpayService from "../services/vnpay.service.js";
 import stripeService from "../services/stripe.service.js";
 import orderService from "../services/order.service.js";
+import userService from "../services/user.service.js";
 import db from "../../models/index.js";
 
 export const createMomoPayment = async (req, res) => {
@@ -53,6 +54,15 @@ export const momoIPN = async (req, res) => {
         { status: "COMPLETED", paid_at: new Date() },
         { where: { order_id: actualOrderId, method: "MOMO" } }
       );
+      // Update user VIP status
+      try {
+        const order = await db.Order.findByPk(actualOrderId);
+        if (order) {
+          await userService.updateVipStatus(order.user_id);
+        }
+      } catch (err) {
+        console.error("Error updating VIP status:", err);
+      }
     } else {
       await orderService.cancelOrder(actualOrderId);
       // Update Payment status to FAILED
@@ -143,6 +153,15 @@ export const vnpayIPN = async (req, res) => {
           { status: "COMPLETED", paid_at: new Date() },
           { where: { order_id: orderId, method: "VNPAY" } }
         );
+        // Update user VIP status
+        try {
+          const order = await db.Order.findByPk(orderId);
+          if (order) {
+            await userService.updateVipStatus(order.user_id);
+          }
+        } catch (err) {
+          console.error("Error updating VIP status:", err);
+        }
       } else {
         await orderService.cancelOrder(orderId);
         // Update Payment status to FAILED
@@ -237,6 +256,16 @@ export const stripeWebhook = async (req, res) => {
           { where: { order_id: orderId, method: "STRIPE" } }
         );
         console.log(`[Stripe Webhook] Payment ${orderId} status updated to COMPLETED`);
+
+        // Update user VIP status
+        try {
+          const order = await db.Order.findByPk(orderId);
+          if (order) {
+            await userService.updateVipStatus(order.user_id);
+          }
+        } catch (err) {
+          console.error("Error updating VIP status:", err);
+        }
       } catch (error) {
         console.error(`[Stripe Webhook] Failed to complete order ${orderId}:`, error);
       }

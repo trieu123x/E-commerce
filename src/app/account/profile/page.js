@@ -98,11 +98,41 @@ export default function ProfilePage() {
   )}
 </AnimatePresence>
       <div className="max-w-5xl mx-auto bg-white p-10 rounded-md shadow-sm border border-gray-200">
-        <h2 className="text-red-500 text-xl font-semibold mb-8">
-          Edit Your Profile
-        </h2>
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-red-500 text-xl font-semibold">
+            Edit Your Profile
+          </h2>
+          {user?.is_vip && (
+            <div className="flex items-center gap-2 bg-gradient-to-r from-amber-100 to-amber-50 border border-amber-300 px-4 py-2 rounded-lg">
+              <span className="text-2xl">⭐</span>
+              <span className="font-semibold text-amber-700">VIP Member</span>
+            </div>
+          )}
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* VIP Status + Total Spent */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <p className="text-sm text-gray-600 mb-1">Total Spent</p>
+              <p className="text-2xl font-bold text-blue-600">
+                ${parseFloat(user?.total_spent || 0).toFixed(2)}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                {user?.is_vip ? "✓ VIP Status Active" : "Spend $100,000+ to become VIP"}
+              </p>
+            </div>
+            <div className={`rounded-lg p-4 ${user?.is_vip ? 'bg-amber-50 border border-amber-200' : 'bg-gray-50 border border-gray-200'}`}>
+              <p className="text-sm text-gray-600 mb-1">VIP Status</p>
+              <p className="text-2xl font-bold">
+                {user?.is_vip ? <span className="text-amber-600">⭐ VIP</span> : <span className="text-gray-400">Not VIP</span>}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                {user?.is_vip ? "Thank you for being a loyal customer!" : "Almost there!"}
+              </p>
+            </div>
+          </div>
+
           {/* Full Name + Email */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>

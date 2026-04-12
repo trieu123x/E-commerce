@@ -36,6 +36,14 @@ export default (sequelize) => {
     phone: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    is_vip: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    total_spent: {
+      type: DataTypes.DECIMAL(15, 2),
+      defaultValue: 0
     }
   }, {
     tableName: 'users',

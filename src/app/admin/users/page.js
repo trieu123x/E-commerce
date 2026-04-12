@@ -97,6 +97,8 @@ export default function UsersPage() {
               <th className="px-6 py-3 text-left text-sm font-semibold">Tên</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">Vai Trò</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">Trạng Thái</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold">VIP</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold">Chi Tiêu</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">Ngày Tạo</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">Hành Động</th>
             </tr>
@@ -123,6 +125,18 @@ export default function UsersPage() {
                   }`}>
                     {user.status === "LOCKED" ? "Khóa" : "Hoạt Động"}
                   </span>
+                </td>
+                <td className="px-6 py-3">
+                  {user.is_vip ? (
+                    <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-800 px-2 py-1 rounded text-sm font-semibold">
+                      <span>⭐</span> VIP
+                    </span>
+                  ) : (
+                    <span className="text-gray-400 text-sm">-</span>
+                  )}
+                </td>
+                <td className="px-6 py-3 text-sm font-medium">
+                  ${parseFloat(user.total_spent || 0).toFixed(2)}
                 </td>
                 <td className="px-6 py-3 text-sm">
                   {new Date(user.created_at).toLocaleDateString("vi-VN")}

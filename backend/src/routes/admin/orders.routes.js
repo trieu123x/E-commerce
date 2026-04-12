@@ -1,6 +1,7 @@
 import express from "express";
 import db from "../../../models/index.js";
 import { Op } from "sequelize";
+import userService from "../../services/user.service.js";
 
 const { Order, OrderItem, User, Product, ProductImage, Payment } = db;
 const router = express.Router();
@@ -200,6 +201,16 @@ router.patch("/:id", async (req, res) => {
     }
 
     await order.update({ status });
+
+    // Update user VIP status if order is completed
+    if (status === "COMPLETED") {
+      try {
+        await userService.updateVipStatus(order.user_id);
+      } catch (err) {
+        console.error("Error updating VIP status:", err);
+        // Don't fail the response if VIP update fails
+      }
+    }
 
     res.json({
       success: true,
