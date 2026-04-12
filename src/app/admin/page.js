@@ -268,14 +268,12 @@ useEffect(() => {
           ) : revenueData.length > 0 ? (
             <div>
               <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={revenueData} margin={{ top: 5, right: 30, left: 0, bottom: 80 }}>
+                <BarChart data={revenueData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis 
                     dataKey={chartType === "monthly" ? "month" : chartType === "weekly" ? "label" : "label"}
                     stroke="#666"
-                    angle={-45}
-                    textAnchor="end"
-                    height={100}
+                    angle={0}
                     tickFormatter={(value) => {
                       if (chartType === "monthly") return `Tháng ${value}`;
                       return value;
