@@ -64,12 +64,19 @@ export default function ProfilePage() {
     if (res.data.success) {
         setSuccess(true);
         setError("");
-        setUser((prev) => {
+        // Fetch latest user data with total_spent and is_vip
+        try {
+          const meRes = await axios.get("/auth/me");
+          setUser(meRes.data);
+        } catch (err) {
+          console.error("Failed to refresh user data:", err);
+          setUser((prev) => {
             return { ...prev, ...form };
-        })
-  setTimeout(() => {
-    setSuccess(false);
-  }, 3000);
+          });
+        }
+        setTimeout(() => {
+          setSuccess(false);
+        }, 3000);
     } else {
       toast.error("Failed to update profile");
     }

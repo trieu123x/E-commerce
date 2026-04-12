@@ -47,6 +47,24 @@ export const login = async (req, res) => {
 export const me = async (req, res) => {
   try {
     const user = await userService.getUserById(req.user.id);
+    
+    // Calculate total spent and VIP status
+    const db = await import("../../models/index.js").then(m => m.default);
+    const orders = await db.Order.findAll({
+      where: {
+        user_id: user.id,
+        status: 'COMPLETED'
+      },
+      attributes: ['total_amount'],
+      raw: true
+    });
+
+    const totalSpent = orders.reduce((sum, order) => {
+      return sum + (parseFloat(order.total_amount) || 0);
+    }, 0);
+
+    const isVip = totalSpent >= 100000;
+
     res.json({
       id: user.id,
       email: user.email,
@@ -54,6 +72,8 @@ export const me = async (req, res) => {
       role: user.role,
       phone: user.phone,
       createdAt: user.created_at,
+      total_spent: totalSpent,
+      is_vip: isVip
     });
   } catch (error) {
     if (error.message === "User not found") {
@@ -68,10 +88,32 @@ export const updateProfile = async (req, res) => {
 
   try {
     const user = await userService.updateProfile(req.user.id, fullName, phone);
+    
+    // Calculate total spent and VIP status
+    const db = await import("../../models/index.js").then(m => m.default);
+    const orders = await db.Order.findAll({
+      where: {
+        user_id: req.user.id,
+        status: 'COMPLETED'
+      },
+      attributes: ['total_amount'],
+      raw: true
+    });
+
+    const totalSpent = orders.reduce((sum, order) => {
+      return sum + (parseFloat(order.total_amount) || 0);
+    }, 0);
+
+    const isVip = totalSpent >= 100000;
+
     res.json({
       success: true,
       message: "Cập nhật hồ sơ thành công",
-      user,
+      user: {
+        ...user.toJSON(),
+        total_spent: totalSpent,
+        is_vip: isVip
+      },
     });
   } catch (error) {
     if (error.message === "Không có trường nào được cập nhật") {
