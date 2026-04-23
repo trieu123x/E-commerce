@@ -54,50 +54,59 @@ export default function OrderPage() {
       setSelectedAddress(defaultAddr.id);
     }
   }, [sortedAddress]);
-  const handlePlaceOrder = async () => {
-  if (!selectedAddress) {
-    toast.error("Vui lòng chọn địa chỉ giao hàng");
-    return;
-  }
 
-  try {
-    setLoading(true);
-
-    let payload = {
-      address_id: selectedAddress,
-      payment_method: payment,
-    };
-
-    if (type === "buyNow") {
-      payload.product_id = product_id;
-      payload.quantity = quantity;
-    }
-
-    if (type === "cart") {
-      payload.items = cartItems.map(item => ({
-        product_id: item.product_id,
-        quantity: item.quantity
-      }));
-    }
-
-    const res = await instance.post("/order", payload);
-
-    if (type === "cart") {
-      const clearCart = await instance.delete("/cart/clear")
-    setCart([])
-    }
-    router.push("/completed");
-
-  } catch (error) {
-    console.error(error);
-    
-  } finally {
-    setLoading(false);
-  }
-};
- 
   const cartItems = cart?.items || [];
   const summary = cart?.summary || {};
+
+  const handlePlaceOrder = async () => {
+    if (!selectedAddress) {
+      toast.error("Vui lòng chọn địa chỉ giao hàng");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      let payload = {
+        address_id: selectedAddress,
+        payment_method: payment,
+      };
+
+      if (type === "buyNow") {
+        payload.product_id = product_id;
+        payload.quantity = quantity;
+      }
+
+      if (type === "cart") {
+        if (!cartItems || cartItems.length === 0) {
+          toast.error("Giỏ hàng trống");
+          return;
+        }
+        payload.items = cartItems.map(item => ({
+          product_id: item.product_id,
+          quantity: item.quantity
+        }));
+      }
+
+      const res = await instance.post("/order", payload);
+
+      if (res.data.success) {
+        if (type === "cart") {
+          const clearCart = await instance.delete("/cart/clear");
+          setCart([]);
+        }
+        toast.success("Đặt hàng thành công!");
+        router.push("/completed");
+      }
+
+    } catch (error) {
+      console.error(error);
+      const errorMsg = error.response?.data?.message || error.message || "Lỗi khi đặt hàng";
+      toast.error(errorMsg);
+    } finally {
+      setLoading(false);
+    }
+  };
 console.log(product)
   return (
     <div className="max-w-6xl mx-auto py-10 px-4 grid grid-cols-1 md:grid-cols-2 gap-10 text-white">

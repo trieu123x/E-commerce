@@ -315,6 +315,7 @@ router.get("/stats-weekly", async (req, res) => {
           year: Number(item.year),
           month: Number(item.month),
           week: Number(item.week),
+          week_start: item.week_start,
           label: label,
           total: 0
         });
@@ -330,9 +331,8 @@ router.get("/stats-weekly", async (req, res) => {
 
     const sortedData = Array.from(weekMap.values())
       .sort((a, b) => {
-        if (a.year !== b.year) return a.year - b.year;
-        if (a.month !== b.month) return a.month - b.month;
-        return a.week - b.week;
+        // Sort by week_start date instead of year/month/week to avoid ordering issues
+        return new Date(a.week_start) - new Date(b.week_start);
       });
 
     res.json({

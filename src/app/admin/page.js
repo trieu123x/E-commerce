@@ -60,6 +60,7 @@ export default function AdminDashboard() {
       const res = await instance.get(url);
 
       if (res.data.success) {
+        console.log("Revenue data:", res.data.data);
         setRevenueData(res.data.data);
       }
 

@@ -167,6 +167,11 @@ class OrderService {
   }
 
   async buyNow(userId, { product_id, quantity = 1, address_id, items, payment_method }) {
+    // Validate address_id
+    if (!address_id) {
+      throw new Error("Vui lòng chọn địa chỉ giao hàng");
+    }
+
     let orderItems = [];
 
     if (items && Array.isArray(items) && items.length > 0) {
