@@ -199,7 +199,7 @@ useEffect(() => {
             >
               Theo Tháng
             </button>
-            <button
+            {/* <button
               onClick={() => setChartType("weekly")}
               className={`px-4 py-2 font-medium transition ${
                 chartType === "weekly"
@@ -208,7 +208,7 @@ useEffect(() => {
               }`}
             >
               Theo Tuần
-            </button>
+            </button> */}
             <button
               onClick={() => setChartType("daily")}
               className={`px-4 py-2 font-medium transition ${

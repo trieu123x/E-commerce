@@ -261,93 +261,7 @@ router.get("/stats", async (req, res) => {
   }
 });
 
-// Thống kê doanh thu theo tuần
-router.get("/stats-weekly", async (req, res) => {
-  try {
-    const { year, month } = req.query;
-    
-    const replacements = {};
-    let query = `
-      SELECT 
-        EXTRACT(YEAR FROM o.created_at) AS year,
-        EXTRACT(MONTH FROM o.created_at) AS month,
-        EXTRACT(WEEK FROM o.created_at) AS week,
-        DATE_TRUNC('week', o.created_at) AS week_start,
-        SUM(o.total_amount) AS revenue,
-        COALESCE(p.method, 'COD') AS payment_method
-      FROM orders o
-      LEFT JOIN payments p ON o.id = p.order_id
-      WHERE o.status = 'COMPLETED'
-    `;
 
-    if (year) {
-      query += ` AND EXTRACT(YEAR FROM o.created_at) = :year`;
-      replacements.year = parseInt(year);
-    }
-
-    if (month) {
-      query += ` AND EXTRACT(MONTH FROM o.created_at) = :month`;
-      replacements.month = parseInt(month);
-    }
-
-    query += `
-      GROUP BY year, month, week, week_start, payment_method
-      ORDER BY year, month, week, payment_method
-    `;
-
-    const result = await db.sequelize.query(query, {
-      replacements,
-      type: db.Sequelize.QueryTypes.SELECT
-    });
-
-    // Reformat data: group by week with payment methods as separate fields
-    const weekMap = new Map();
-
-    result.forEach(item => {
-      const key = `${item.year}-${item.month}-${item.week}`;
-      if (!weekMap.has(key)) {
-        // Format: "Tuần 1", "Tuần 2" (tuần trong tháng)
-        const weekStartDate = new Date(item.week_start);
-        const weekOfMonth = Math.ceil((weekStartDate.getDate()) / 7);
-        const label = `Tuần ${weekOfMonth}`;
-        
-        weekMap.set(key, {
-          year: Number(item.year),
-          month: Number(item.month),
-          week: Number(item.week),
-          week_start: item.week_start,
-          label: label,
-          total: 0
-        });
-      }
-      
-      const weekData = weekMap.get(key);
-      const paymentMethod = item.payment_method || 'COD';
-      const revenue = Number(item.revenue) || 0;
-      
-      weekData[paymentMethod] = revenue;
-      weekData.total += revenue;
-    });
-
-    const sortedData = Array.from(weekMap.values())
-      .sort((a, b) => {
-        // Sort by week_start date instead of year/month/week to avoid ordering issues
-        return new Date(a.week_start) - new Date(b.week_start);
-      });
-
-    res.json({
-      success: true,
-      data: sortedData
-    });
-
-  } catch (error) {
-    console.error("Weekly stats error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server error"
-    });
-  }
-});
 
 // Thống kê doanh thu theo ngày
 router.get("/stats-daily", async (req, res) => {
@@ -380,7 +294,7 @@ router.get("/stats-daily", async (req, res) => {
 
     query += `
       GROUP BY date, year, month, day, payment_method
-      ORDER BY date DESC, payment_method
+      ORDER BY date ASC, payment_method
     `;
 
     const result = await db.sequelize.query(query, {
@@ -1123,6 +1037,92 @@ router.delete("/:id/permanent", async (req, res) => {
   }
 });
 
+router.get("/stats-weekly", async (req, res) => {
+  try {
+    const { year, month } = req.query;
+    
+    const replacements = {};
+    let query = `
+      SELECT 
+        EXTRACT(YEAR FROM o.created_at) AS year,
+        EXTRACT(MONTH FROM o.created_at) AS month,
+        EXTRACT(WEEK FROM o.created_at) AS week,
+        DATE_TRUNC('week', o.created_at) AS week_start,
+        SUM(o.total_amount) AS revenue,
+        COALESCE(p.method, 'COD') AS payment_method
+      FROM orders o
+      LEFT JOIN payments p ON o.id = p.order_id
+      WHERE o.status = 'COMPLETED'
+    `;
+
+    if (year) {
+      query += ` AND EXTRACT(YEAR FROM o.created_at) = :year`;
+      replacements.year = parseInt(year);
+    }
+
+    if (month) {
+      query += ` AND EXTRACT(MONTH FROM o.created_at) = :month`;
+      replacements.month = parseInt(month);
+    }
+
+    query += `
+      GROUP BY year, month, week, week_start, payment_method
+      ORDER BY year, month, week, payment_method
+    `;
+
+    const result = await db.sequelize.query(query, {
+      replacements,
+      type: db.Sequelize.QueryTypes.SELECT
+    });
+
+    // Reformat data: group by week with payment methods as separate fields
+    const weekMap = new Map();
+
+    result.forEach(item => {
+      const key = `${item.year}-${item.month}-${item.week}`;
+      if (!weekMap.has(key)) {
+        // Format: "Tuần 1", "Tuần 2" (tuần trong tháng)
+        const weekStartDate = new Date(item.week_start);
+        const weekOfMonth = Math.ceil((weekStartDate.getDate()) / 7);
+        const label = `Tuần ${weekOfMonth}`;
+        
+        weekMap.set(key, {
+          year: Number(item.year),
+          month: Number(item.month),
+          week: Number(item.week),
+          week_start: item.week_start,
+          label: label,
+          total: 0
+        });
+      }
+      
+      const weekData = weekMap.get(key);
+      const paymentMethod = item.payment_method || 'COD';
+      const revenue = Number(item.revenue) || 0;
+      
+      weekData[paymentMethod] = revenue;
+      weekData.total += revenue;
+    });
+
+    const sortedData = Array.from(weekMap.values())
+      .sort((a, b) => {
+        // Sort by week_start date instead of year/month/week to avoid ordering issues
+        return new Date(a.week_start) - new Date(b.week_start);
+      });
+
+    res.json({
+      success: true,
+      data: sortedData
+    });
+
+  } catch (error) {
+    console.error("Weekly stats error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error"
+    });
+  }
+});
 
 
 export default router;
