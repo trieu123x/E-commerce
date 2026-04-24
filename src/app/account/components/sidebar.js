@@ -56,7 +56,7 @@ export default function AccountSidebar() {
             }`}
           >
             <CreditCard size={18} />
-            My Payment Options
+            Payment Statistics
           </Link>
 
           <Link

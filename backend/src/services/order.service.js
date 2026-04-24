@@ -499,6 +499,59 @@ class OrderService {
 
     return { price_after, sale: saleName };
   }
+
+  async getPaymentStatistics(userId) {
+    const query = `
+      SELECT 
+        COALESCE(p.method, 'COD') AS payment_method,
+        COUNT(DISTINCT o.id) AS total_orders,
+        SUM(o.total_amount) AS total_amount,
+        AVG(o.total_amount) AS avg_amount,
+        MAX(o.created_at) AS last_used
+      FROM orders o
+      LEFT JOIN payments p ON o.id = p.order_id
+      WHERE o.user_id = :user_id
+        AND o.status = 'COMPLETED'
+      GROUP BY p.method
+      ORDER BY total_amount DESC
+    `;
+
+    const result = await db.sequelize.query(query, {
+      replacements: { user_id: userId },
+      type: db.Sequelize.QueryTypes.SELECT
+    });
+
+    // Format data
+    const statistics = {
+      summary: {
+        totalOrders: 0,
+        totalSpent: 0,
+        paymentMethods: []
+      }
+    };
+
+    let totalOrders = 0;
+    let totalSpent = 0;
+
+    result.forEach(item => {
+      totalOrders += Number(item.total_orders) || 0;
+      totalSpent += Number(item.total_amount) || 0;
+
+      statistics.summary.paymentMethods.push({
+        method: item.payment_method || 'COD',
+        orders: Number(item.total_orders) || 0,
+        spent: Number(item.total_amount) || 0,
+        average: Number(item.avg_amount) || 0,
+        lastUsed: item.last_used
+      });
+    });
+
+    statistics.summary.totalOrders = totalOrders;
+    statistics.summary.totalSpent = totalSpent;
+
+    return statistics;
+  }
 }
 
 export default new OrderService();
+

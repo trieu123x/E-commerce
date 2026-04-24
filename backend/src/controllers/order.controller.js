@@ -140,3 +140,21 @@ export const getOrderDetails = async (req, res) => {
     });
   }
 };
+
+export const getPaymentStatistics = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const result = await orderService.getPaymentStatistics(userId);
+    res.json({
+      success: true,
+      data: result
+    });
+  } catch (error) {
+    console.error("Error fetching payment statistics:", error);
+    res.status(500).json({
+      success: false,
+      message: "Lỗi server khi lấy thống kê thanh toán"
+    });
+  }
+};
+
