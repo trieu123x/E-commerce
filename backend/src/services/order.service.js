@@ -111,6 +111,24 @@ class OrderService {
           lock: transaction.LOCK.UPDATE,
         });
 
+        // Validate product exists and is active
+        if (!product) {
+          throw new Error(`Sản phẩm không tồn tại`);
+        }
+
+        if (product.status !== 'ACTIVE') {
+          throw new Error(`Sản phẩm "${product.name}" không khả dụng`);
+        }
+
+        // Validate stock
+        if (product.stock === 0) {
+          throw new Error(`Sản phẩm "${product.name}" đã hết hàng`);
+        }
+
+        if (item.quantity > product.stock) {
+          throw new Error(`Sản phẩm "${product.name}" chỉ còn ${product.stock} cái (bạn muốn mua ${item.quantity})`);
+        }
+
         const sales = await product.getSales({ transaction });
         const { price_after } = this._getBestSalePrice(product, sales);
 

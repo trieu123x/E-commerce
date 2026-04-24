@@ -82,6 +82,37 @@ export default function OrderPage() {
           toast.error("Giỏ hàng trống");
           return;
         }
+
+        // Kiểm tra stock của mỗi item trong giỏ hàng
+        for (const item of cartItems) {
+          try {
+            const productRes = await instance.get(`/products/${item.product_id}`);
+            const productData = productRes.data.product;
+            
+            if (!productData) {
+              toast.error(`Sản phẩm không tồn tại`);
+              setLoading(false);
+              return;
+            }
+
+            if (productData.stock === 0) {
+              toast.error(`Sản phẩm "${item.product_name}" đã hết hàng`);
+              setLoading(false);
+              return;
+            }
+
+            if (item.quantity > productData.stock) {
+              toast.error(`Sản phẩm "${item.product_name}" chỉ còn ${productData.stock} cái (bạn muốn mua ${item.quantity})`);
+              setLoading(false);
+              return;
+            }
+          } catch (error) {
+            toast.error(`Lỗi kiểm tra sản phẩm: ${item.product_name}`);
+            setLoading(false);
+            return;
+          }
+        }
+
         payload.items = cartItems.map(item => ({
           product_id: item.product_id,
           quantity: item.quantity

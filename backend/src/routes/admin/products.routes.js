@@ -191,6 +191,7 @@ router.get("/stats", async (req, res) => {
   try {
     const { year } = req.query;
     
+    
     let query = `
       SELECT 
         EXTRACT(YEAR FROM o.created_at) AS year,

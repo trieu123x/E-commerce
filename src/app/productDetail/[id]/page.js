@@ -403,15 +403,25 @@ export default function ProductDetail() {
                   `/checkout?type=buyNow&product_id=${id}&quantity=${quantity}`,
                 );
               }}
-              className="bg-orange-600 text-white px-8 py-3 rounded cursor-pointer transition"
+              disabled={product.stock === 0 || quantity > product.stock}
+              className={`px-8 py-3 rounded transition ${
+                product.stock === 0 || quantity > product.stock
+                  ? "bg-gray-400 text-white cursor-not-allowed opacity-60"
+                  : "bg-orange-600 text-white cursor-pointer hover:bg-orange-700"
+              }`}
             >
-              Buy Now
+              {product.stock === 0 ? "Out of Stock" : "Buy Now"}
             </button>
             <button
               onClick={handleAddToCart}
-              className="bg-green-500 text-white px-8 py-3 rounded hover:bg-red-600 transition"
+              disabled={product.stock === 0 || quantity > product.stock}
+              className={`px-8 py-3 rounded transition ${
+                product.stock === 0 || quantity > product.stock
+                  ? "bg-gray-400 text-white cursor-not-allowed opacity-60"
+                  : "bg-green-500 text-white cursor-pointer hover:bg-green-600"
+              }`}
             >
-              {nonti}
+              {product.stock === 0 ? "Out of Stock" : nonti}
             </button>
             <button
               onClick={handleWishlistToggle}

@@ -22,7 +22,7 @@ export default function AdminDashboard() {
   const [loadingChart, setLoadingChart] = useState(false);
   const [topProducts, setTopProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
-  const [chartType, setChartType] = useState("monthly"); // monthly, weekly, daily
+  const [chartType, setChartType] = useState("monthly"); // monthly, daily
   const [visualType, setVisualType] = useState("bar"); // bar, line, combined
 
   // Format số tiền theo kiểu 1M, 2M, 3M
